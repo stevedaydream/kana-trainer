@@ -146,6 +146,36 @@ button:disabled{opacity:.45;cursor:default}
 .warm-grid span.now{background:var(--ruri);color:#fff;border-color:var(--ruri);transform:scale(1.15)}
 .center{text-align:center}
 a{color:var(--ruri)}
+/* ---- 每日 / 連續天數 ---- */
+.streak{background:#fdf0e6;border:1px solid #f3cdae;color:var(--shu);font-weight:700;border-radius:999px;padding:6px 12px;font-size:.9rem;white-space:nowrap}
+.goalbar{position:relative;height:20px;background:#e5dfd2;border-radius:10px;overflow:hidden;margin-bottom:14px}
+.goalbar i{display:block;height:100%;background:linear-gradient(90deg,var(--ruri),var(--ruri-light));border-radius:10px;transition:width .4s}
+.goalbar span{position:absolute;inset:0;text-align:center;font-size:.72rem;line-height:20px;color:var(--sumi)}
+.banner.due{background:#eef4ff;border-color:#c3d4ef;color:var(--ruri)}
+/* ---- 首頁行動入口 ---- */
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:4px 0 6px}
+.act{display:flex;flex-direction:column;align-items:flex-start;gap:2px;background:var(--card);color:var(--sumi);border:1.5px solid var(--line);font-size:.95rem;padding:14px;text-align:left}
+.act.primary{grid-column:1 / -1;background:var(--ruri);color:#fff;border-color:var(--ruri);flex-direction:row;justify-content:space-between;align-items:center;font-size:1.05rem;font-weight:600}
+.act.primary:disabled{background:#a9a292;border-color:#a9a292}
+.act .cnt{font-size:.85rem;opacity:.9;font-weight:400}
+/* ---- 設定頁（分段選擇） ---- */
+.setup{margin-top:8px}
+.setlabel{font-size:.85rem;color:#8a8272;margin:14px 0 6px}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg button{background:var(--card);color:var(--sumi);border:1.5px solid var(--line);font-size:.9rem;padding:10px 14px;border-radius:10px;flex:1 1 auto}
+.seg button.on{background:var(--ruri);color:#fff;border-color:var(--ruri)}
+.start{font-size:1.05rem}
+/* ---- 課後總結 ---- */
+.summary{max-width:300px;margin:18px auto 0;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;text-align:left}
+.summary .srow{display:flex;justify-content:space-between;font-size:.9rem;padding:4px 0;border-bottom:1px dashed #ece6d8}
+.summary .srow:last-child{border-bottom:none}
+.summary .srow b{color:var(--ruri)}
+/* ---- 產出型輸入 ---- */
+.typebox{display:flex;gap:10px}
+.typebox input{flex:1;font-family:inherit;font-size:1.3rem;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;background:var(--card);color:var(--sumi);text-align:center}
+.typebox input:focus{outline:none;border-color:var(--ruri)}
+.typebox input.wrong{border-color:var(--ng);color:var(--ng)}
+.linkbtn{background:none;border:none;color:var(--ruri);text-decoration:underline;font-size:.85rem;padding:6px;margin-top:6px}
 </style>
 </head>
 <body>
@@ -203,19 +233,77 @@ a{color:var(--ruri)}
   })();
 
   /* ---------- 進度狀態 ---------- */
-  const P = { weights: {}, streak: {}, best: {}, unlocked: 1, warmup: false };
+  const DAY = 86400000;
+  // FSRS-lite：DSR 模型（難度/穩定度/可提取度），目標留存 90%；不做梯度下降，208 音規模足夠。
+  const FSRS = { G: 3, S0: { 1: 0.5, 3: 2, 4: 4 }, MASTER_S: 21 };
+  const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+  const P = {
+    weights: {}, streak: {}, best: {}, unlocked: 1, warmup: false,
+    srs: {}, daily: { lastActiveDate: "", streakDays: 0, todayCount: 0, goal: 30 }
+  };
   function initKeys() {
     ALL_KANA.forEach(x => {
       if (!(x.k in P.weights)) P.weights[x.k] = 1;   // 新假名自動補 1
       if (!(x.k in P.streak)) P.streak[x.k] = 0;
+      if (!(x.k in P.srs)) P.srs[x.k] = { D: 5, S: 0, last: 0, reps: 0, lapses: 0 };
     });
   }
-  function save() { store.set({ weights: P.weights, streak: P.streak, best: P.best, unlocked: P.unlocked, warmup: P.warmup }); }
-  function markMiss(k) { P.weights[k] = Math.min(16, (P.weights[k] || 1) * 4); P.streak[k] = 0; save(); }
-  function markHit(k) {
+  function save() {
+    store.set({ weights: P.weights, streak: P.streak, best: P.best, unlocked: P.unlocked,
+      warmup: P.warmup, srs: P.srs, daily: P.daily });
+  }
+
+  /* ----- FSRS-lite 間隔重複排程 ----- */
+  function srsUpdate(k, rating) {   // rating: 1=Again(✗) / 3=Good(✓) / 4=Easy
+    const now = Date.now();
+    const s = P.srs[k] || (P.srs[k] = { D: 5, S: 0, last: 0, reps: 0, lapses: 0 });
+    if (s.reps === 0) {
+      s.D = clamp(6 - (rating - 3), 1, 10);
+      s.S = FSRS.S0[rating] || FSRS.S0[3];
+    } else {
+      const elapsed = (now - s.last) / DAY;
+      const R = Math.exp(Math.log(0.9) * elapsed / Math.max(s.S, 0.01)); // 可提取度
+      if (rating === 1) { s.S = Math.max(0.2, s.S * 0.3); s.D = clamp(s.D + 1, 1, 10); s.lapses++; }
+      else { s.S = s.S * (1 + FSRS.G * (1 - R) * (11 - s.D) / 10); s.D = clamp(s.D - 0.3, 1, 10); } // R 越低成長越大＝合宜困難度
+    }
+    s.last = now;
+    // 失敗（Again）當日重練：due 設為現在，立即回到今日複習佇列；成功則依穩定度排程
+    s.due = rating === 1 ? now : now + s.S * DAY;
+    s.reps++;
+  }
+  function dueOf(k) {
+    const s = P.srs[k];
+    if (!s || s.reps === 0) return Infinity;
+    return s.due != null ? s.due : s.last + s.S * DAY;  // 舊存檔無 due 時回退
+  }
+  function isMastered(k) { const s = P.srs[k]; return !!(s && s.S >= FSRS.MASTER_S); }
+  function masteredCount() { return ALL_KANA.reduce((n, x) => n + (isMastered(x.k) ? 1 : 0), 0); }
+
+  /* ----- 每日目標 / 連續天數（呼應 24 小時鞏固循環） ----- */
+  function dayKey(ts) {
+    const d = new Date(ts), m = String(d.getMonth() + 1).padStart(2, "0"), dd = String(d.getDate()).padStart(2, "0");
+    return d.getFullYear() + "-" + m + "-" + dd;
+  }
+  function bumpDaily() {
+    const t = dayKey(Date.now());
+    if (P.daily.lastActiveDate !== t) {
+      const prev = P.daily.lastActiveDate;
+      const gap = prev ? Math.round((Date.parse(t) - Date.parse(prev)) / DAY) : Infinity;
+      P.daily.streakDays = gap === 1 ? (P.daily.streakDays || 0) + 1 : 1;
+      P.daily.lastActiveDate = t;
+      P.daily.todayCount = 0;
+    }
+    P.daily.todayCount++;
+  }
+
+  function markMiss(k) {
+    P.weights[k] = Math.min(16, (P.weights[k] || 1) * 4); P.streak[k] = 0;
+    srsUpdate(k, 1); bumpDaily(); save();
+  }
+  function markHit(k, easy) {
     P.streak[k] = (P.streak[k] || 0) + 1;
     P.weights[k] = P.streak[k] >= 2 ? 1 : Math.max(1, (P.weights[k] || 1) / 2);
-    save();
+    srsUpdate(k, easy ? 4 : 3); bumpDaily(); save();
   }
 
   /* ---------- 語音（無 speechSynthesis 時靜音降級，絕不拋錯） ---------- */
@@ -295,7 +383,68 @@ a{color:var(--ruri)}
   }
   function kanaSizeClass(k) { return k.length > 1 ? "kana-big multi" : "kana-big"; }
   function unlockedLevels() { return LEVELS.filter(lv => lv.id <= P.unlocked); }
+  function unlockedKana() { const out = []; unlockedLevels().forEach(lv => out.push(...lv.hira, ...lv.kata)); return out; }
+  function rangeKana(loId, hiId, kinds) {   // kinds: "hira" | "kata" | "both"
+    const out = [];
+    LEVELS.forEach(lv => {
+      if (lv.id < loId || lv.id > hiId) return;
+      if (kinds !== "kata") out.push(...lv.hira);
+      if (kinds !== "hira") out.push(...lv.kata);
+    });
+    return out;
+  }
+  function reviewQueue() {   // 已解鎖範圍內到期複習，依最該複習優先，上限 40（CLT 保護工作記憶）
+    const now = Date.now();
+    return unlockedKana().filter(x => dueOf(x.k) <= now)
+      .sort((a, b) => dueOf(a.k) - dueOf(b.k)).slice(0, 40);
+  }
   function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+
+  /* ----- 易混淆假名（Noticing the Gap）：程式資產，非題庫 ----- */
+  const CONFUSE_GROUPS = [
+    ["シ", "ツ", "ソ", "ン"], ["ね", "れ", "わ"], ["は", "ほ", "ま", "も"], ["る", "ろ"],
+    ["ク", "ワ", "タ", "ケ", "フ"], ["コ", "ユ", "ヨ"], ["ぬ", "め", "れ"], ["あ", "お"],
+    ["き", "さ", "ち"], ["ウ", "ワ", "ヲ", "ラ"], ["ナ", "メ", "ヌ", "ス"], ["ア", "マ"]
+  ];
+  const CONFUSABLES = {};
+  CONFUSE_GROUPS.forEach(g => g.forEach(k => { CONFUSABLES[k] = (CONFUSABLES[k] || []).concat(g.filter(o => o !== k)); }));
+  function confusablePool(pool, correctK) {   // pool 中與正解形近者，供考試優先干擾
+    const set = CONFUSABLES[correctK]; if (!set) return null;
+    const hit = pool.filter(o => set.indexOf(o.k) >= 0);
+    return hit.length ? hit : null;
+  }
+  function distractors(pool, correct, n, key, priorityPool) {
+    const c = key(correct);
+    let cand = priorityPool ? shuffle([...new Set(priorityPool.map(key))].filter(v => v !== c)) : [];
+    const rest = shuffle([...new Set(pool.map(key))].filter(v => v !== c && cand.indexOf(v) < 0));
+    cand = cand.concat(rest).slice(0, n);
+    return shuffle(cand.concat([c]));
+  }
+
+  /* ----- 羅馬音容錯比對（產出型輸入）：hepburn 標準 + 常見替代拼法 ----- */
+  const ROMAJI_ALIASES = {
+    si: "shi", ti: "chi", tu: "tsu", hu: "fu", zi: "ji", di: "ji", du: "zu",
+    sya: "sha", syu: "shu", syo: "sho", tya: "cha", tyu: "chu", tyo: "cho",
+    zya: "ja", zyu: "ju", zyo: "jo", jya: "ja", jyu: "ju", jyo: "jo"
+  };
+  function romajiEq(input, answer) {
+    const v = String(input || "").trim().toLowerCase().replace(/[^a-z]/g, "");
+    return !!v && (v === answer || ROMAJI_ALIASES[v] === answer);
+  }
+
+  /* ----- 課後總結 ----- */
+  function sessionSummary(s) {
+    const acc = s.total ? Math.round(s.correct / s.total * 100) : 0;
+    const secs = Math.max(1, Math.round((Date.now() - s.startTs) / 1000));
+    const weak = Object.keys(s.missed || {}).sort((a, b) => s.missed[b] - s.missed[a]).slice(0, 3);
+    const goalTxt = "今日 " + P.daily.todayCount + " / " + P.daily.goal + (P.daily.todayCount >= P.daily.goal ? " ✅ 達標" : "");
+    return '<div class="summary">' +
+      '<div class="srow"><span>正確率</span><b>' + acc + "%</b></div>" +
+      '<div class="srow"><span>用時</span><b>' + secs + " 秒</b></div>" +
+      (weak.length ? '<div class="srow"><span>最弱</span><b>' + weak.map(esc).join("　") + "</b></div>" : "") +
+      '<div class="srow"><span>連續</span><b>🔥 ' + (P.daily.streakDays || 0) + " 天</b></div>" +
+      '<div class="srow"><span>目標</span><b>' + goalTxt + "</b></div></div>";
+  }
 
   let examTimer = null;
   function clearTimers() { if (examTimer) { clearInterval(examTimer); examTimer = null; } TTS.stop(); }
@@ -303,12 +452,14 @@ a{color:var(--ruri)}
 
   /* =====================  首頁  ===================== */
   function homeScreen() {
+    const due = reviewQueue().length;
     const rows = LEVELS.map(lv => {
       const locked = lv.id > P.unlocked;
       const best = P.best[lv.id];
       const count = lv.hira.length + lv.kata.length;
+      const mastered = lv.hira.concat(lv.kata).every(x => isMastered(x.k));
       return '<div class="level-row' + (locked ? " locked" : "") + '" data-lv="' + lv.id + '">' +
-        '<div class="badge">' + (locked ? "🔒" : lv.id) + "</div>" +
+        '<div class="badge">' + (locked ? "🔒" : (mastered ? "✓" : lv.id)) + "</div>" +
         '<div class="info"><div class="name">' + esc(lv.name) + "</div>" +
         '<div class="meta">' + count + " 音 ・ 平假名／片假名／混合／考試</div></div>" +
         (best != null ? '<div class="score">最佳 ' + best + " 題</div>" :
@@ -325,13 +476,33 @@ a{color:var(--ruri)}
           '<span class="weak-chip">' + esc(x.k) + " <b>×" + Math.round(P.weights[x.k]) + "</b></span>").join("") + "</div>"
       : '<div class="progress-note">目前沒有弱項，太棒了！練習中按「✗忘了」的假名會出現在這裡。</div>';
 
+    const goalPct = Math.min(100, Math.round(P.daily.todayCount / P.daily.goal * 100));
     render(
       '<div class="topbar"><div><h1>五十音練習器</h1>' +
-      '<div class="sub">翻牌提取練習 ・ 錯題加權 ・ 十級解鎖</div></div></div>' +
+      '<div class="sub">FSRS 間隔重複 ・ 提取練習 ・ 14 級</div></div>' +
+      '<div class="streak">🔥 ' + (P.daily.streakDays || 0) + ' 天</div></div>' +
+      '<div class="goalbar"><i style="width:' + goalPct + '%"></i><span>今日 ' + P.daily.todayCount + ' / ' + P.daily.goal + ' 題</span></div>' +
       (!TTS.enabled ? '<div class="banner">🔇 此環境不支援語音，已切換靜音模式：考試將不出聽選題。</div>' : "") +
+      (due ? '<div class="banner due">📌 今日尚有 <b>' + due + '</b> 張到期複習，趁記憶正要淡去時複習效果最佳。</div>' : "") +
+      '<div class="actions">' +
+      '<button class="act primary" id="review"' + (due ? "" : " disabled") + '>📅 今日複習<span class="cnt">' + (due ? due + " 張到期" : "已完成 ✅") + '</span></button>' +
+      '<button class="act" id="challenge">🎯 總複習 / 挑戰</button>' +
+      '<button class="act" id="confuse">🔀 易混淆特訓</button>' +
+      (TTS.enabled ? '<button class="act" id="audio">🔊 聽音辨形</button><button class="act" id="shadow">🗣️ 跟讀練習</button>' : "") +
+      "</div>" +
       '<div class="levels">' + rows + "</div>" +
-      '<div class="panel"><h2>弱項榜</h2>' + weakHtml + "</div>"
+      '<div class="panel"><h2>弱項榜 ・ 已精熟 ' + masteredCount() + " / " + ALL_KANA.length + " 音</h2>" + weakHtml + "</div>"
     );
+    const rv = $app.querySelector("#review");
+    rv.addEventListener("click", () => {
+      const q = reviewQueue();
+      if (!q.length) return;
+      practiceScreen({ title: "今日複習", sub: "間隔重複到期", set: q, onBack: homeScreen, rounds: 1 });
+    });
+    $app.querySelector("#challenge").addEventListener("click", challengeSetupScreen);
+    $app.querySelector("#confuse").addEventListener("click", confuseDrill);
+    const ab = $app.querySelector("#audio"); if (ab) ab.addEventListener("click", audioFirstScreen);
+    const sb = $app.querySelector("#shadow"); if (sb) sb.addEventListener("click", shadowScreen);
     $app.querySelectorAll(".level-row:not(.locked)").forEach(el =>
       el.addEventListener("click", () => levelScreen(+el.dataset.lv)));
   }
@@ -359,29 +530,31 @@ a{color:var(--ruri)}
     $app.querySelector("#warm").addEventListener("change", e => { P.warmup = e.target.checked; save(); });
     $app.querySelectorAll("[data-part]").forEach(btn => btn.addEventListener("click", () => {
       const part = +btn.dataset.part;
-      if (part === 4) return examScreen(lv);
+      if (part === 4) return examScreen(levelExamCfg(lv));
       const set = part === 1 ? lv.hira : part === 2 ? lv.kata : lv.hira.concat(lv.kata);
-      if (P.warmup && TTS.enabled) warmupScreen(lv, part, set);
-      else practiceScreen(lv, part, set);
+      const partName = part === 1 ? "平假名" : part === 2 ? "片假名" : "平片混合";
+      const cfg = { title: lv.name, sub: "Part " + part + " " + partName, set, onBack: () => levelScreen(lv.id) };
+      if (P.warmup && TTS.enabled) warmupScreen(cfg); else practiceScreen(cfg);
     }));
   }
 
   /* =====================  熱身（可跳過） ===================== */
-  function warmupScreen(lv, part, set) {
+  function warmupScreen(cfg) {
+    const set = cfg.set;
     render(
       '<div class="topbar"><div><h1>熱身跟讀</h1>' +
-      '<div class="sub">' + esc(lv.name) + " ・ 跟著唸一遍</div></div>" +
+      '<div class="sub">' + esc(cfg.title) + " ・ 跟著唸一遍</div></div>" +
       '<button class="ghost small" id="skip">跳過 →</button></div>' +
       '<div class="warm-grid">' + set.map((x, i) =>
         '<span id="wk' + i + '">' + esc(x.k) + "</span>").join("") + "</div>" +
       '<div class="center progress-note" id="wnote">準備開始…</div>'
     );
     let i = 0, cancelled = false, timeout = null;
-    const done = () => { cancelled = true; if (timeout) clearTimeout(timeout); practiceScreen(lv, part, set); };
-    $app.querySelector("#skip").addEventListener("click", done);
+    const go = () => { cancelled = true; if (timeout) clearTimeout(timeout); practiceScreen(cfg); };
+    $app.querySelector("#skip").addEventListener("click", go);
     (function step() {
       if (cancelled) return;
-      if (i >= set.length) return done();
+      if (i >= set.length) return go();
       $app.querySelectorAll(".warm-grid span").forEach(s => s.classList.remove("now"));
       const el = $app.querySelector("#wk" + i);
       if (el) el.classList.add("now");
@@ -393,38 +566,46 @@ a{color:var(--ruri)}
     })();
   }
 
-  /* =====================  翻牌練習  ===================== */
-  function practiceScreen(lv, part, set) {
-    const total = set.length * 2;   // 每輪出題數（加權抽樣）
-    let done = 0, lastK = null;
-    const partName = part === 1 ? "平假名" : part === 2 ? "片假名" : "平片混合";
+  /* =====================  翻牌練習（通用；支援 audioFront 音先於形） ===================== */
+  function practiceScreen(cfg) {
+    const set = cfg.set;
+    const backTo = cfg.onBack || homeScreen;
+    if (!set || !set.length) return backTo();
+    const total = cfg.total || set.length * (cfg.rounds || 2);
+    const audioFront = cfg.audioFront && TTS.enabled;
+    let done = 0, lastK = null, hits = 0;
+    const missed = {}, startTs = Date.now();
+
+    function head() {
+      return '<div class="topbar"><div><h1>' + esc(cfg.title) + "</h1>" +
+        '<div class="sub">' + (cfg.sub ? esc(cfg.sub) + " ・ " : "") + "第 " + (done + 1) + " / " + total + ' 張</div></div>' +
+        '<button class="ghost small" id="quit">結束</button></div>';
+    }
 
     function nextCard() {
       if (done >= total) return practiceDone();
       const x = weightedPick(set, lastK);
       lastK = x.k;
-      render(
-        '<div class="topbar"><div><h1>' + esc(lv.name) + "</h1>" +
-        '<div class="sub">Part ' + part + " " + partName + " ・ 第 " + (done + 1) + " / " + total + ' 張</div></div>' +
-        '<button class="ghost small" id="quit">結束</button></div>' +
-        '<div class="card-stage">' +
-        '<div class="tazuke" id="card"><span class="' + kanaSizeClass(x.k) + '">' + esc(x.k) + "</span>" +
-        '<div class="tap-hint">先在心裡唸出來，再點卡揭曉</div></div></div>'
-      );
-      $app.querySelector("#quit").addEventListener("click", () => levelScreen(lv.id));
+      const front = audioFront
+        ? '<button class="shu" id="playf">🔊 播放發音</button><div class="tap-hint">聽發音、回想字形，再點卡揭曉</div>'
+        : '<span class="' + kanaSizeClass(x.k) + '">' + esc(x.k) + '</span><div class="tap-hint">先在心裡唸出來，再點卡揭曉</div>';
+      render(head() + '<div class="card-stage"><div class="tazuke" id="card">' + front + "</div></div>");
+      $app.querySelector("#quit").addEventListener("click", backTo);
+      const pf = $app.querySelector("#playf");
+      if (pf) { pf.addEventListener("click", e => { e.stopPropagation(); TTS.speak(x.k); }); TTS.speak(x.k); }
       $app.querySelector("#card").addEventListener("click", () => revealCard(x), { once: true });
     }
 
     function revealCard(x) {
+      const mastered = isMastered(x.k);   // 去中介化：精熟後字源預設收合
       render(
-        '<div class="topbar"><div><h1>' + esc(lv.name) + "</h1>" +
-        '<div class="sub">Part ' + part + " " + partName + " ・ 第 " + (done + 1) + " / " + total + ' 張</div></div>' +
-        '<button class="ghost small" id="quit">結束</button></div>' +
-        '<div class="card-stage">' +
-        '<div class="reveal">' +
+        head() +
+        '<div class="card-stage"><div class="reveal">' +
         '<div class="romaji">' + esc(x.r) + '</div>' +
         '<div class="kana-mid">' + esc(x.k) + '</div>' +
-        '<div class="origin">' + esc(x.origin) + "</div>" +
+        (mastered
+          ? '<button class="linkbtn" id="showorigin">顯示字源</button><div class="origin" id="origin" hidden>' + esc(x.origin) + "</div>"
+          : '<div class="origin">' + esc(x.origin) + "</div>") +
         '<div class="visual" id="vslot"></div>' +
         '<div class="word">' + esc(x.w) + "</div>" +
         '<div class="zh">' + esc(x.zh) + "</div>" +
@@ -436,62 +617,61 @@ a{color:var(--ruri)}
       );
       $app.querySelector("#vslot").replaceWith(visualEl(x));
       TTS.speak(x.k + "。" + speakable(x.w));
-      $app.querySelector("#quit").addEventListener("click", () => levelScreen(lv.id));
+      $app.querySelector("#quit").addEventListener("click", backTo);
+      const so = $app.querySelector("#showorigin");
+      if (so) so.addEventListener("click", () => { so.remove(); const o = $app.querySelector("#origin"); if (o) o.hidden = false; });
       const rp = $app.querySelector("#replay");
       if (rp) rp.addEventListener("click", () => TTS.speak(x.k + "。" + speakable(x.w)));
-      $app.querySelector("#hit").addEventListener("click", () => { markHit(x.k); done++; nextCard(); });
-      $app.querySelector("#miss").addEventListener("click", () => { markMiss(x.k); done++; nextCard(); });
+      $app.querySelector("#hit").addEventListener("click", () => { markHit(x.k); hits++; done++; nextCard(); });
+      $app.querySelector("#miss").addEventListener("click", () => { markMiss(x.k); missed[x.k] = (missed[x.k] || 0) + 1; done++; nextCard(); });
     }
 
     function practiceDone() {
       render(
         '<div class="result-box"><div class="big">🎉</div>' +
-        '<div class="msg">' + esc(lv.name) + " Part " + part + " 練習完成！</div>" +
+        '<div class="msg">' + esc(cfg.title) + " 練習完成！</div>" +
+        sessionSummary({ correct: hits, total: done, missed, startTs }) +
         '<div class="btn-col">' +
         '<button id="again">再練一輪</button>' +
-        '<button class="ghost" id="back">回級別頁</button></div></div>'
+        '<button class="ghost" id="back">返回</button></div></div>'
       );
-      $app.querySelector("#again").addEventListener("click", () => practiceScreen(lv, part, set));
-      $app.querySelector("#back").addEventListener("click", () => levelScreen(lv.id));
+      $app.querySelector("#again").addEventListener("click", () => practiceScreen(cfg));
+      $app.querySelector("#back").addEventListener("click", backTo);
     }
     nextCard();
   }
 
-  /* =====================  考試（Part 4，60 秒） ===================== */
-  function examScreen(lv) {
+  /* =====================  考試（60 秒；通用 config） =====================
+   * config = { title, set, poolAll, bestKey, onBack, onPass?, allowType? }
+   * 題型：聽選 / 讀選 / 平片配對 /（allowType）鍵入羅馬音（產出型）。
+   * 選項干擾優先取形近字（Noticing the Gap）。答錯播正確音、餵入權重與 SRS。
+   * =================================================================== */
+  function examScreen(cfg) {
     const EXAM_SEC = 60;
-    const types = TTS.enabled ? ["listen", "read", "match"] : ["read", "match"]; // 無語音剔除聽選
-    const levelSet = lv.hira.concat(lv.kata);
-    // 干擾選項池：當前級別＋已解鎖級別（T2 泛化）
-    const poolLevels = LEVELS.filter(l => l.id <= Math.max(P.unlocked, lv.id));
-    const poolAll = [];
-    poolLevels.forEach(l => poolAll.push(...l.hira, ...l.kata));
-    const romajiPool = [...new Set(poolAll.map(x => x.r))];
+    const set = cfg.set, poolAll = cfg.poolAll;
+    const types = [];
+    if (TTS.enabled) types.push("listen");        // 無語音剔除聽選
+    types.push("read", "match");
+    if (cfg.allowType) types.push("type");         // 產出型回憶（Pushed Output）
+    const backTo = cfg.onBack || homeScreen;
 
-    let score = 0, answered = 0, remain = EXAM_SEC, lastK = null, locked = false;
-
-    function distractors(pool, correct, n, key) {
-      const c = key(correct);
-      const cand = shuffle([...new Set(pool.map(key))].filter(v => v !== c)).slice(0, n);
-      return shuffle(cand.concat([c]));
-    }
+    let score = 0, answered = 0, remain = EXAM_SEC, lastK = null, locked = false, hits = 0;
+    const missed = {}, startTs = Date.now();
 
     function makeQuestion() {
       const type = types[Math.floor(Math.random() * types.length)];
-      const x = weightedPick(levelSet, lastK);
+      const x = weightedPick(set, lastK);
       lastK = x.k;
-      if (type === "read") {
-        return { type, x, answer: x.r, options: distractors(poolAll, x, 3, o => o.r) };
-      }
+      if (type === "read") return { type, x, answer: x.r, options: distractors(poolAll, x, 3, o => o.r) };
+      if (type === "type") return { type, x, answer: x.r };
       if (type === "listen") {
         const sameType = poolAll.filter(o => o.type === x.type);
-        return { type, x, answer: x.k, options: distractors(sameType, x, 3, o => o.k) };
+        return { type, x, answer: x.k, options: distractors(sameType, x, 3, o => o.k, confusablePool(sameType, x.k)) };
       }
       // match：平片配對（雙向）
       const oppo = poolAll.filter(o => o.type !== x.type);
       const correct = BY_K[x.pair] || { k: x.pair };
-      const cand = shuffle(oppo.filter(o => o.k !== correct.k)).slice(0, 3).map(o => o.k);
-      return { type, x, answer: correct.k, options: shuffle(cand.concat([correct.k])) };
+      return { type, x, answer: correct.k, options: distractors(oppo, correct, 3, o => o.k, confusablePool(oppo, correct.k)) };
     }
 
     function header() {
@@ -501,51 +681,56 @@ a{color:var(--ruri)}
         '<div class="timerbar"><i id="bar" style="width:' + (remain / EXAM_SEC * 100) + '%"></i></div>';
     }
 
+    function grade(right, q, btn) {
+      if (locked) return;
+      locked = true; answered++;
+      if (right) { score++; hits++; markHit(q.x.k); if (btn) btn.classList.add("hit"); }
+      else {
+        markMiss(q.x.k);                 // 答錯餵入權重 + SRS
+        missed[q.x.k] = (missed[q.x.k] || 0) + 1;
+        TTS.speak(q.x.k);                // 答錯播正確音
+        if (btn) btn.classList.add("miss");
+        $app.querySelectorAll(".opts button").forEach(b => { if (b.dataset.v === q.answer) b.classList.add("hit"); });
+        const tin = $app.querySelector("#tin");
+        if (tin) { tin.classList.add("wrong"); tin.value = q.answer; tin.disabled = true; }
+      }
+      const scoreEl = $app.querySelector(".exam-score");
+      if (scoreEl) scoreEl.textContent = "得分 " + score + " 題";
+      setTimeout(() => { if (remain > 0) showQuestion(); else finish(); }, right ? 350 : 950);
+    }
+
     function showQuestion() {
       if (remain <= 0) return finish();
       locked = false;
       const q = makeQuestion();
-      let promptHtml, label;
+      const kCls = q.x.k.length > 1 ? "k multi" : "k";
+      let promptHtml;
       if (q.type === "listen") {
-        label = "聽發音，選出正確的假名";
-        promptHtml = '<div class="label">' + label + '</div>' +
-          '<button class="shu" id="playq">🔊 播放發音</button>';
+        promptHtml = '<div class="label">聽發音，選出正確的假名</div><button class="shu" id="playq">🔊 播放發音</button>';
       } else if (q.type === "read") {
-        label = "這個假名的羅馬音是？";
-        promptHtml = '<div class="label">' + label + '</div><div class="' +
-          (q.x.k.length > 1 ? "k multi" : "k") + '">' + esc(q.x.k) + "</div>";
+        promptHtml = '<div class="label">這個假名的羅馬音是？</div><div class="' + kCls + '">' + esc(q.x.k) + "</div>";
+      } else if (q.type === "type") {
+        promptHtml = '<div class="label">鍵入這個假名的羅馬音</div><div class="' + kCls + '">' + esc(q.x.k) + "</div>";
       } else {
-        label = q.x.type === "hira" ? "選出對應的片假名" : "選出對應的平假名";
-        promptHtml = '<div class="label">' + label + '</div><div class="' +
-          (q.x.k.length > 1 ? "k multi" : "k") + '">' + esc(q.x.k) + "</div>";
+        promptHtml = '<div class="label">' + (q.x.type === "hira" ? "選出對應的片假名" : "選出對應的平假名") +
+          '</div><div class="' + kCls + '">' + esc(q.x.k) + "</div>";
       }
-      render(
-        header() +
-        '<div class="q-prompt">' + promptHtml + "</div>" +
-        '<div class="opts">' + q.options.map(o =>
-          '<button data-v="' + esc(o) + '">' + esc(o) + "</button>").join("") + "</div>"
-      );
+      const answerHtml = q.type === "type"
+        ? '<form class="typebox" id="typef"><input id="tin" type="text" inputmode="latin" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="羅馬音…"><button class="shu" type="submit">送出</button></form>'
+        : '<div class="opts">' + q.options.map(o => '<button data-v="' + esc(o) + '">' + esc(o) + "</button>").join("") + "</div>";
+      render(header() + '<div class="q-prompt">' + promptHtml + "</div>" + answerHtml);
       startTick();
-      $app.querySelector("#quit").addEventListener("click", () => levelScreen(lv.id));
+      $app.querySelector("#quit").addEventListener("click", backTo);
       const pq = $app.querySelector("#playq");
       if (pq) { pq.addEventListener("click", () => TTS.speak(q.x.k)); TTS.speak(q.x.k); }
-      $app.querySelectorAll(".opts button").forEach(btn => btn.addEventListener("click", () => {
-        if (locked) return;
-        locked = true;
-        answered++;
-        const pick = btn.dataset.v;
-        const right = pick === q.answer;
-        if (right) { score++; btn.classList.add("hit"); }
-        else {
-          btn.classList.add("miss");
-          markMiss(q.x.k);                 // 考試答錯同樣餵入權重
-          TTS.speak(q.x.k);                // 答錯播正確音
-          $app.querySelectorAll(".opts button").forEach(b => { if (b.dataset.v === q.answer) b.classList.add("hit"); });
-        }
-        const scoreEl = $app.querySelector(".exam-score");
-        if (scoreEl) scoreEl.textContent = "得分 " + score + " 題";
-        setTimeout(() => { if (remain > 0) showQuestion(); else finish(); }, right ? 350 : 900);
-      }));
+      if (q.type === "type") {
+        const inp = $app.querySelector("#tin");
+        inp.focus();
+        $app.querySelector("#typef").addEventListener("submit", e => { e.preventDefault(); grade(romajiEq(inp.value, q.answer), q, null); });
+      } else {
+        $app.querySelectorAll(".opts button").forEach(btn =>
+          btn.addEventListener("click", () => grade(btn.dataset.v === q.answer, q, btn)));
+      }
     }
 
     function startTick() {
@@ -561,35 +746,130 @@ a{color:var(--ruri)}
 
     function finish() {
       clearTimers();
-      const prevBest = P.best[lv.id];
-      if (prevBest == null || score > prevBest) P.best[lv.id] = score;
-      let unlockMsg = "";
-      if (score >= 12) {
-        const next = lv.id + 1;
-        if (next <= LEVELS.length && P.unlocked < next) {
-          P.unlocked = next;
-          unlockMsg = '<div class="unlock">🎊 已解鎖 ' + esc(LEVELS[next - 1].name) + "！</div>";
-        } else if (next > LEVELS.length) {
-          unlockMsg = '<div class="unlock">🏆 你已完成全部級別！</div>';
-        }
-      }
+      const prevBest = P.best[cfg.bestKey];
+      if (prevBest == null || score > prevBest) P.best[cfg.bestKey] = score;
+      const passHtml = cfg.onPass ? cfg.onPass(score) : "";
       save();
       render(
         '<div class="result-box"><div class="big">' + score + ' 題</div>' +
-        '<div class="msg">' + esc(lv.name) + " 考試結束（作答 " + answered + " 題）<br>" +
-        (score >= 12 ? "通過標準（≥ 12 題）！" : "還差 " + (12 - score) + " 題就能解鎖下一級，加油！") + "</div>" +
-        unlockMsg +
+        '<div class="msg">' + esc(cfg.title) + " 結束（作答 " + answered + " 題）" +
+        (cfg.onPass ? "<br>" + (score >= 12 ? "通過標準（≥ 12 題）！" : "還差 " + (12 - score) + " 題就能解鎖下一級，加油！") : "") + "</div>" +
+        passHtml +
+        sessionSummary({ correct: hits, total: answered, missed, startTs }) +
         '<div class="btn-col">' +
         '<button class="shu" id="again">再考一次</button>' +
-        '<button class="ghost" id="back">回級別頁</button>' +
+        '<button class="ghost" id="back">返回</button>' +
         '<button class="ghost" id="home">回首頁</button></div></div>'
       );
-      $app.querySelector("#again").addEventListener("click", () => examScreen(lv));
-      $app.querySelector("#back").addEventListener("click", () => levelScreen(lv.id));
+      $app.querySelector("#again").addEventListener("click", () => examScreen(cfg));
+      $app.querySelector("#back").addEventListener("click", backTo);
       $app.querySelector("#home").addEventListener("click", homeScreen);
     }
 
     showQuestion();
+  }
+
+  // 各級考試 config：題組=當級、干擾池=已解鎖、通過解鎖下一級（行為與原本一致）
+  function levelExamCfg(lv) {
+    const poolAll = [];
+    LEVELS.filter(l => l.id <= Math.max(P.unlocked, lv.id)).forEach(l => poolAll.push(...l.hira, ...l.kata));
+    return {
+      title: lv.name + " 考試", set: lv.hira.concat(lv.kata), poolAll, bestKey: lv.id,
+      onBack: () => levelScreen(lv.id),
+      onPass: (score) => {
+        if (score >= 12) {
+          const next = lv.id + 1;
+          if (next <= LEVELS.length && P.unlocked < next) { P.unlocked = next; return '<div class="unlock">🎊 已解鎖 ' + esc(LEVELS[next - 1].name) + "！</div>"; }
+          if (next > LEVELS.length) return '<div class="unlock">🏆 你已完成全部級別！</div>';
+        }
+        return "";
+      }
+    };
+  }
+
+  /* =====================  總複習 / 挑戰（跨級交錯） ===================== */
+  function challengeSetupScreen() {
+    const maxLv = P.unlocked;
+    const STAGES = [{ label: "1–5 級", lo: 1, hi: 5 }, { label: "6–10 級", lo: 6, hi: 10 },
+      { label: "11–14 級", lo: 11, hi: 14 }, { label: "全部", lo: 1, hi: maxLv }]
+      .filter(s => s.lo <= maxLv).map(s => ({ label: s.label, lo: s.lo, hi: Math.min(s.hi, maxLv) }));
+    const kindsOpts = [{ label: "平+片", v: "both" }, { label: "只平假", v: "hira" }, { label: "只片假", v: "kata" }];
+    const modeOpts = [{ label: "翻牌複習", v: "flash" }, { label: "60 秒挑戰", v: "exam" }];
+    let rangeIdx = STAGES.length - 1, kindsIdx = 0, modeIdx = 0, input = false;
+
+    function segHtml(id, opts, cur) {
+      return '<div class="seg" data-seg="' + id + '">' + opts.map((o, i) =>
+        '<button class="' + (i === cur ? "on" : "") + '" data-i="' + i + '">' + esc(o.label) + "</button>").join("") + "</div>";
+    }
+    function draw() {
+      render(
+        '<div class="topbar"><div><h1>總複習 / 挑戰</h1><div class="sub">跨級交錯練習（強化編碼變異）</div></div>' +
+        '<button class="ghost small" id="back">← 返回</button></div>' +
+        '<div class="setup">' +
+        '<div class="setlabel">範圍</div>' + segHtml("range", STAGES, rangeIdx) +
+        '<div class="setlabel">假名種類</div>' + segHtml("kinds", kindsOpts, kindsIdx) +
+        '<div class="setlabel">模式</div>' + segHtml("mode", modeOpts, modeIdx) +
+        (modeOpts[modeIdx].v === "exam"
+          ? '<label class="check-row"><input type="checkbox" id="inp"' + (input ? " checked" : "") + ">輸入模式：鍵入羅馬音（產出型回憶，較深編碼）</label>" : "") +
+        '<button class="start" id="start" style="margin-top:18px;width:100%">開始</button></div>'
+      );
+      $app.querySelector("#back").addEventListener("click", homeScreen);
+      $app.querySelectorAll('[data-seg="range"] button').forEach(b => b.addEventListener("click", () => { rangeIdx = +b.dataset.i; draw(); }));
+      $app.querySelectorAll('[data-seg="kinds"] button').forEach(b => b.addEventListener("click", () => { kindsIdx = +b.dataset.i; draw(); }));
+      $app.querySelectorAll('[data-seg="mode"] button').forEach(b => b.addEventListener("click", () => { modeIdx = +b.dataset.i; draw(); }));
+      const inp = $app.querySelector("#inp"); if (inp) inp.addEventListener("change", e => { input = e.target.checked; });
+      $app.querySelector("#start").addEventListener("click", start);
+    }
+    function start() {
+      const rg = STAGES[rangeIdx], kinds = kindsOpts[kindsIdx].v, mode = modeOpts[modeIdx].v;
+      const set = rangeKana(rg.lo, rg.hi, kinds);
+      if (!set.length) return;
+      const title = "挑戰 " + rg.label;
+      if (mode === "flash") return practiceScreen({ title, sub: kindsOpts[kindsIdx].label, set, onBack: challengeSetupScreen, rounds: 1 });
+      examScreen({ title, set, poolAll: rangeKana(rg.lo, rg.hi, "both"),
+        bestKey: "challenge:" + rg.lo + "-" + rg.hi + ":" + kinds + (input ? ":type" : ""),
+        onBack: challengeSetupScreen, allowType: input });
+    }
+    draw();
+  }
+
+  /* =====================  易混淆特訓（Noticing the Gap） ===================== */
+  function confuseDrill() {
+    const pool = unlockedKana();
+    const set = pool.filter(x => CONFUSABLES[x.k]);
+    if (!set.length) return homeScreen();
+    examScreen({ title: "易混淆特訓", set, poolAll: pool, bestKey: "confuse", onBack: homeScreen });
+  }
+
+  /* =====================  聽音辨形（音先於形） ===================== */
+  function audioFirstScreen() {
+    practiceScreen({ title: "聽音辨形", sub: "先聽發音再回想字形", set: unlockedKana(), onBack: homeScreen, audioFront: true, rounds: 1 });
+  }
+
+  /* =====================  跟讀練習（影子跟讀簡化：聽→哼→影子） ===================== */
+  function shadowScreen() {
+    const set = unlockedKana();
+    let i = 0;
+    function show() {
+      if (i >= set.length) return homeScreen();
+      const x = set[i];
+      render(
+        '<div class="topbar"><div><h1>跟讀練習</h1><div class="sub">已解鎖假名 ・ ' + (i + 1) + " / " + set.length + "</div></div>" +
+        '<button class="ghost small" id="quit">結束</button></div>' +
+        '<div class="card-stage"><div class="reveal">' +
+        '<div class="kana-mid" style="font-size:3.4rem">' + esc(x.k) + "</div>" +
+        '<div class="romaji" style="font-size:1.4rem">' + esc(x.r) + "</div>" +
+        '<div class="word">' + esc(x.w) + '</div><div class="zh">' + esc(x.zh) + "</div>" +
+        '<div class="progress-note" style="margin-top:8px">① 聽　② 小聲哼　③ 像影子一樣跟著唸</div>' +
+        '<button class="ghost small replay-btn" id="replay" style="margin-top:10px">🔊 再聽一次</button></div>' +
+        '<div class="grade-btns"><button id="next">下一個 →</button></div></div>'
+      );
+      $app.querySelector("#quit").addEventListener("click", homeScreen);
+      $app.querySelector("#replay").addEventListener("click", () => TTS.speak(x.k + "。" + speakable(x.w)));
+      $app.querySelector("#next").addEventListener("click", () => { i++; show(); });
+      TTS.speak(x.k + "。" + speakable(x.w));
+    }
+    show();
   }
 
   /* =====================  啟動  ===================== */
@@ -600,6 +880,8 @@ a{color:var(--ruri)}
         Object.assign(P.weights, saved.weights || {});
         Object.assign(P.streak, saved.streak || {});
         Object.assign(P.best, saved.best || {});
+        if (saved.srs) Object.assign(P.srs, saved.srs);
+        if (saved.daily) Object.assign(P.daily, saved.daily);
         if (typeof saved.unlocked === "number") P.unlocked = saved.unlocked;
         P.warmup = !!saved.warmup;
       }
