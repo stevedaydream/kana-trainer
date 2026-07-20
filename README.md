@@ -1,0 +1,42 @@
+# 五十音練習器（PWA）
+
+翻牌提取練習 × 錯題加權 × 十級解鎖的五十音練習器。純 HTML/CSS/Vanilla JS，零框架、零建置、零外部 CDN；可安裝為 PWA 離線使用，也可直接雙擊 `index.html`（file://）運作。
+
+## 使用方式
+
+- **本機直接開**：雙擊 `index.html` 即可（file:// 下自動略過 Service Worker，功能完整）。
+- **PWA 安裝**：以任一靜態伺服器託管（例如 `npx serve` 或 GitHub Pages），瀏覽器網址列會出現「安裝」按鈕；安裝後可離線使用。
+
+## 玩法
+
+1. **翻牌練習**（每級 Part 1 平假名 / Part 2 片假名 / Part 3 混合）：亮假名 → 先在心裡唸 → 點卡揭曉（羅馬音＋字源＋圖＋單詞＋播音）→ 自評「✓記得 / ✗忘了」。
+2. **錯題加權**：✗ 出現機率 ×4（上限 16）；✓ 一次減半、連對兩次歸 1。首頁「弱項榜」顯示最弱的假名。
+3. **考試**（Part 4，60 秒）：聽選／讀選／平片配對 三題型隨機，答錯播正確音並餵入權重。答對 ≥ 12 題解鎖下一級。
+4. **熱身**：級別頁可勾選「開始前每字播放跟讀一輪」，可隨時跳過。
+
+## 檔案結構
+
+```
+kana-trainer/
+├─ index.html            # 主程式（UI + 邏輯，不含任何題庫資料）
+├─ data/levels.js        # 題庫外掛檔（唯一資料來源；換題庫只換這個檔）
+├─ img/                  # 配圖（檔名 = 題庫 img 鍵 + .png；缺檔自動退回 SVG/emoji）
+├─ scripts/validate.mjs  # 題庫驗證：node scripts/validate.mjs
+├─ manifest.webmanifest  # PWA manifest
+├─ sw.js                 # Service Worker（app shell 預快取 + 配圖 runtime cache）
+├─ icon.svg              # 應用圖示（img/icon-192.png、img/icon-512.png 為 PNG 版）
+└─ project.md            # 專案規格
+```
+
+## 測試用 URL 參數
+
+- `?unlock=all` — 解鎖全部級別（測試後門）。
+- `?notts=1` — 模擬無語音環境：靜音運作、考試剔除聽選題。
+
+## 題庫驗證
+
+```
+node scripts/validate.mjs
+```
+
+檢查欄位齊全、羅馬音特例（し=shi、ち=chi、つ=tsu、ふ=fu、を=o、ん=n…）、pair 平片雙向對稱、img 鍵全域唯一、每級數量正確，並列出缺圖清單（缺圖可上線，會自動退回）。羅馬音表與級別數量表皆為資料驅動，第二階段（濁音／拗音，11～14 級）擴充時只需補表。

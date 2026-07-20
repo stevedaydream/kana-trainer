@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#1f4788"/>
+  <rect x="72" y="72" width="368" height="368" rx="28" fill="#f7f4ec"/>
+  <g stroke="#c9d4e6" stroke-width="6" stroke-dasharray="18 14">
+    <line x1="256" y1="96" x2="256" y2="416"/>
+    <line x1="96" y1="256" x2="416" y2="256"/>
+  </g>
+  <text x="256" y="352" font-family="'Hiragino Sans','Noto Sans JP',sans-serif" font-size="280" text-anchor="middle" fill="#eb6101">あ</text>
+</svg>

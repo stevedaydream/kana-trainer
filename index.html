@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>五十音練習器</title>
+<meta name="description" content="翻牌提取練習 × 錯題加權 × 十級解鎖的五十音練習器">
+<meta name="theme-color" content="#1f4788">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="img/icon-192.png">
+<style>
+:root{
+  --ruri:#1f4788;      /* 瑠璃紺 */
+  --ruri-light:#3a6bb5;
+  --shu:#eb6101;       /* 朱色 */
+  --sumi:#2b2b2b;      /* 墨色 */
+  --paper:#f7f4ec;
+  --card:#fffdf7;
+  --line:#d8d2c4;
+  --ok:#2e7d32;
+  --ng:#c62828;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{font-size:16px}
+body{
+  font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Noto Sans TC","Yu Gothic","Microsoft JhengHei",sans-serif;
+  background:var(--paper);color:var(--sumi);min-height:100vh;
+}
+#app{max-width:520px;margin:0 auto;padding:16px 16px 48px}
+h1{font-size:1.5rem;color:var(--ruri);letter-spacing:.1em}
+.sub{color:#8a8272;font-size:.85rem;margin-top:4px}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+button{
+  font-family:inherit;font-size:1rem;border:none;border-radius:10px;
+  padding:12px 16px;cursor:pointer;background:var(--ruri);color:#fff;
+  transition:transform .06s, opacity .2s;
+}
+button:active{transform:scale(.97)}
+button.ghost{background:transparent;color:var(--ruri);border:1.5px solid var(--ruri)}
+button.shu{background:var(--shu)}
+button.small{font-size:.85rem;padding:8px 12px;border-radius:8px}
+button:disabled{opacity:.45;cursor:default}
+.banner{
+  background:#fff6e8;border:1px solid #f0d9b0;border-radius:10px;
+  padding:10px 12px;font-size:.85rem;color:#8a6d3b;margin-bottom:14px;
+}
+.banner.err{background:#fdecea;border-color:#f2b8b5;color:var(--ng)}
+/* ---- 級別列表 ---- */
+.levels{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.level-row{
+  display:flex;align-items:center;gap:12px;background:var(--card);
+  border:1px solid var(--line);border-radius:12px;padding:14px;
+  cursor:pointer;box-shadow:0 1px 3px rgba(43,43,43,.06);
+}
+.level-row.locked{opacity:.55;cursor:default}
+.level-row .badge{
+  width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  background:var(--ruri);color:#fff;font-weight:bold;font-size:1.1rem;flex-shrink:0;
+}
+.level-row.locked .badge{background:#a9a292}
+.level-row .info{flex:1}
+.level-row .name{font-weight:600}
+.level-row .meta{font-size:.78rem;color:#8a8272;margin-top:2px}
+.level-row .score{font-size:.85rem;color:var(--shu);font-weight:600;white-space:nowrap}
+/* ---- 弱項榜 ---- */
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:20px}
+.panel h2{font-size:1rem;color:var(--ruri);margin-bottom:10px}
+.weak-list{display:flex;flex-wrap:wrap;gap:8px}
+.weak-chip{
+  display:inline-flex;align-items:center;gap:6px;background:#fdf0e6;border:1px solid #f3cdae;
+  border-radius:999px;padding:6px 12px;font-size:1rem;
+}
+.weak-chip b{color:var(--shu);font-size:.78rem}
+/* ---- 田字格卡片 ---- */
+.card-stage{display:flex;flex-direction:column;align-items:center;gap:16px;margin-top:8px}
+.tazuke{
+  position:relative;width:min(78vw,300px);height:min(78vw,300px);
+  background:var(--card);border:2px solid var(--ruri);border-radius:14px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  box-shadow:0 3px 10px rgba(31,71,136,.12);user-select:none;
+}
+.tazuke::before,.tazuke::after{
+  content:"";position:absolute;background:transparent;pointer-events:none;
+}
+.tazuke::before{left:50%;top:6%;bottom:6%;border-left:1.5px dashed #c9d4e6}
+.tazuke::after{top:50%;left:6%;right:6%;border-top:1.5px dashed #c9d4e6}
+.kana-big{font-size:104px;color:var(--sumi);line-height:1;z-index:1}
+.kana-big.multi{font-size:64px}
+.tap-hint{position:absolute;bottom:10px;left:0;right:0;text-align:center;font-size:.75rem;color:#a9a292}
+/* ---- 揭曉面 ---- */
+.reveal{width:min(78vw,300px);background:var(--card);border:2px solid var(--shu);border-radius:14px;padding:16px;text-align:center}
+.reveal .romaji{font-size:2rem;color:var(--shu);font-weight:700;letter-spacing:.05em}
+.reveal .kana-mid{font-size:2.6rem;margin-top:2px}
+.reveal .origin{font-size:.85rem;color:var(--ruri);margin-top:8px;line-height:1.5}
+.reveal .visual{margin:10px auto;width:96px;height:96px;display:flex;align-items:center;justify-content:center}
+.reveal .visual img,.reveal .visual svg{max-width:96px;max-height:96px}
+.reveal .visual .emoji{font-size:64px;line-height:1}
+.reveal .word{font-size:1.1rem;margin-top:4px}
+.reveal .zh{font-size:.85rem;color:#8a8272;margin-top:2px}
+.grade-btns{display:flex;gap:14px;margin-top:4px}
+.grade-btns button{min-width:120px}
+.progress-note{font-size:.8rem;color:#8a8272}
+/* ---- 考試 ---- */
+.exam-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.exam-score{font-weight:700;color:var(--ruri)}
+.timerbar{height:8px;background:#e5dfd2;border-radius:4px;overflow:hidden;margin-bottom:18px}
+.timerbar i{display:block;height:100%;background:var(--shu);border-radius:4px;transition:width .3s linear}
+.q-prompt{
+  background:var(--card);border:2px solid var(--ruri);border-radius:14px;
+  min-height:130px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;padding:16px;margin-bottom:16px;text-align:center;
+}
+.q-prompt .k{font-size:72px;line-height:1.1}
+.q-prompt .k.multi{font-size:48px}
+.q-prompt .label{font-size:.85rem;color:#8a8272}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opts button{
+  background:var(--card);color:var(--sumi);border:1.5px solid var(--line);
+  font-size:1.5rem;padding:16px 8px;border-radius:12px;
+}
+.opts button.hit{background:#e6f4e6;border-color:var(--ok);color:var(--ok)}
+.opts button.miss{background:#fdecea;border-color:var(--ng);color:var(--ng)}
+.replay-btn{margin:0 auto}
+/* ---- 結果 ---- */
+.result-box{text-align:center;padding:28px 0}
+.result-box .big{font-size:3rem;font-weight:700;color:var(--ruri)}
+.result-box .msg{margin-top:10px;font-size:1.05rem}
+.result-box .unlock{color:var(--shu);font-weight:700;margin-top:8px}
+.btn-col{display:flex;flex-direction:column;gap:10px;margin-top:24px;align-items:center}
+.btn-col button{min-width:220px}
+/* ---- 級別頁 ---- */
+.part-list{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.part-list button{display:flex;justify-content:space-between;align-items:center;background:var(--card);color:var(--sumi);border:1.5px solid var(--line);padding:15px;font-size:1rem}
+.part-list button .tag{font-size:.78rem;color:#fff;background:var(--ruri);border-radius:6px;padding:2px 8px}
+.part-list button.exam .tag{background:var(--shu)}
+.check-row{display:flex;align-items:center;gap:8px;margin-top:16px;font-size:.9rem;color:#5c5647}
+.check-row input{width:18px;height:18px;accent-color:var(--shu)}
+/* ---- 熱身 ---- */
+.warm-grid{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:18px 0}
+.warm-grid span{
+  width:56px;height:56px;display:flex;align-items:center;justify-content:center;
+  background:var(--card);border:1.5px solid var(--line);border-radius:10px;font-size:1.6rem;
+  transition:all .15s;
+}
+.warm-grid span.now{background:var(--ruri);color:#fff;border-color:var(--ruri);transform:scale(1.15)}
+.center{text-align:center}
+a{color:var(--ruri)}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script src="data/levels.js"></script>
+<script>
+"use strict";
+/* =====================================================================
+ * 五十音練習器 主程式
+ * 只透過 window.KANA_DATA 取資料；題庫更換零修改。
+ * =================================================================== */
+(function () {
+  const $app = document.getElementById("app");
+  const params = new URLSearchParams(location.search);
+
+  /* ---------- 題庫載入防護 ---------- */
+  const DATA = (window.KANA_DATA && Array.isArray(window.KANA_DATA.levels) && window.KANA_DATA.levels.length)
+    ? window.KANA_DATA : null;
+  if (!DATA) {
+    $app.innerHTML =
+      '<div class="topbar"><div><h1>五十音練習器</h1></div></div>' +
+      '<div class="banner err"><b>題庫未載入</b><br>' +
+      '找不到 <code>data/levels.js</code> 或其中沒有 <code>window.KANA_DATA</code>。<br>' +
+      '請確認檔案存在後重新整理頁面。</div>';
+    return;
+  }
+  const LEVELS = DATA.levels;
+  const ALL_KANA = [];
+  const BY_K = {};
+  LEVELS.forEach(lv => (lv.hira.concat(lv.kata)).forEach(x => { ALL_KANA.push(x); BY_K[x.k] = x; }));
+
+  /* ---------- 儲存層：window.storage → localStorage → 記憶體 ---------- */
+  const STORE_KEY = "kana_trainer_v1";
+  const store = (function () {
+    try {
+      if (window.storage && typeof window.storage.getItem === "function" && typeof window.storage.setItem === "function") {
+        return {
+          kind: "claude",
+          async get() { try { const v = await window.storage.getItem(STORE_KEY); return v ? JSON.parse(typeof v === "string" ? v : v.value) : null; } catch (e) { return null; } },
+          set(obj) { try { window.storage.setItem(STORE_KEY, JSON.stringify(obj)); } catch (e) {} }
+        };
+      }
+    } catch (e) {}
+    try {
+      const t = "__kt_test__";
+      window.localStorage.setItem(t, "1"); window.localStorage.removeItem(t);
+      return {
+        kind: "local",
+        async get() { try { const v = window.localStorage.getItem(STORE_KEY); return v ? JSON.parse(v) : null; } catch (e) { return null; } },
+        set(obj) { try { window.localStorage.setItem(STORE_KEY, JSON.stringify(obj)); } catch (e) {} }
+      };
+    } catch (e) {}
+    let mem = null;
+    return { kind: "memory", async get() { return mem; }, set(obj) { mem = obj; } };
+  })();
+
+  /* ---------- 進度狀態 ---------- */
+  const P = { weights: {}, streak: {}, best: {}, unlocked: 1, warmup: false };
+  function initKeys() {
+    ALL_KANA.forEach(x => {
+      if (!(x.k in P.weights)) P.weights[x.k] = 1;   // 新假名自動補 1
+      if (!(x.k in P.streak)) P.streak[x.k] = 0;
+    });
+  }
+  function save() { store.set({ weights: P.weights, streak: P.streak, best: P.best, unlocked: P.unlocked, warmup: P.warmup }); }
+  function markMiss(k) { P.weights[k] = Math.min(16, (P.weights[k] || 1) * 4); P.streak[k] = 0; save(); }
+  function markHit(k) {
+    P.streak[k] = (P.streak[k] || 0) + 1;
+    P.weights[k] = P.streak[k] >= 2 ? 1 : Math.max(1, (P.weights[k] || 1) / 2);
+    save();
+  }
+
+  /* ---------- 語音（無 speechSynthesis 時靜音降級，絕不拋錯） ---------- */
+  const TTS = (function () {
+    let ok = false;
+    try { ok = !params.has("notts") && "speechSynthesis" in window && typeof window.SpeechSynthesisUtterance === "function"; } catch (e) { ok = false; }
+    let voice = null;
+    function pickVoice() {
+      try {
+        const vs = window.speechSynthesis.getVoices() || [];
+        voice = vs.find(v => /^ja/i.test(v.lang)) || null;
+      } catch (e) {}
+    }
+    if (ok) {
+      pickVoice();
+      try { window.speechSynthesis.onvoiceschanged = pickVoice; } catch (e) {}
+    }
+    return {
+      enabled: ok,
+      speak(text, rate) {
+        if (!ok || !text) return;
+        try {
+          window.speechSynthesis.cancel();
+          const u = new SpeechSynthesisUtterance(text);
+          u.lang = "ja-JP";
+          if (voice) u.voice = voice;
+          u.rate = rate || 0.85;
+          window.speechSynthesis.speak(u);
+        } catch (e) {}
+      },
+      stop() { if (ok) { try { window.speechSynthesis.cancel(); } catch (e) {} } }
+    };
+  })();
+  const speakable = w => String(w || "").replace(/（[^）]*）/g, "");
+
+  /* ---------- 內建 SVG（程式資產；缺 SVG 退 emoji） ---------- */
+  const SVGS = {
+    asa: '<svg viewBox="0 0 96 96"><rect x="8" y="60" width="80" height="6" fill="#1f4788"/><circle cx="48" cy="58" r="20" fill="#eb6101"/><g stroke="#eb6101" stroke-width="4" stroke-linecap="round"><line x1="48" y1="22" x2="48" y2="10"/><line x1="22" y1="34" x2="14" y2="26"/><line x1="74" y1="34" x2="82" y2="26"/></g></svg>',
+    inu: '<svg viewBox="0 0 96 96"><ellipse cx="48" cy="62" rx="26" ry="20" fill="#c8905c"/><circle cx="48" cy="36" r="18" fill="#c8905c"/><ellipse cx="34" cy="22" rx="7" ry="12" fill="#8a5a30"/><ellipse cx="62" cy="22" rx="7" ry="12" fill="#8a5a30"/><circle cx="42" cy="34" r="2.5" fill="#2b2b2b"/><circle cx="54" cy="34" r="2.5" fill="#2b2b2b"/><ellipse cx="48" cy="42" rx="4" ry="3" fill="#2b2b2b"/></svg>',
+    umi: '<svg viewBox="0 0 96 96"><path d="M4 58 Q16 44 28 58 T52 58 T76 58 T96 58 V88 H4 Z" fill="#3a6bb5"/><path d="M4 70 Q16 58 28 70 T52 70 T76 70 T96 70 V92 H4 Z" fill="#1f4788"/><circle cx="72" cy="26" r="10" fill="#eb6101"/></svg>',
+    eki: '<svg viewBox="0 0 96 96"><rect x="14" y="38" width="68" height="34" rx="4" fill="#1f4788"/><rect x="22" y="46" width="14" height="12" fill="#fffdf7"/><rect x="60" y="46" width="14" height="12" fill="#fffdf7"/><rect x="10" y="72" width="76" height="6" fill="#2b2b2b"/><path d="M14 38 L48 18 L82 38 Z" fill="#eb6101"/></svg>',
+    onigiri: '<svg viewBox="0 0 96 96"><path d="M48 14 Q60 14 74 42 Q84 62 76 72 Q66 80 48 80 Q30 80 20 72 Q12 62 22 42 Q36 14 48 14 Z" fill="#fffdf7" stroke="#d8d2c4" stroke-width="2"/><rect x="36" y="56" width="24" height="22" rx="3" fill="#2b2b2b"/></svg>',
+    aisu: '<svg viewBox="0 0 96 96"><path d="M30 44 L48 88 L66 44 Z" fill="#c8905c"/><circle cx="48" cy="34" r="18" fill="#fde8ef"/><circle cx="36" cy="40" r="10" fill="#fbd0de"/><circle cx="60" cy="40" r="10" fill="#fbd0de"/></svg>',
+    inku: '<svg viewBox="0 0 96 96"><rect x="30" y="40" width="36" height="36" rx="6" fill="#1f4788"/><rect x="38" y="28" width="20" height="12" rx="2" fill="#2b2b2b"/><path d="M70 20 L78 28 L58 48 L50 48 L50 40 Z" fill="#eb6101"/></svg>',
+    uuru: '<svg viewBox="0 0 96 96"><circle cx="48" cy="48" r="28" fill="#e8e0f5"/><g fill="none" stroke="#9b7fd4" stroke-width="3"><path d="M24 40 Q48 28 72 40"/><path d="M22 52 Q48 40 74 52"/><path d="M26 64 Q48 52 70 64"/></g><line x1="70" y1="66" x2="88" y2="80" stroke="#9b7fd4" stroke-width="3"/></svg>',
+    ebi: '<svg viewBox="0 0 96 96"><path d="M22 34 Q48 12 74 34 Q86 46 74 58 Q60 70 44 66" fill="none" stroke="#eb6101" stroke-width="12" stroke-linecap="round"/><path d="M44 66 L30 82 M44 66 L48 84" stroke="#eb6101" stroke-width="5" stroke-linecap="round"/><circle cx="26" cy="34" r="3" fill="#2b2b2b"/><path d="M20 30 L8 20 M22 26 L14 12" stroke="#eb6101" stroke-width="3" stroke-linecap="round"/></svg>',
+    orenji: '<svg viewBox="0 0 96 96"><circle cx="48" cy="54" r="28" fill="#f5a623"/><circle cx="48" cy="54" r="20" fill="#fbc775"/><g stroke="#f5a623" stroke-width="3"><line x1="48" y1="34" x2="48" y2="74"/><line x1="28" y1="54" x2="68" y2="54"/><line x1="34" y1="40" x2="62" y2="68"/><line x1="62" y1="40" x2="34" y2="68"/></g><path d="M48 26 Q56 14 66 18 Q60 28 48 26" fill="#2e7d32"/></svg>'
+  };
+
+  /* 圖片載入優先序：img/{key}.png → 內建 SVG → emoji */
+  function visualEl(x) {
+    const box = document.createElement("div");
+    box.className = "visual";
+    const fallback = () => {
+      if (SVGS[x.img]) box.innerHTML = SVGS[x.img];
+      else box.innerHTML = '<span class="emoji">' + (x.emoji || "❔") + "</span>";
+    };
+    const im = new Image();
+    im.alt = x.zh || "";
+    im.onload = () => { box.innerHTML = ""; box.appendChild(im); };
+    im.onerror = fallback;
+    im.src = "img/" + x.img + ".png";
+    fallback(); // 先放退回內容，圖檔載到再替換
+    return box;
+  }
+
+  /* ---------- 工具 ---------- */
+  const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  function weightedPick(set, excludeK) {
+    let pool = set.filter(x => x.k !== excludeK);
+    if (!pool.length) pool = set;
+    let total = 0;
+    const cum = pool.map(x => (total += (P.weights[x.k] || 1)));
+    const r = Math.random() * total;
+    for (let i = 0; i < pool.length; i++) if (r < cum[i]) return pool[i];
+    return pool[pool.length - 1];
+  }
+  function kanaSizeClass(k) { return k.length > 1 ? "kana-big multi" : "kana-big"; }
+  function unlockedLevels() { return LEVELS.filter(lv => lv.id <= P.unlocked); }
+  function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+
+  let examTimer = null;
+  function clearTimers() { if (examTimer) { clearInterval(examTimer); examTimer = null; } TTS.stop(); }
+  function render(html) { clearTimers(); $app.innerHTML = html; }
+
+  /* =====================  首頁  ===================== */
+  function homeScreen() {
+    const rows = LEVELS.map(lv => {
+      const locked = lv.id > P.unlocked;
+      const best = P.best[lv.id];
+      const count = lv.hira.length + lv.kata.length;
+      return '<div class="level-row' + (locked ? " locked" : "") + '" data-lv="' + lv.id + '">' +
+        '<div class="badge">' + (locked ? "🔒" : lv.id) + "</div>" +
+        '<div class="info"><div class="name">' + esc(lv.name) + "</div>" +
+        '<div class="meta">' + count + " 音 ・ 平假名／片假名／混合／考試</div></div>" +
+        (best != null ? '<div class="score">最佳 ' + best + " 題</div>" :
+          (locked ? '<div class="meta">前一級考試 ≥ 12 題解鎖</div>' : "")) +
+        "</div>";
+    }).join("");
+
+    const weak = ALL_KANA
+      .filter(x => (P.weights[x.k] || 1) > 1)
+      .sort((a, b) => (P.weights[b.k] || 1) - (P.weights[a.k] || 1))
+      .slice(0, 8);
+    const weakHtml = weak.length
+      ? '<div class="weak-list">' + weak.map(x =>
+          '<span class="weak-chip">' + esc(x.k) + " <b>×" + Math.round(P.weights[x.k]) + "</b></span>").join("") + "</div>"
+      : '<div class="progress-note">目前沒有弱項，太棒了！練習中按「✗忘了」的假名會出現在這裡。</div>';
+
+    render(
+      '<div class="topbar"><div><h1>五十音練習器</h1>' +
+      '<div class="sub">翻牌提取練習 ・ 錯題加權 ・ 十級解鎖</div></div></div>' +
+      (!TTS.enabled ? '<div class="banner">🔇 此環境不支援語音，已切換靜音模式：考試將不出聽選題。</div>' : "") +
+      '<div class="levels">' + rows + "</div>" +
+      '<div class="panel"><h2>弱項榜</h2>' + weakHtml + "</div>"
+    );
+    $app.querySelectorAll(".level-row:not(.locked)").forEach(el =>
+      el.addEventListener("click", () => levelScreen(+el.dataset.lv)));
+  }
+
+  /* =====================  級別頁  ===================== */
+  function levelScreen(id) {
+    const lv = LEVELS.find(l => l.id === id);
+    if (!lv) return homeScreen();
+    const best = P.best[id];
+    render(
+      '<div class="topbar"><div><h1>' + esc(lv.name) + "</h1>" +
+      '<div class="sub">' + (best != null ? "考試最佳成績：" + best + " 題" : "尚未通過考試") + "</div></div>" +
+      '<button class="ghost small" id="back">← 返回</button></div>' +
+      '<div class="part-list">' +
+      '<button data-part="1">Part 1 平假名練習 <span class="tag">' + lv.hira.length + ' 音</span></button>' +
+      '<button data-part="2">Part 2 片假名練習 <span class="tag">' + lv.kata.length + ' 音</span></button>' +
+      '<button data-part="3">Part 3 平片混合練習 <span class="tag">' + (lv.hira.length + lv.kata.length) + ' 音</span></button>' +
+      '<button data-part="4" class="exam">Part 4 考試（60 秒） <span class="tag">≥12 題解鎖下一級</span></button>' +
+      "</div>" +
+      '<label class="check-row"><input type="checkbox" id="warm"' +
+      (P.warmup ? " checked" : "") + (TTS.enabled ? "" : " disabled") + ">" +
+      "熱身：練習開始前，每個假名先播放跟讀一輪" + (TTS.enabled ? "" : "（需要語音支援）") + "</label>"
+    );
+    $app.querySelector("#back").addEventListener("click", homeScreen);
+    $app.querySelector("#warm").addEventListener("change", e => { P.warmup = e.target.checked; save(); });
+    $app.querySelectorAll("[data-part]").forEach(btn => btn.addEventListener("click", () => {
+      const part = +btn.dataset.part;
+      if (part === 4) return examScreen(lv);
+      const set = part === 1 ? lv.hira : part === 2 ? lv.kata : lv.hira.concat(lv.kata);
+      if (P.warmup && TTS.enabled) warmupScreen(lv, part, set);
+      else practiceScreen(lv, part, set);
+    }));
+  }
+
+  /* =====================  熱身（可跳過） ===================== */
+  function warmupScreen(lv, part, set) {
+    render(
+      '<div class="topbar"><div><h1>熱身跟讀</h1>' +
+      '<div class="sub">' + esc(lv.name) + " ・ 跟著唸一遍</div></div>" +
+      '<button class="ghost small" id="skip">跳過 →</button></div>' +
+      '<div class="warm-grid">' + set.map((x, i) =>
+        '<span id="wk' + i + '">' + esc(x.k) + "</span>").join("") + "</div>" +
+      '<div class="center progress-note" id="wnote">準備開始…</div>'
+    );
+    let i = 0, cancelled = false, timeout = null;
+    const done = () => { cancelled = true; if (timeout) clearTimeout(timeout); practiceScreen(lv, part, set); };
+    $app.querySelector("#skip").addEventListener("click", done);
+    (function step() {
+      if (cancelled) return;
+      if (i >= set.length) return done();
+      $app.querySelectorAll(".warm-grid span").forEach(s => s.classList.remove("now"));
+      const el = $app.querySelector("#wk" + i);
+      if (el) el.classList.add("now");
+      const note = $app.querySelector("#wnote");
+      if (note) note.textContent = set[i].k + "（" + set[i].r + "）";
+      TTS.speak(set[i].k);
+      i++;
+      timeout = setTimeout(step, 1600);
+    })();
+  }
+
+  /* =====================  翻牌練習  ===================== */
+  function practiceScreen(lv, part, set) {
+    const total = set.length * 2;   // 每輪出題數（加權抽樣）
+    let done = 0, lastK = null;
+    const partName = part === 1 ? "平假名" : part === 2 ? "片假名" : "平片混合";
+
+    function nextCard() {
+      if (done >= total) return practiceDone();
+      const x = weightedPick(set, lastK);
+      lastK = x.k;
+      render(
+        '<div class="topbar"><div><h1>' + esc(lv.name) + "</h1>" +
+        '<div class="sub">Part ' + part + " " + partName + " ・ 第 " + (done + 1) + " / " + total + ' 張</div></div>' +
+        '<button class="ghost small" id="quit">結束</button></div>' +
+        '<div class="card-stage">' +
+        '<div class="tazuke" id="card"><span class="' + kanaSizeClass(x.k) + '">' + esc(x.k) + "</span>" +
+        '<div class="tap-hint">先在心裡唸出來，再點卡揭曉</div></div></div>'
+      );
+      $app.querySelector("#quit").addEventListener("click", () => levelScreen(lv.id));
+      $app.querySelector("#card").addEventListener("click", () => revealCard(x), { once: true });
+    }
+
+    function revealCard(x) {
+      render(
+        '<div class="topbar"><div><h1>' + esc(lv.name) + "</h1>" +
+        '<div class="sub">Part ' + part + " " + partName + " ・ 第 " + (done + 1) + " / " + total + ' 張</div></div>' +
+        '<button class="ghost small" id="quit">結束</button></div>' +
+        '<div class="card-stage">' +
+        '<div class="reveal">' +
+        '<div class="romaji">' + esc(x.r) + '</div>' +
+        '<div class="kana-mid">' + esc(x.k) + '</div>' +
+        '<div class="origin">' + esc(x.origin) + "</div>" +
+        '<div class="visual" id="vslot"></div>' +
+        '<div class="word">' + esc(x.w) + "</div>" +
+        '<div class="zh">' + esc(x.zh) + "</div>" +
+        (TTS.enabled ? '<button class="ghost small replay-btn" id="replay" style="margin-top:10px">🔊 再聽一次</button>' : "") +
+        "</div>" +
+        '<div class="grade-btns">' +
+        '<button class="shu" id="miss">✗ 忘了</button>' +
+        '<button id="hit">✓ 記得</button></div></div>'
+      );
+      $app.querySelector("#vslot").replaceWith(visualEl(x));
+      TTS.speak(x.k + "。" + speakable(x.w));
+      $app.querySelector("#quit").addEventListener("click", () => levelScreen(lv.id));
+      const rp = $app.querySelector("#replay");
+      if (rp) rp.addEventListener("click", () => TTS.speak(x.k + "。" + speakable(x.w)));
+      $app.querySelector("#hit").addEventListener("click", () => { markHit(x.k); done++; nextCard(); });
+      $app.querySelector("#miss").addEventListener("click", () => { markMiss(x.k); done++; nextCard(); });
+    }
+
+    function practiceDone() {
+      render(
+        '<div class="result-box"><div class="big">🎉</div>' +
+        '<div class="msg">' + esc(lv.name) + " Part " + part + " 練習完成！</div>" +
+        '<div class="btn-col">' +
+        '<button id="again">再練一輪</button>' +
+        '<button class="ghost" id="back">回級別頁</button></div></div>'
+      );
+      $app.querySelector("#again").addEventListener("click", () => practiceScreen(lv, part, set));
+      $app.querySelector("#back").addEventListener("click", () => levelScreen(lv.id));
+    }
+    nextCard();
+  }
+
+  /* =====================  考試（Part 4，60 秒） ===================== */
+  function examScreen(lv) {
+    const EXAM_SEC = 60;
+    const types = TTS.enabled ? ["listen", "read", "match"] : ["read", "match"]; // 無語音剔除聽選
+    const levelSet = lv.hira.concat(lv.kata);
+    // 干擾選項池：當前級別＋已解鎖級別（T2 泛化）
+    const poolLevels = LEVELS.filter(l => l.id <= Math.max(P.unlocked, lv.id));
+    const poolAll = [];
+    poolLevels.forEach(l => poolAll.push(...l.hira, ...l.kata));
+    const romajiPool = [...new Set(poolAll.map(x => x.r))];
+
+    let score = 0, answered = 0, remain = EXAM_SEC, lastK = null, locked = false;
+
+    function distractors(pool, correct, n, key) {
+      const c = key(correct);
+      const cand = shuffle([...new Set(pool.map(key))].filter(v => v !== c)).slice(0, n);
+      return shuffle(cand.concat([c]));
+    }
+
+    function makeQuestion() {
+      const type = types[Math.floor(Math.random() * types.length)];
+      const x = weightedPick(levelSet, lastK);
+      lastK = x.k;
+      if (type === "read") {
+        return { type, x, answer: x.r, options: distractors(poolAll, x, 3, o => o.r) };
+      }
+      if (type === "listen") {
+        const sameType = poolAll.filter(o => o.type === x.type);
+        return { type, x, answer: x.k, options: distractors(sameType, x, 3, o => o.k) };
+      }
+      // match：平片配對（雙向）
+      const oppo = poolAll.filter(o => o.type !== x.type);
+      const correct = BY_K[x.pair] || { k: x.pair };
+      const cand = shuffle(oppo.filter(o => o.k !== correct.k)).slice(0, 3).map(o => o.k);
+      return { type, x, answer: correct.k, options: shuffle(cand.concat([correct.k])) };
+    }
+
+    function header() {
+      return '<div class="exam-head"><div class="exam-score">得分 ' + score + " 題</div>" +
+        '<div class="progress-note">剩餘 <b id="sec">' + remain + '</b> 秒</div>' +
+        '<button class="ghost small" id="quit">放棄</button></div>' +
+        '<div class="timerbar"><i id="bar" style="width:' + (remain / EXAM_SEC * 100) + '%"></i></div>';
+    }
+
+    function showQuestion() {
+      if (remain <= 0) return finish();
+      locked = false;
+      const q = makeQuestion();
+      let promptHtml, label;
+      if (q.type === "listen") {
+        label = "聽發音，選出正確的假名";
+        promptHtml = '<div class="label">' + label + '</div>' +
+          '<button class="shu" id="playq">🔊 播放發音</button>';
+      } else if (q.type === "read") {
+        label = "這個假名的羅馬音是？";
+        promptHtml = '<div class="label">' + label + '</div><div class="' +
+          (q.x.k.length > 1 ? "k multi" : "k") + '">' + esc(q.x.k) + "</div>";
+      } else {
+        label = q.x.type === "hira" ? "選出對應的片假名" : "選出對應的平假名";
+        promptHtml = '<div class="label">' + label + '</div><div class="' +
+          (q.x.k.length > 1 ? "k multi" : "k") + '">' + esc(q.x.k) + "</div>";
+      }
+      render(
+        header() +
+        '<div class="q-prompt">' + promptHtml + "</div>" +
+        '<div class="opts">' + q.options.map(o =>
+          '<button data-v="' + esc(o) + '">' + esc(o) + "</button>").join("") + "</div>"
+      );
+      startTick();
+      $app.querySelector("#quit").addEventListener("click", () => levelScreen(lv.id));
+      const pq = $app.querySelector("#playq");
+      if (pq) { pq.addEventListener("click", () => TTS.speak(q.x.k)); TTS.speak(q.x.k); }
+      $app.querySelectorAll(".opts button").forEach(btn => btn.addEventListener("click", () => {
+        if (locked) return;
+        locked = true;
+        answered++;
+        const pick = btn.dataset.v;
+        const right = pick === q.answer;
+        if (right) { score++; btn.classList.add("hit"); }
+        else {
+          btn.classList.add("miss");
+          markMiss(q.x.k);                 // 考試答錯同樣餵入權重
+          TTS.speak(q.x.k);                // 答錯播正確音
+          $app.querySelectorAll(".opts button").forEach(b => { if (b.dataset.v === q.answer) b.classList.add("hit"); });
+        }
+        const scoreEl = $app.querySelector(".exam-score");
+        if (scoreEl) scoreEl.textContent = "得分 " + score + " 題";
+        setTimeout(() => { if (remain > 0) showQuestion(); else finish(); }, right ? 350 : 900);
+      }));
+    }
+
+    function startTick() {
+      if (examTimer) return;
+      examTimer = setInterval(() => {
+        remain--;
+        const s = $app.querySelector("#sec"), b = $app.querySelector("#bar");
+        if (s) s.textContent = remain;
+        if (b) b.style.width = (Math.max(0, remain) / EXAM_SEC * 100) + "%";
+        if (remain <= 0) { clearInterval(examTimer); examTimer = null; finish(); }
+      }, 1000);
+    }
+
+    function finish() {
+      clearTimers();
+      const prevBest = P.best[lv.id];
+      if (prevBest == null || score > prevBest) P.best[lv.id] = score;
+      let unlockMsg = "";
+      if (score >= 12) {
+        const next = lv.id + 1;
+        if (next <= LEVELS.length && P.unlocked < next) {
+          P.unlocked = next;
+          unlockMsg = '<div class="unlock">🎊 已解鎖 ' + esc(LEVELS[next - 1].name) + "！</div>";
+        } else if (next > LEVELS.length) {
+          unlockMsg = '<div class="unlock">🏆 你已完成全部級別！</div>';
+        }
+      }
+      save();
+      render(
+        '<div class="result-box"><div class="big">' + score + ' 題</div>' +
+        '<div class="msg">' + esc(lv.name) + " 考試結束（作答 " + answered + " 題）<br>" +
+        (score >= 12 ? "通過標準（≥ 12 題）！" : "還差 " + (12 - score) + " 題就能解鎖下一級，加油！") + "</div>" +
+        unlockMsg +
+        '<div class="btn-col">' +
+        '<button class="shu" id="again">再考一次</button>' +
+        '<button class="ghost" id="back">回級別頁</button>' +
+        '<button class="ghost" id="home">回首頁</button></div></div>'
+      );
+      $app.querySelector("#again").addEventListener("click", () => examScreen(lv));
+      $app.querySelector("#back").addEventListener("click", () => levelScreen(lv.id));
+      $app.querySelector("#home").addEventListener("click", homeScreen);
+    }
+
+    showQuestion();
+  }
+
+  /* =====================  啟動  ===================== */
+  (async function boot() {
+    try {
+      const saved = await store.get();
+      if (saved && typeof saved === "object") {
+        Object.assign(P.weights, saved.weights || {});
+        Object.assign(P.streak, saved.streak || {});
+        Object.assign(P.best, saved.best || {});
+        if (typeof saved.unlocked === "number") P.unlocked = saved.unlocked;
+        P.warmup = !!saved.warmup;
+      }
+    } catch (e) {}
+    initKeys();
+    if (params.get("unlock") === "all") { P.unlocked = LEVELS.length; }   // 測試後門
+    P.unlocked = Math.min(Math.max(1, P.unlocked), LEVELS.length);
+    homeScreen();
+  })();
+
+  /* ---------- PWA：file:// 開啟時自動略過，不影響運作 ---------- */
+  if ("serviceWorker" in navigator && /^https?:$/.test(location.protocol)) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("sw.js").catch(() => {});
+    });
+  }
+})();
+</script>
+</body>
+</html>
