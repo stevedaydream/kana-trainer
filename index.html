@@ -176,6 +176,16 @@ a{color:var(--ruri)}
 .typebox input:focus{outline:none;border-color:var(--ruri)}
 .typebox input.wrong{border-color:var(--ng);color:var(--ng)}
 .linkbtn{background:none;border:none;color:var(--ruri);text-decoration:underline;font-size:.85rem;padding:6px;margin-top:6px}
+/* ---- 聽音辨形：平/片對照 ---- */
+.pairwrap{display:flex;align-items:center;justify-content:center;gap:14px;margin:2px 0 4px}
+.pairwrap .pcell{display:flex;flex-direction:column;align-items:center}
+.pairwrap .pcell .g{line-height:1}
+.pairwrap .pcell.main .g{font-size:2.8rem;color:var(--sumi)}
+.pairwrap .pcell.sub .g{font-size:1.9rem;color:#a9a292}
+.pairwrap .plabel{font-size:.68rem;margin-top:5px}
+.pairwrap .pcell.main .plabel{color:var(--ruri)}
+.pairwrap .pcell.sub .plabel{color:#b7b0a0}
+.pairwrap .psep{font-size:1.4rem;color:var(--shu)}
 </style>
 </head>
 <body>
@@ -602,7 +612,13 @@ a{color:var(--ruri)}
         head() +
         '<div class="card-stage"><div class="reveal">' +
         '<div class="romaji">' + esc(x.r) + '</div>' +
-        '<div class="kana-mid">' + esc(x.k) + '</div>' +
+        (cfg.pairCompare
+          ? '<div class="pairwrap">' +
+              '<div class="pcell main"><span class="g">' + esc(x.k) + '</span><span class="plabel">' + (cfg.primary === "hira" ? "平假名" : "片假名") + '</span></div>' +
+              '<div class="psep">↔</div>' +
+              '<div class="pcell sub"><span class="g">' + esc(x.pair) + '</span><span class="plabel">' + (cfg.primary === "hira" ? "片假名" : "平假名") + '</span></div>' +
+            '</div>'
+          : '<div class="kana-mid">' + esc(x.k) + '</div>') +
         (mastered
           ? '<button class="linkbtn" id="showorigin">顯示字源</button><div class="origin" id="origin" hidden>' + esc(x.origin) + "</div>"
           : '<div class="origin">' + esc(x.origin) + "</div>") +
@@ -841,9 +857,27 @@ a{color:var(--ruri)}
     examScreen({ title: "易混淆特訓", set, poolAll: pool, bestKey: "confuse", onBack: homeScreen });
   }
 
-  /* =====================  聽音辨形（音先於形） ===================== */
+  /* =====================  聽音辨形（音先於形；平/片對照） ===================== */
   function audioFirstScreen() {
-    practiceScreen({ title: "聽音辨形", sub: "先聽發音再回想字形", set: unlockedKana(), onBack: homeScreen, audioFront: true, rounds: 1 });
+    // 先選主副方向：聽到發音 → 回想主字形，揭曉時同時對照另一套
+    render(
+      '<div class="topbar"><div><h1>聽音辨形</h1><div class="sub">聽發音回想字形，揭曉平/片對照</div></div>' +
+      '<button class="ghost small" id="back">← 返回</button></div>' +
+      '<div class="setup"><div class="setlabel">選擇主／副字種</div>' +
+      '<div class="part-list">' +
+      '<button data-primary="hira">平主片副 <span class="tag">主：平假名</span></button>' +
+      '<button data-primary="kata">片主平副 <span class="tag">主：片假名</span></button>' +
+      "</div></div>"
+    );
+    $app.querySelector("#back").addEventListener("click", homeScreen);
+    $app.querySelectorAll("[data-primary]").forEach(btn => btn.addEventListener("click", () => {
+      const primary = btn.dataset.primary;
+      const set = rangeKana(1, P.unlocked, primary);
+      practiceScreen({
+        title: "聽音辨形", sub: primary === "hira" ? "平主片副" : "片主平副",
+        set, onBack: audioFirstScreen, audioFront: true, pairCompare: true, primary, rounds: 1
+      });
+    }));
   }
 
   /* =====================  跟讀練習（影子跟讀簡化：聽→哼→影子） ===================== */
