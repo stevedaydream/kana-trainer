@@ -47,7 +47,7 @@
 
 ### 每日自動化（Gemini，需自備金鑰）
 
-AI 只在**離線管線**跑、不進瀏覽器（同題庫分離精神）。設定：repo Settings → Secrets → 新增 `GEMINI_API_KEY`（可另設 variable `GEMINI_MODEL`，預設 `gemini-2.0-flash`）。
+AI 只在**離線管線**跑、不進瀏覽器（同題庫分離精神）。設定：repo Settings → Secrets → 新增 `GEMINI_API_KEY`（可另設 variable `GEMINI_MODEL`，預設 `gemini-2.5-flash`）。
 
 - **每日新聞**：`.github/workflows/daily-news.yml`（cron 每日；也可手動觸發選難度/主題）→ `scripts/generate-news.mjs` 讀真新聞→**重製摘要**分級包→驗證→累積進 `data/news.js`（保留最近 60 則）。
 - **讀音辭庫 ×5**：`.github/workflows/wordbank.yml`（手動觸發一次）→ `scripts/generate-wordbank.mjs` 為每音補 5 詞→`data/wordbank.js`。

@@ -1,10 +1,10 @@
 /* =========================================================
  * scripts/lib/gemini.mjs — 最小 Gemini API 呼叫（給離線內容管線用）
  * 金鑰讀環境變數 GEMINI_API_KEY（請放 GitHub Secrets，切勿寫進 repo）。
- * 模型可用 GEMINI_MODEL 覆寫，預設 gemini-2.0-flash。
+ * 模型可用 GEMINI_MODEL 覆寫，預設 gemini-2.5-flash。
  * 回傳：解析後的 JSON 物件（要求 responseMimeType=application/json）。
  * ========================================================= */
-const MODEL = process.env.GEMINI_MODEL || "gemini-2.0-flash";
+const MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
 const ENDPOINT = m => `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`;
 
 export function hasKey() { return !!process.env.GEMINI_API_KEY; }
