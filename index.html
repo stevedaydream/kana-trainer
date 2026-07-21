@@ -251,6 +251,7 @@ a{color:var(--ruri)}
 <body>
 <div id="app"></div>
 <script src="data/levels.js"></script>
+<script src="data/wordbank.js"></script>
 <script src="data/news.js"></script>
 <script>
 "use strict";
@@ -318,6 +319,13 @@ a{color:var(--ruri)}
   };
   const NEWS = (window.KANA_NEWS && Array.isArray(window.KANA_NEWS.packs) && window.KANA_NEWS.packs.length)
     ? window.KANA_NEWS.packs : null;
+  const WORDBANK = (window.KANA_WORDBANK && typeof window.KANA_WORDBANK === "object") ? window.KANA_WORDBANK : {};
+  // 讀音辭庫：某假名若有多詞則隨機抽一個，否則退回題庫單一 w/zh
+  function pickWord(x) {
+    const list = WORDBANK[x.k];
+    if (Array.isArray(list) && list.length) { const c = list[Math.floor(Math.random() * list.length)]; if (c && c.w) return c; }
+    return { w: x.w, zh: x.zh };
+  }
   // 學習強度預設：每日新級數、弱項頻率、隨機考次數、每 N 天一級
   const INTENSITY = {
     high: { id: "high", label: "高強度", levelsPerDay: 2, weakDaily: true, randomPerDay: 2, levelEveryNDays: 1 },
@@ -673,7 +681,7 @@ a{color:var(--ruri)}
     $app.querySelector("#challenge").addEventListener("click", challengeSetupScreen);
     $app.querySelector("#confuse").addEventListener("click", confuseDrill);
     $app.querySelector("#write").addEventListener("click", writeScreen);
-    const nb = $app.querySelector("#news"); if (nb) nb.addEventListener("click", () => newsScreen(newsToday()));
+    const nb = $app.querySelector("#news"); if (nb) nb.addEventListener("click", newsListScreen);
     const ab = $app.querySelector("#audio"); if (ab) ab.addEventListener("click", audioFirstScreen);
     const sb = $app.querySelector("#shadow"); if (sb) sb.addEventListener("click", shadowScreen);
     const wd = $app.querySelector("#weakdrill"); if (wd) wd.addEventListener("click", weakDrill);
@@ -775,6 +783,7 @@ a{color:var(--ruri)}
 
     function revealCard(x) {
       const mastered = isMastered(x.k);   // 去中介化：精熟後字源預設收合
+      const word = pickWord(x);           // 讀音辭庫：每次隨機抽一個單詞
       render(
         head() +
         '<div class="card-stage"><div class="reveal">' +
@@ -790,8 +799,8 @@ a{color:var(--ruri)}
           ? '<button class="linkbtn" id="showorigin">顯示字源</button><div class="origin" id="origin" hidden>' + esc(x.origin) + "</div>"
           : '<div class="origin">' + esc(x.origin) + "</div>") +
         '<div class="visual" id="vslot"></div>' +
-        '<div class="word">' + esc(x.w) + "</div>" +
-        '<div class="zh">' + esc(x.zh) + "</div>" +
+        '<div class="word">' + esc(word.w) + "</div>" +
+        '<div class="zh">' + esc(word.zh) + "</div>" +
         '<div class="reveal-tools">' +
         '<button class="ghost small starbtn" id="star">' + (P.star[x.k] ? "★ 已標記" : "☆ 標記易忘") + "</button>" +
         (TTS.enabled ? '<button class="ghost small" id="replay">🔊 再聽一次</button>' : "") +
@@ -801,7 +810,7 @@ a{color:var(--ruri)}
         '<button id="hit">✓ 記得</button></div></div>'
       );
       $app.querySelector("#vslot").replaceWith(visualEl(x));
-      TTS.speak(x.k + "。" + speakable(x.w));
+      TTS.speak(x.k + "。" + speakable(word.w));
       $app.querySelector("#quit").addEventListener("click", backTo);
       const so = $app.querySelector("#showorigin");
       if (so) so.addEventListener("click", () => { so.remove(); const o = $app.querySelector("#origin"); if (o) o.hidden = false; });
@@ -814,7 +823,7 @@ a{color:var(--ruri)}
       });
       if (P.star[x.k]) st.classList.add("on");
       const rp = $app.querySelector("#replay");
-      if (rp) rp.addEventListener("click", () => TTS.speak(x.k + "。" + speakable(x.w)));
+      if (rp) rp.addEventListener("click", () => TTS.speak(x.k + "。" + speakable(word.w)));
       $app.querySelector("#hit").addEventListener("click", () => { markHit(x.k); hits++; done++; nextCard(); });
       $app.querySelector("#miss").addEventListener("click", () => { markMiss(x.k); missed[x.k] = (missed[x.k] || 0) + 1; done++; nextCard(); });
     }
@@ -1288,6 +1297,31 @@ a{color:var(--ruri)}
 
   /* =====================  每日新聞（聽/聽寫/讀/小考/口說七步） ===================== */
   function newsToday() { return NEWS ? (NEWS.find(p => p.level === P.news.level) || NEWS[0]) : null; }
+
+  // 新聞列表（歷史累積，可重複學習）
+  function newsListScreen() {
+    if (!NEWS) return homeScreen();
+    const packs = NEWS.slice().sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+    const rows = packs.map(p => {
+      const d = newsInput(p.date);
+      const done = [d.listen, d.dictation, d.quizPassed].filter(Boolean).length;
+      return '<button class="level-row news-row" data-id="' + esc(p.id) + '">' +
+        '<div class="badge">📰</div>' +
+        '<div class="info"><div class="name">' + esc(p.title.zh) + "</div>" +
+        '<div class="meta">' + esc(p.date) + " ・ " + esc(p.level) + " ・ " + esc(p.title.ja) + "</div></div>" +
+        '<div class="score">' + (done >= 3 ? "✓ 完成" : done + "/3") + "</div></button>";
+    }).join("");
+    render(
+      '<div class="topbar"><div><h1>📰 每日新聞</h1><div class="sub">共 ' + packs.length + " 則 ・ 可重複學習</div></div>" +
+      '<button class="ghost small" id="back">← 返回</button></div>' +
+      '<div class="levels">' + rows + "</div>"
+    );
+    $app.querySelector("#back").addEventListener("click", homeScreen);
+    $app.querySelectorAll(".news-row").forEach(el => el.addEventListener("click", () => {
+      const p = NEWS.find(x => x.id === el.dataset.id);
+      if (p) newsScreen(p);
+    }));
+  }
   const levelRank = l => ({ N5: 1, N4: 2, N3: 3, N2: 4, N1: 5 }[l] || 1);
   function newsInput(date) { return P.news.inputDone[date] || {}; }
   function markInput(pack, key) {
@@ -1319,7 +1353,7 @@ a{color:var(--ruri)}
       "</div>" +
       '<div class="panel"><div class="progress-note">摘要改寫自：' + esc(pack.source.publisher) + "。" + esc(pack.source.note) + "</div></div>"
     );
-    $app.querySelector("#back").addEventListener("click", homeScreen);
+    $app.querySelector("#back").addEventListener("click", newsListScreen);
     const GO = { listen: newsListen, dictation: newsDictation, read: newsRead, quiz: newsQuiz, speak: newsSpeak };
     $app.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => GO[b.dataset.go](pack)));
   }

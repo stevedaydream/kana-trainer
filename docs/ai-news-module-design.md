@@ -216,11 +216,11 @@ window.KANA_NEWS = {
 |---|---|---|
 | 1 | 內容來源 | ✅ **真新聞 → LLM 重製摘要**（不用原文逐字）；附出處。 |
 | 2 | 口說評分 | ✅ **自評 ＋ 錄音回放**（MediaRecorder，本機）；STT／發音評分列後續。 |
-| 3 | 本輪動作 | ✅ **只定設計，不實作**（無需先設金鑰/後端）。 |
+| 3 | 本輪動作 | ✅ MVP＋管線**已實作**：五技能 UI、內建範例包、`scripts/generate-news.mjs`＋`.github/workflows/daily-news.yml`（Gemini 每日累積）、`scripts/generate-wordbank.mjs`＋辭庫 ×5。 |
 | 3.1 | 學習步驟對齊理論 | ✅ 口說採**分階七步跟讀**（§6）；**輸入先於輸出**閘控＋依難度縮放輸入/輸出比（§5.1）；不另加理論引用章節（步驟本身即對齊）。 |
-| 4 | 內容管線 A/C | ⏳ 待實作時定（建議 A：每日 GitHub Action 離線管線）。 |
-| 5 | 管線用哪個 AI | ⏳ 待實作時定（Gemini／Claude 皆可）。 |
-| 6 | MVP 範圍 | ⏳ 待實作時定（建議先手造範例包＋UI，再接自動化）。 |
+| 4 | 內容管線 A/C | ✅ 採 **A**：每日 GitHub Action 離線管線，累積進 `data/news.js`（保留最近 60 則）。 |
+| 5 | 管線用哪個 AI | ✅ **Gemini**（`GEMINI_API_KEY` secret、`GEMINI_MODEL` 預設 gemini-2.0-flash）。 |
+| 6 | MVP 範圍 | ✅ 已交付；真實每日內容由使用者金鑰在 Action 產出（本環境不呼叫 Gemini）。 |
 
 > 待實作啟動時的建議路線：**先做 MVP**（手造一則範例包 + 讀/聽/聽寫/小考/口說 UI，純離線、零風險）
 > → 確認體驗 → 再接 Phase 2（GitHub Action + LLM 重製摘要管線 + `validate-news`）。

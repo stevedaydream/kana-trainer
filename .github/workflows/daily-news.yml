@@ -1,0 +1,55 @@
+name: Daily news pack (Gemini)
+
+# 每日產生一則分級新聞包並累積進 data/news.js。
+# 需在 repo Settings → Secrets and variables → Actions 新增 GEMINI_API_KEY。
+# 也可到 Actions 分頁手動觸發（workflow_dispatch），可帶 level / topic。
+
+on:
+  schedule:
+    - cron: "0 21 * * *"   # 每日 21:00 UTC（≈台灣 05:00）
+  workflow_dispatch:
+    inputs:
+      level:
+        description: "JLPT 難度 (N5..N1)"
+        default: "N5"
+      topic:
+        description: "主題傾向（可留空）"
+        required: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-news
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Generate news pack
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
+        run: |
+          if [ -z "$GEMINI_API_KEY" ]; then
+            echo "::error::缺少 GEMINI_API_KEY secret，略過。到 Settings → Secrets 新增後即可自動產生。"
+            exit 0
+          fi
+          node scripts/generate-news.mjs \
+            --level="${{ github.event.inputs.level || 'N5' }}" \
+            ${{ github.event.inputs.topic && format('--topic="{0}"', github.event.inputs.topic) || '' }}
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- data/news.js; then
+            echo "無變更。"; exit 0
+          fi
+          git config user.name "kana-news-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/news.js
+          git commit -m "chore(news): daily pack $(date -u +%F)"
+          git push

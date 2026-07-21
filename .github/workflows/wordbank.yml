@@ -1,0 +1,40 @@
+name: Build wordbank ×5 (Gemini)
+
+# 手動觸發：為每個假名補齊 5 個讀音練習單詞，寫進 data/wordbank.js。
+# 需 GEMINI_API_KEY secret。跑一次即可（之後題庫翻牌會隨機抽詞）。
+
+on:
+  workflow_dispatch:
+    inputs:
+      all:
+        description: "重建全部（true）或只補未滿 5 詞者（false）"
+        default: "false"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Generate wordbank
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
+        run: |
+          if [ -z "$GEMINI_API_KEY" ]; then
+            echo "::error::缺少 GEMINI_API_KEY secret。"; exit 1
+          fi
+          node scripts/generate-wordbank.mjs ${{ github.event.inputs.all == 'true' && '--all' || '' }}
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- data/wordbank.js; then echo "無變更。"; exit 0; fi
+          git config user.name "kana-wordbank-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/wordbank.js
+          git commit -m "chore(wordbank): build ×5 reading words"
+          git push
