@@ -186,6 +186,15 @@ a{color:var(--ruri)}
 .pairwrap .pcell.main .plabel{color:var(--ruri)}
 .pairwrap .pcell.sub .plabel{color:#b7b0a0}
 .pairwrap .psep{font-size:1.4rem;color:var(--shu)}
+/* ---- 語音設定 ---- */
+.topright{display:flex;align-items:center;gap:8px}
+.iconbtn{background:var(--card);border:1.5px solid var(--line);color:var(--ruri);border-radius:999px;width:40px;height:40px;padding:0;font-size:1.1rem;display:flex;align-items:center;justify-content:center}
+.settings select{width:100%;font-family:inherit;font-size:1rem;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--card);color:var(--sumi)}
+.settings input[type=range]{width:100%;accent-color:var(--shu);margin-top:4px}
+.settings .rowval{display:flex;justify-content:space-between;align-items:baseline}
+.settings .rowval b{color:var(--ruri);font-variant-numeric:tabular-nums}
+.settings .preview{width:100%;margin-top:20px}
+.settings .note{font-size:.8rem;color:#8a6d3b;background:#fff6e8;border:1px solid #f0d9b0;border-radius:10px;padding:10px 12px;margin-top:10px}
 </style>
 </head>
 <body>
@@ -249,7 +258,8 @@ a{color:var(--ruri)}
   const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
   const P = {
     weights: {}, streak: {}, best: {}, unlocked: 1, warmup: false,
-    srs: {}, daily: { lastActiveDate: "", streakDays: 0, todayCount: 0, goal: 30 }
+    srs: {}, daily: { lastActiveDate: "", streakDays: 0, todayCount: 0, goal: 30 },
+    tts: { persona: "default", voiceURI: "", rate: 0.85, pitch: 1.0, gender: "" }
   };
   function initKeys() {
     ALL_KANA.forEach(x => {
@@ -260,7 +270,7 @@ a{color:var(--ruri)}
   }
   function save() {
     store.set({ weights: P.weights, streak: P.streak, best: P.best, unlocked: P.unlocked,
-      warmup: P.warmup, srs: P.srs, daily: P.daily });
+      warmup: P.warmup, srs: P.srs, daily: P.daily, tts: P.tts });
   }
 
   /* ----- FSRS-lite 間隔重複排程 ----- */
@@ -316,31 +326,62 @@ a{color:var(--ruri)}
     srsUpdate(k, easy ? 4 : 3); bumpDaily(); save();
   }
 
+  /* ---------- 語音人格預設（程式資產）：以音高/語速近似，依裝置語音自動挑性別 ---------- */
+  const PERSONAS = [
+    { id: "default", label: "標準", pitch: 1.0, rate: 0.85, gender: "" },
+    { id: "cute_f", label: "可愛女聲", pitch: 1.6, rate: 1.0, gender: "f" },
+    { id: "sexy_f", label: "性感女聲", pitch: 0.9, rate: 0.78, gender: "f" },
+    { id: "sunny_m", label: "陽光男聲", pitch: 1.15, rate: 1.08, gender: "m" },
+    { id: "deep_m", label: "低沉男聲", pitch: 0.55, rate: 0.85, gender: "m" }
+  ];
+  const FEMALE_RE = /kyoko|o-?ren|haruka|nanami|ayumi|sayaka|mizuki|hana|kanade|female|woman|women|女/i;
+  const MALE_RE = /otoya|ichiro|daichi|takeshi|hattori|male|man|男/i;
+
   /* ---------- 語音（無 speechSynthesis 時靜音降級，絕不拋錯） ---------- */
   const TTS = (function () {
     let ok = false;
     try { ok = !params.has("notts") && "speechSynthesis" in window && typeof window.SpeechSynthesisUtterance === "function"; } catch (e) { ok = false; }
+    const cfg = { voiceURI: "", pitch: 1.0, rate: 0.85, gender: "" };
     let voice = null;
-    function pickVoice() {
-      try {
-        const vs = window.speechSynthesis.getVoices() || [];
-        voice = vs.find(v => /^ja/i.test(v.lang)) || null;
-      } catch (e) {}
+    function jaVoices() {
+      try { return (window.speechSynthesis.getVoices() || []).filter(v => /^ja/i.test(v.lang)); }
+      catch (e) { return []; }
+    }
+    function resolveVoice() {
+      const vs = jaVoices();
+      if (!vs.length) { voice = null; return; }
+      // 1) 使用者手選的語音優先
+      if (cfg.voiceURI) { const hit = vs.find(v => v.voiceURI === cfg.voiceURI); if (hit) { voice = hit; return; } }
+      // 2) 依人格性別偏好挑一個相符語音
+      if (cfg.gender === "f") { const f = vs.find(v => FEMALE_RE.test(v.name) && !MALE_RE.test(v.name)); if (f) { voice = f; return; } }
+      if (cfg.gender === "m") { const m = vs.find(v => MALE_RE.test(v.name) && !FEMALE_RE.test(v.name)); if (m) { voice = m; return; } }
+      // 3) 回退第一個 ja 語音
+      voice = vs[0];
     }
     if (ok) {
-      pickVoice();
-      try { window.speechSynthesis.onvoiceschanged = pickVoice; } catch (e) {}
+      resolveVoice();
+      try { window.speechSynthesis.onvoiceschanged = resolveVoice; } catch (e) {}
     }
     return {
       enabled: ok,
-      speak(text, rate) {
+      voices() { return ok ? jaVoices() : []; },
+      configure(t) {
+        if (!t) return;
+        if (typeof t.voiceURI === "string") cfg.voiceURI = t.voiceURI;
+        if (typeof t.pitch === "number") cfg.pitch = t.pitch;
+        if (typeof t.rate === "number") cfg.rate = t.rate;
+        if (typeof t.gender === "string") cfg.gender = t.gender;
+        if (ok) resolveVoice();
+      },
+      speak(text, rateOverride) {
         if (!ok || !text) return;
         try {
           window.speechSynthesis.cancel();
           const u = new SpeechSynthesisUtterance(text);
           u.lang = "ja-JP";
           if (voice) u.voice = voice;
-          u.rate = rate || 0.85;
+          u.pitch = cfg.pitch;
+          u.rate = rateOverride || cfg.rate;
           window.speechSynthesis.speak(u);
         } catch (e) {}
       },
@@ -490,7 +531,8 @@ a{color:var(--ruri)}
     render(
       '<div class="topbar"><div><h1>五十音練習器</h1>' +
       '<div class="sub">FSRS 間隔重複 ・ 提取練習 ・ 14 級</div></div>' +
-      '<div class="streak">🔥 ' + (P.daily.streakDays || 0) + ' 天</div></div>' +
+      '<div class="topright"><div class="streak">🔥 ' + (P.daily.streakDays || 0) + ' 天</div>' +
+      '<button class="iconbtn" id="settings" title="語音設定">⚙️</button></div></div>' +
       '<div class="goalbar"><i style="width:' + goalPct + '%"></i><span>今日 ' + P.daily.todayCount + ' / ' + P.daily.goal + ' 題</span></div>' +
       (!TTS.enabled ? '<div class="banner">🔇 此環境不支援語音，已切換靜音模式：考試將不出聽選題。</div>' : "") +
       (due ? '<div class="banner due">📌 今日尚有 <b>' + due + '</b> 張到期複習，趁記憶正要淡去時複習效果最佳。</div>' : "") +
@@ -509,6 +551,7 @@ a{color:var(--ruri)}
       if (!q.length) return;
       practiceScreen({ title: "今日複習", sub: "間隔重複到期", set: q, onBack: homeScreen, rounds: 1 });
     });
+    $app.querySelector("#settings").addEventListener("click", voiceSettingsScreen);
     $app.querySelector("#challenge").addEventListener("click", challengeSetupScreen);
     $app.querySelector("#confuse").addEventListener("click", confuseDrill);
     const ab = $app.querySelector("#audio"); if (ab) ab.addEventListener("click", audioFirstScreen);
@@ -857,6 +900,54 @@ a{color:var(--ruri)}
     examScreen({ title: "易混淆特訓", set, poolAll: pool, bestKey: "confuse", onBack: homeScreen });
   }
 
+  /* =====================  語音設定（自選語音 + 人格預設） ===================== */
+  function voiceSettingsScreen() {
+    const voices = TTS.voices();
+    function applyAndSave() { TTS.configure(P.tts); save(); }
+    function draw() {
+      const curP = P.tts.persona;
+      const voiceOpts = '<option value="">自動（依人格挑選）</option>' +
+        voices.map(v => '<option value="' + esc(v.voiceURI) + '"' + (P.tts.voiceURI === v.voiceURI ? " selected" : "") +
+          ">" + esc(v.name) + "</option>").join("");
+      render(
+        '<div class="topbar"><div><h1>語音設定</h1><div class="sub">選語音與人格（音高／語速近似）</div></div>' +
+        '<button class="ghost small" id="back">← 返回</button></div>' +
+        (!TTS.enabled ? '<div class="banner">🔇 此環境未啟用語音，設定暫不發聲。</div>' : "") +
+        '<div class="settings">' +
+        '<div class="setlabel">人格</div>' +
+        '<div class="seg" data-seg="persona">' +
+          PERSONAS.map(p => '<button class="' + (p.id === curP ? "on" : "") + '" data-id="' + p.id + '">' + esc(p.label) + "</button>").join("") +
+          '<button class="' + (curP === "custom" ? "on" : "") + '" data-id="custom">自訂</button>' +
+        "</div>" +
+        '<div class="setlabel">語音</div>' +
+        '<select id="voice"' + (voices.length ? "" : " disabled") + ">" + voiceOpts + "</select>" +
+        (voices.length ? "" : '<div class="note">此裝置未提供日語語音；仍會套用下方音高／語速，實際音色取決於系統可用語音。</div>') +
+        '<div class="setlabel rowval">音高 <b id="pv">' + P.tts.pitch.toFixed(2) + "</b></div>" +
+        '<input type="range" id="pitch" min="0.4" max="1.8" step="0.05" value="' + P.tts.pitch + '">' +
+        '<div class="setlabel rowval">語速 <b id="rv">' + P.tts.rate.toFixed(2) + "</b></div>" +
+        '<input type="range" id="rate" min="0.5" max="1.3" step="0.05" value="' + P.tts.rate + '">' +
+        '<button class="shu preview" id="preview">🔊 試聽</button>' +
+        "</div>"
+      );
+      $app.querySelector("#back").addEventListener("click", homeScreen);
+      $app.querySelectorAll('[data-seg="persona"] button').forEach(b => b.addEventListener("click", () => {
+        const id = b.dataset.id;
+        if (id === "custom") { P.tts.persona = "custom"; applyAndSave(); return draw(); }
+        const p = PERSONAS.find(x => x.id === id);
+        P.tts.persona = p.id; P.tts.pitch = p.pitch; P.tts.rate = p.rate; P.tts.gender = p.gender;
+        P.tts.voiceURI = "";                 // 換人格 → 回自動依性別挑語音
+        applyAndSave(); draw(); TTS.speak("こんにちは");
+      }));
+      const vsel = $app.querySelector("#voice");
+      if (vsel) vsel.addEventListener("change", () => { P.tts.voiceURI = vsel.value; applyAndSave(); TTS.speak("こんにちは"); });
+      const pit = $app.querySelector("#pitch"), rat = $app.querySelector("#rate");
+      pit.addEventListener("input", () => { P.tts.pitch = +pit.value; P.tts.persona = "custom"; $app.querySelector("#pv").textContent = P.tts.pitch.toFixed(2); applyAndSave(); });
+      rat.addEventListener("input", () => { P.tts.rate = +rat.value; P.tts.persona = "custom"; $app.querySelector("#rv").textContent = P.tts.rate.toFixed(2); applyAndSave(); });
+      $app.querySelector("#preview").addEventListener("click", () => TTS.speak("こんにちは。あいうえお。"));
+    }
+    draw();
+  }
+
   /* =====================  聽音辨形（音先於形；平/片對照） ===================== */
   function audioFirstScreen() {
     // 先選主副方向：聽到發音 → 回想主字形，揭曉時同時對照另一套
@@ -918,9 +1009,11 @@ a{color:var(--ruri)}
         if (saved.daily) Object.assign(P.daily, saved.daily);
         if (typeof saved.unlocked === "number") P.unlocked = saved.unlocked;
         P.warmup = !!saved.warmup;
+        if (saved.tts) Object.assign(P.tts, saved.tts);
       }
     } catch (e) {}
     initKeys();
+    TTS.configure(P.tts);   // 套用已存語音設定
     if (params.get("unlock") === "all") { P.unlocked = LEVELS.length; }   // 測試後門
     P.unlocked = Math.min(Math.max(1, P.unlocked), LEVELS.length);
     homeScreen();
