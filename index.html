@@ -195,6 +195,28 @@ a{color:var(--ruri)}
 .settings .rowval b{color:var(--ruri);font-variant-numeric:tabular-nums}
 .settings .preview{width:100%;margin-top:20px}
 .settings .note{font-size:.8rem;color:#8a6d3b;background:#fff6e8;border:1px solid #f0d9b0;border-radius:10px;padding:10px 12px;margin-top:10px}
+.settings .note.err{background:#fdecea;border-color:#f2b8b5;color:var(--ng)}
+.settings .sec-h{font-size:1.05rem;color:var(--ruri);font-weight:700;margin:22px 0 8px;border-top:1px solid var(--line);padding-top:16px}
+.settings .sec-h:first-child{border-top:none;padding-top:0;margin-top:4px}
+.btn-row{display:flex;gap:10px;margin-top:10px}
+.btn-row button{flex:1}
+.settings textarea{width:100%;min-height:64px;margin-top:10px;font-family:inherit;font-size:.85rem;padding:10px;border:1.5px solid var(--line);border-radius:10px;background:var(--card);color:var(--sumi);resize:vertical}
+/* ---- 今日計畫 ---- */
+.panel.plan .task{display:flex;justify-content:space-between;align-items:center;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;margin-top:8px;cursor:pointer;background:var(--paper)}
+.panel.plan .task.ok{opacity:.6;background:#eef4ee;border-color:#cfe3cf;cursor:default}
+.panel.plan .task .tk{font-size:.95rem}
+.panel.plan .task .tp{font-size:.82rem;color:var(--shu);font-variant-numeric:tabular-nums}
+/* ---- 弱項榜擴充 ---- */
+.weak-chip.starred{background:#fff4d6;border-color:#f0d98a}
+.weak-chip i{font-style:normal;color:#a2643a;font-size:.72rem}
+.reveal-tools{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+.starbtn.on{background:#fff4d6;border-color:#e0b34d;color:#a2643a}
+/* ---- 書寫練習 ---- */
+.write-info{display:flex;align-items:center;justify-content:center;gap:14px;margin:6px 0 12px}
+.write-info .wk{font-size:2rem}
+.write-info .wr{font-size:1.2rem;color:var(--shu);font-weight:700}
+.write-stage{display:flex;justify-content:center}
+.write-stage canvas{width:min(86vw,320px);height:min(86vw,320px);background:var(--card);border:2px solid var(--ruri);border-radius:14px;touch-action:none;cursor:crosshair}
 </style>
 </head>
 <body>
@@ -259,7 +281,15 @@ a{color:var(--ruri)}
   const P = {
     weights: {}, streak: {}, best: {}, unlocked: 1, warmup: false,
     srs: {}, daily: { lastActiveDate: "", streakDays: 0, todayCount: 0, goal: 30 },
-    tts: { persona: "default", voiceURI: "", rate: 0.85, pitch: 1.0, gender: "" }
+    tts: { persona: "default", voiceURI: "", rate: 0.85, pitch: 1.0, gender: "" },
+    star: {},
+    plan: { intensity: "normal", casualRandom: true, progress: { date: "", level: 0, weak: 0, random: 0, write: 0 } }
+  };
+  // 學習強度預設：每日新級數、弱項頻率、隨機考次數、每 N 天一級
+  const INTENSITY = {
+    high: { id: "high", label: "高強度", levelsPerDay: 2, weakDaily: true, randomPerDay: 2, levelEveryNDays: 1 },
+    normal: { id: "normal", label: "一般", levelsPerDay: 1, weakDaily: true, randomPerDay: 1, levelEveryNDays: 1 },
+    casual: { id: "casual", label: "休閒", levelsPerDay: 1, weakDaily: "alt", randomPerDay: 1, levelEveryNDays: 2 }
   };
   function initKeys() {
     ALL_KANA.forEach(x => {
@@ -270,7 +300,11 @@ a{color:var(--ruri)}
   }
   function save() {
     store.set({ weights: P.weights, streak: P.streak, best: P.best, unlocked: P.unlocked,
-      warmup: P.warmup, srs: P.srs, daily: P.daily, tts: P.tts });
+      warmup: P.warmup, srs: P.srs, daily: P.daily, tts: P.tts, star: P.star, plan: P.plan });
+  }
+  function snapshot() {   // 供 JSON 備份：完整存檔物件
+    return { weights: P.weights, streak: P.streak, best: P.best, unlocked: P.unlocked,
+      warmup: P.warmup, srs: P.srs, daily: P.daily, tts: P.tts, star: P.star, plan: P.plan };
   }
 
   /* ----- FSRS-lite 間隔重複排程 ----- */
@@ -449,6 +483,34 @@ a{color:var(--ruri)}
     return unlockedKana().filter(x => dueOf(x.k) <= now)
       .sort((a, b) => dueOf(a.k) - dueOf(b.k)).slice(0, 40);
   }
+
+  /* ----- 弱項池（權重 / 忘記次數 / 星號） ----- */
+  function forgetCount(k) { const s = P.srs[k]; return s ? (s.lapses || 0) : 0; }
+  function isWeak(k) { return (P.weights[k] || 1) > 1 || !!P.star[k] || forgetCount(k) > 0; }
+  function weakScore(k) { return (P.star[k] ? 1000 : 0) + (P.weights[k] || 1) * 100 + forgetCount(k) * 10; }
+  function weakPool() { return unlockedKana().filter(x => isWeak(x.k)).sort((a, b) => weakScore(b.k) - weakScore(a.k)); }
+
+  /* ----- 學習強度：今日計畫（App 內提醒） ----- */
+  function planReset() {
+    const t = dayKey(Date.now());
+    if (P.plan.progress.date !== t) { P.plan.progress = { date: t, level: 0, weak: 0, random: 0, write: 0 }; save(); }
+  }
+  function bumpPlan(kind) { planReset(); if (kind && kind in P.plan.progress) { P.plan.progress[kind]++; save(); } }
+  function planTasks() {
+    planReset();
+    const cfg = INTENSITY[P.plan.intensity] || INTENSITY.normal;
+    const epochDay = Math.floor(Date.parse(P.plan.progress.date) / DAY);
+    const levelDay = (epochDay % cfg.levelEveryNDays) === 0;
+    const pr = P.plan.progress;
+    const tasks = [];
+    if (levelDay) tasks.push({ kind: "level", label: "練習 " + cfg.levelsPerDay + " 級", need: cfg.levelsPerDay, done: pr.level });
+    const weakNeed = cfg.weakDaily === true ? 1 : (cfg.weakDaily === "alt" ? (levelDay ? 0 : 1) : 0);
+    if (weakNeed) tasks.push({ kind: "weak", label: "弱項鍛鍊", need: weakNeed, done: pr.weak });
+    let rnd = cfg.randomPerDay;
+    if (P.plan.intensity === "casual" && !P.plan.casualRandom) rnd = 0;
+    if (rnd) tasks.push({ kind: "random", label: "每日隨機考" + (rnd > 1 ? " ×" + rnd : ""), need: rnd, done: pr.random });
+    return tasks;
+  }
   function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
 
   /* ----- 易混淆假名（Noticing the Gap）：程式資產，非題庫 ----- */
@@ -518,32 +580,52 @@ a{color:var(--ruri)}
         "</div>";
     }).join("");
 
-    const weak = ALL_KANA
-      .filter(x => (P.weights[x.k] || 1) > 1)
-      .sort((a, b) => (P.weights[b.k] || 1) - (P.weights[a.k] || 1))
-      .slice(0, 8);
+    // 弱項榜（權重 + 忘記次數 + 星號）
+    const weak = weakPool().slice(0, 8);
     const weakHtml = weak.length
-      ? '<div class="weak-list">' + weak.map(x =>
-          '<span class="weak-chip">' + esc(x.k) + " <b>×" + Math.round(P.weights[x.k]) + "</b></span>").join("") + "</div>"
-      : '<div class="progress-note">目前沒有弱項，太棒了！練習中按「✗忘了」的假名會出現在這裡。</div>';
+      ? '<div class="weak-list">' + weak.map(x => {
+          const f = forgetCount(x.k), w = Math.round(P.weights[x.k] || 1);
+          return '<span class="weak-chip' + (P.star[x.k] ? " starred" : "") + '">' + (P.star[x.k] ? "★" : "") + esc(x.k) +
+            (w > 1 ? ' <b>×' + w + "</b>" : "") + (f > 0 ? ' <i>忘' + f + "</i>" : "") + "</span>";
+        }).join("") + "</div>"
+      : '<div class="progress-note">目前沒有弱項，太棒了！練習中按「✗忘了」或在揭曉卡點「☆ 標記易忘」都會列入這裡。</div>';
+
+    // 今日計畫（依學習強度）
+    const tasks = planTasks();
+    const planHtml = tasks.length
+      ? '<div class="panel plan"><h2>📋 今日計畫（' + esc((INTENSITY[P.plan.intensity] || INTENSITY.normal).label) + '）</h2>' +
+        tasks.map(t => {
+          const ok = t.done >= t.need;
+          return '<div class="task' + (ok ? " ok" : "") + '" data-kind="' + t.kind + '">' +
+            '<span class="tk">' + (ok ? "✅" : "⬜") + " " + esc(t.label) + "</span>" +
+            '<span class="tp">' + t.done + " / " + t.need + "</span></div>";
+        }).join("") +
+        "</div>"
+      : "";
+    const planUndone = tasks.some(t => t.done < t.need);
 
     const goalPct = Math.min(100, Math.round(P.daily.todayCount / P.daily.goal * 100));
     render(
       '<div class="topbar"><div><h1>五十音練習器</h1>' +
       '<div class="sub">FSRS 間隔重複 ・ 提取練習 ・ 14 級</div></div>' +
       '<div class="topright"><div class="streak">🔥 ' + (P.daily.streakDays || 0) + ' 天</div>' +
-      '<button class="iconbtn" id="settings" title="語音設定">⚙️</button></div></div>' +
+      '<button class="iconbtn" id="settings" title="設定">⚙️</button></div></div>' +
       '<div class="goalbar"><i style="width:' + goalPct + '%"></i><span>今日 ' + P.daily.todayCount + ' / ' + P.daily.goal + ' 題</span></div>' +
       (!TTS.enabled ? '<div class="banner">🔇 此環境不支援語音，已切換靜音模式：考試將不出聽選題。</div>' : "") +
-      (due ? '<div class="banner due">📌 今日尚有 <b>' + due + '</b> 張到期複習，趁記憶正要淡去時複習效果最佳。</div>' : "") +
+      (planUndone ? '<div class="banner due">📌 今日計畫尚未完成，點下方任務開始吧！</div>' : "") +
+      planHtml +
       '<div class="actions">' +
       '<button class="act primary" id="review"' + (due ? "" : " disabled") + '>📅 今日複習<span class="cnt">' + (due ? due + " 張到期" : "已完成 ✅") + '</span></button>' +
+      '<button class="act" id="random">🎲 每日隨機考<span class="cnt">60 題 ・ 45 及格</span></button>' +
+      '<button class="act" id="weak">💪 弱項鍛鍊</button>' +
       '<button class="act" id="challenge">🎯 總複習 / 挑戰</button>' +
       '<button class="act" id="confuse">🔀 易混淆特訓</button>' +
+      '<button class="act" id="write">✍️ 書寫練習</button>' +
       (TTS.enabled ? '<button class="act" id="audio">🔊 聽音辨形</button><button class="act" id="shadow">🗣️ 跟讀練習</button>' : "") +
       "</div>" +
       '<div class="levels">' + rows + "</div>" +
-      '<div class="panel"><h2>弱項榜 ・ 已精熟 ' + masteredCount() + " / " + ALL_KANA.length + " 音</h2>" + weakHtml + "</div>"
+      '<div class="panel"><h2>弱項榜 ・ 已精熟 ' + masteredCount() + " / " + ALL_KANA.length + " 音</h2>" + weakHtml +
+        (weak.length ? '<button class="ghost small" id="weakdrill" style="margin-top:10px">💪 開始弱項鍛鍊</button>' : "") + "</div>"
     );
     const rv = $app.querySelector("#review");
     rv.addEventListener("click", () => {
@@ -551,11 +633,18 @@ a{color:var(--ruri)}
       if (!q.length) return;
       practiceScreen({ title: "今日複習", sub: "間隔重複到期", set: q, onBack: homeScreen, rounds: 1 });
     });
-    $app.querySelector("#settings").addEventListener("click", voiceSettingsScreen);
+    $app.querySelector("#settings").addEventListener("click", settingsScreen);
+    $app.querySelector("#random").addEventListener("click", dailyRandomExam);
+    $app.querySelector("#weak").addEventListener("click", weakDrill);
     $app.querySelector("#challenge").addEventListener("click", challengeSetupScreen);
     $app.querySelector("#confuse").addEventListener("click", confuseDrill);
+    $app.querySelector("#write").addEventListener("click", writeScreen);
     const ab = $app.querySelector("#audio"); if (ab) ab.addEventListener("click", audioFirstScreen);
     const sb = $app.querySelector("#shadow"); if (sb) sb.addEventListener("click", shadowScreen);
+    const wd = $app.querySelector("#weakdrill"); if (wd) wd.addEventListener("click", weakDrill);
+    // 今日計畫任務點擊 → 對應模式
+    const TASK_GO = { level: () => { const nx = LEVELS.find(l => l.id <= P.unlocked && !l.hira.concat(l.kata).every(x => isMastered(x.k))) || LEVELS[0]; levelScreen(nx.id); }, weak: weakDrill, random: dailyRandomExam };
+    $app.querySelectorAll(".task").forEach(el => el.addEventListener("click", () => { const go = TASK_GO[el.dataset.kind]; if (go) go(); }));
     $app.querySelectorAll(".level-row:not(.locked)").forEach(el =>
       el.addEventListener("click", () => levelScreen(+el.dataset.lv)));
   }
@@ -586,7 +675,7 @@ a{color:var(--ruri)}
       if (part === 4) return examScreen(levelExamCfg(lv));
       const set = part === 1 ? lv.hira : part === 2 ? lv.kata : lv.hira.concat(lv.kata);
       const partName = part === 1 ? "平假名" : part === 2 ? "片假名" : "平片混合";
-      const cfg = { title: lv.name, sub: "Part " + part + " " + partName, set, onBack: () => levelScreen(lv.id) };
+      const cfg = { title: lv.name, sub: "Part " + part + " " + partName, set, onBack: () => levelScreen(lv.id), planKind: "level" };
       if (P.warmup && TTS.enabled) warmupScreen(cfg); else practiceScreen(cfg);
     }));
   }
@@ -668,8 +757,10 @@ a{color:var(--ruri)}
         '<div class="visual" id="vslot"></div>' +
         '<div class="word">' + esc(x.w) + "</div>" +
         '<div class="zh">' + esc(x.zh) + "</div>" +
-        (TTS.enabled ? '<button class="ghost small replay-btn" id="replay" style="margin-top:10px">🔊 再聽一次</button>' : "") +
-        "</div>" +
+        '<div class="reveal-tools">' +
+        '<button class="ghost small starbtn" id="star">' + (P.star[x.k] ? "★ 已標記" : "☆ 標記易忘") + "</button>" +
+        (TTS.enabled ? '<button class="ghost small" id="replay">🔊 再聽一次</button>' : "") +
+        "</div></div>" +
         '<div class="grade-btns">' +
         '<button class="shu" id="miss">✗ 忘了</button>' +
         '<button id="hit">✓ 記得</button></div></div>'
@@ -679,6 +770,14 @@ a{color:var(--ruri)}
       $app.querySelector("#quit").addEventListener("click", backTo);
       const so = $app.querySelector("#showorigin");
       if (so) so.addEventListener("click", () => { so.remove(); const o = $app.querySelector("#origin"); if (o) o.hidden = false; });
+      const st = $app.querySelector("#star");
+      st.addEventListener("click", () => {
+        if (P.star[x.k]) delete P.star[x.k]; else P.star[x.k] = true;
+        st.textContent = P.star[x.k] ? "★ 已標記" : "☆ 標記易忘";
+        st.classList.toggle("on", !!P.star[x.k]);
+        save();
+      });
+      if (P.star[x.k]) st.classList.add("on");
       const rp = $app.querySelector("#replay");
       if (rp) rp.addEventListener("click", () => TTS.speak(x.k + "。" + speakable(x.w)));
       $app.querySelector("#hit").addEventListener("click", () => { markHit(x.k); hits++; done++; nextCard(); });
@@ -686,6 +785,7 @@ a{color:var(--ruri)}
     }
 
     function practiceDone() {
+      if (cfg.planKind) bumpPlan(cfg.planKind);
       render(
         '<div class="result-box"><div class="big">🎉</div>' +
         '<div class="msg">' + esc(cfg.title) + " 練習完成！</div>" +
@@ -707,6 +807,8 @@ a{color:var(--ruri)}
    * =================================================================== */
   function examScreen(cfg) {
     const EXAM_SEC = 60;
+    const countMode = typeof cfg.qTotal === "number";   // 題數模式（如每日隨機 60 題）；否則 60 秒計時
+    const passN = cfg.passN != null ? cfg.passN : 12;
     const set = cfg.set, poolAll = cfg.poolAll;
     const types = [];
     if (TTS.enabled) types.push("listen");        // 無語音剔除聽選
@@ -716,6 +818,8 @@ a{color:var(--ruri)}
 
     let score = 0, answered = 0, remain = EXAM_SEC, lastK = null, locked = false, hits = 0;
     const missed = {}, startTs = Date.now();
+    const timeUp = () => !countMode && remain <= 0;
+    const finished = () => countMode ? answered >= cfg.qTotal : remain <= 0;
 
     function makeQuestion() {
       const type = types[Math.floor(Math.random() * types.length)];
@@ -734,10 +838,13 @@ a{color:var(--ruri)}
     }
 
     function header() {
-      return '<div class="exam-head"><div class="exam-score">得分 ' + score + " 題</div>" +
-        '<div class="progress-note">剩餘 <b id="sec">' + remain + '</b> 秒</div>' +
+      const right = countMode
+        ? '<div class="progress-note">第 <b>' + Math.min(answered + 1, cfg.qTotal) + "</b> / " + cfg.qTotal + " 題</div>"
+        : '<div class="progress-note">剩餘 <b id="sec">' + remain + '</b> 秒</div>';
+      const barW = countMode ? (answered / cfg.qTotal * 100) : (remain / EXAM_SEC * 100);
+      return '<div class="exam-head"><div class="exam-score">得分 ' + score + " 題</div>" + right +
         '<button class="ghost small" id="quit">放棄</button></div>' +
-        '<div class="timerbar"><i id="bar" style="width:' + (remain / EXAM_SEC * 100) + '%"></i></div>';
+        '<div class="timerbar"><i id="bar" style="width:' + barW + '%"></i></div>';
     }
 
     function grade(right, q, btn) {
@@ -755,11 +862,12 @@ a{color:var(--ruri)}
       }
       const scoreEl = $app.querySelector(".exam-score");
       if (scoreEl) scoreEl.textContent = "得分 " + score + " 題";
-      setTimeout(() => { if (remain > 0) showQuestion(); else finish(); }, right ? 350 : 950);
+      if (countMode) { const b = $app.querySelector("#bar"); if (b) b.style.width = (answered / cfg.qTotal * 100) + "%"; }
+      setTimeout(() => { if (finished()) finish(); else showQuestion(); }, right ? 350 : 950);
     }
 
     function showQuestion() {
-      if (remain <= 0) return finish();
+      if (finished()) return finish();
       locked = false;
       const q = makeQuestion();
       const kCls = q.x.k.length > 1 ? "k multi" : "k";
@@ -793,7 +901,7 @@ a{color:var(--ruri)}
     }
 
     function startTick() {
-      if (examTimer) return;
+      if (countMode || examTimer) return;   // 題數模式不計時
       examTimer = setInterval(() => {
         remain--;
         const s = $app.querySelector("#sec"), b = $app.querySelector("#bar");
@@ -808,11 +916,14 @@ a{color:var(--ruri)}
       const prevBest = P.best[cfg.bestKey];
       if (prevBest == null || score > prevBest) P.best[cfg.bestKey] = score;
       const passHtml = cfg.onPass ? cfg.onPass(score) : "";
+      if (cfg.planKind) bumpPlan(cfg.planKind);
       save();
+      const passLine = cfg.onPass
+        ? "<br>" + (score >= 12 ? "通過標準（≥ 12 題）！" : "還差 " + (12 - score) + " 題就能解鎖下一級，加油！")
+        : (countMode ? "<br>" + (score >= passN ? "🎉 通過！（≥ " + passN + " 題）" : "未達標準（需 ≥ " + passN + " 題），再挑戰一次！") : "");
       render(
         '<div class="result-box"><div class="big">' + score + ' 題</div>' +
-        '<div class="msg">' + esc(cfg.title) + " 結束（作答 " + answered + " 題）" +
-        (cfg.onPass ? "<br>" + (score >= 12 ? "通過標準（≥ 12 題）！" : "還差 " + (12 - score) + " 題就能解鎖下一級，加油！") : "") + "</div>" +
+        '<div class="msg">' + esc(cfg.title) + " 結束（作答 " + answered + " 題）" + passLine + "</div>" +
         passHtml +
         sessionSummary({ correct: hits, total: answered, missed, startTs }) +
         '<div class="btn-col">' +
@@ -900,20 +1011,67 @@ a{color:var(--ruri)}
     examScreen({ title: "易混淆特訓", set, poolAll: pool, bestKey: "confuse", onBack: homeScreen });
   }
 
-  /* =====================  語音設定（自選語音 + 人格預設） ===================== */
-  function voiceSettingsScreen() {
+  /* =====================  弱項鍛鍊（權重 / 忘記次數 / 星號池） ===================== */
+  function weakDrill() {
+    const set = weakPool();
+    if (!set.length) return homeScreen();
+    practiceScreen({ title: "弱項鍛鍊", sub: "依權重・忘記次數・星號加權", set, onBack: homeScreen, rounds: 1, planKind: "weak" });
+  }
+
+  /* =====================  每日隨機考（已解鎖隨機 60 題，≥45 及格） ===================== */
+  function dailyRandomExam() {
+    const pool = unlockedKana();
+    examScreen({ title: "每日隨機考", set: pool, poolAll: pool, qTotal: 60, passN: 45, bestKey: "daily-random", onBack: homeScreen, planKind: "random" });
+  }
+
+  /* =====================  設定中心（學習強度 / 語音 / 備份還原） ===================== */
+  function importSaved(obj) {   // 併入外部存檔（與 boot 相同邏輯）
+    if (!obj || typeof obj !== "object" || (!obj.srs && !obj.weights && typeof obj.unlocked !== "number")) return false;
+    if (obj.weights) P.weights = obj.weights;
+    if (obj.streak) P.streak = obj.streak;
+    if (obj.best) P.best = obj.best;
+    if (obj.srs) P.srs = obj.srs;
+    if (obj.star) P.star = obj.star;
+    if (obj.daily) Object.assign(P.daily, obj.daily);
+    if (obj.tts) Object.assign(P.tts, obj.tts);
+    if (obj.plan) { Object.assign(P.plan, obj.plan); if (obj.plan.progress) Object.assign(P.plan.progress, obj.plan.progress); }
+    if (typeof obj.unlocked === "number") P.unlocked = Math.min(Math.max(1, obj.unlocked), LEVELS.length);
+    if (typeof obj.warmup === "boolean") P.warmup = obj.warmup;
+    initKeys(); TTS.configure(P.tts); save();
+    return true;
+  }
+  function downloadJSON(filename, text) {
+    try {
+      const url = URL.createObjectURL(new Blob([text], { type: "application/json" }));
+      const a = document.createElement("a"); a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000); return true;
+    } catch (e) { return false; }
+  }
+
+  function settingsScreen() {
     const voices = TTS.voices();
-    function applyAndSave() { TTS.configure(P.tts); save(); }
+    function applyVoice() { TTS.configure(P.tts); save(); }
+    const setNote = (id, msg, err) => { const n = $app.querySelector(id); if (n) { n.textContent = msg; n.className = "note" + (err ? " err" : ""); } };
     function draw() {
-      const curP = P.tts.persona;
+      const curP = P.tts.persona, inten = P.plan.intensity;
       const voiceOpts = '<option value="">自動（依人格挑選）</option>' +
-        voices.map(v => '<option value="' + esc(v.voiceURI) + '"' + (P.tts.voiceURI === v.voiceURI ? " selected" : "") +
-          ">" + esc(v.name) + "</option>").join("");
+        voices.map(v => '<option value="' + esc(v.voiceURI) + '"' + (P.tts.voiceURI === v.voiceURI ? " selected" : "") + ">" + esc(v.name) + "</option>").join("");
       render(
-        '<div class="topbar"><div><h1>語音設定</h1><div class="sub">選語音與人格（音高／語速近似）</div></div>' +
+        '<div class="topbar"><div><h1>設定</h1><div class="sub">學習強度 ・ 語音 ・ 備份還原</div></div>' +
         '<button class="ghost small" id="back">← 返回</button></div>' +
-        (!TTS.enabled ? '<div class="banner">🔇 此環境未啟用語音，設定暫不發聲。</div>' : "") +
         '<div class="settings">' +
+        // ---- 學習強度 ----
+        '<div class="sec-h">🎯 學習強度</div>' +
+        '<div class="seg" data-seg="inten">' +
+          Object.values(INTENSITY).map(it => '<button class="' + (it.id === inten ? "on" : "") + '" data-id="' + it.id + '">' + esc(it.label) + "</button>").join("") +
+        "</div>" +
+        '<div class="note">' + intensityDesc(inten) + "</div>" +
+        (inten === "casual"
+          ? '<label class="check-row"><input type="checkbox" id="casualrnd"' + (P.plan.casualRandom ? " checked" : "") + ">休閒模式仍要每日隨機考</label>" : "") +
+        // ---- 語音 ----
+        '<div class="sec-h">🔊 語音</div>' +
+        (!TTS.enabled ? '<div class="banner">🔇 此環境未啟用語音，設定暫不發聲。</div>' : "") +
         '<div class="setlabel">人格</div>' +
         '<div class="seg" data-seg="persona">' +
           PERSONAS.map(p => '<button class="' + (p.id === curP ? "on" : "") + '" data-id="' + p.id + '">' + esc(p.label) + "</button>").join("") +
@@ -921,31 +1079,75 @@ a{color:var(--ruri)}
         "</div>" +
         '<div class="setlabel">語音</div>' +
         '<select id="voice"' + (voices.length ? "" : " disabled") + ">" + voiceOpts + "</select>" +
-        (voices.length ? "" : '<div class="note">此裝置未提供日語語音；仍會套用下方音高／語速，實際音色取決於系統可用語音。</div>') +
+        (voices.length ? "" : '<div class="note">此裝置未提供日語語音；仍會套用下方音高／語速。</div>') +
         '<div class="setlabel rowval">音高 <b id="pv">' + P.tts.pitch.toFixed(2) + "</b></div>" +
         '<input type="range" id="pitch" min="0.4" max="1.8" step="0.05" value="' + P.tts.pitch + '">' +
         '<div class="setlabel rowval">語速 <b id="rv">' + P.tts.rate.toFixed(2) + "</b></div>" +
         '<input type="range" id="rate" min="0.5" max="1.3" step="0.05" value="' + P.tts.rate + '">' +
         '<button class="shu preview" id="preview">🔊 試聽</button>' +
+        // ---- 備份還原 ----
+        '<div class="sec-h">💾 備份還原</div>' +
+        '<div class="note">進度僅存在本機。跨瀏覽器或未來 APK 之間，請用下方匯出/匯入 JSON 手動搬遷。</div>' +
+        '<div class="btn-row"><button id="export">⬇️ 匯出進度</button><button class="ghost" id="copy">📋 複製</button></div>' +
+        '<div class="btn-row"><button class="ghost" id="importbtn">⬆️ 從檔案匯入</button></div>' +
+        '<input type="file" id="importfile" accept="application/json,.json" hidden>' +
+        '<textarea id="pastebox" placeholder="或在此貼上進度 JSON…"></textarea>' +
+        '<button class="ghost" id="pasteimport" style="width:100%">從貼上內容還原</button>' +
+        '<div class="note" id="bknote"></div>' +
         "</div>"
       );
       $app.querySelector("#back").addEventListener("click", homeScreen);
+      // 學習強度
+      $app.querySelectorAll('[data-seg="inten"] button').forEach(b => b.addEventListener("click", () => {
+        P.plan.intensity = b.dataset.id; save(); draw();
+      }));
+      const cr = $app.querySelector("#casualrnd");
+      if (cr) cr.addEventListener("change", () => { P.plan.casualRandom = cr.checked; save(); });
+      // 語音
       $app.querySelectorAll('[data-seg="persona"] button').forEach(b => b.addEventListener("click", () => {
         const id = b.dataset.id;
-        if (id === "custom") { P.tts.persona = "custom"; applyAndSave(); return draw(); }
+        if (id === "custom") { P.tts.persona = "custom"; applyVoice(); return draw(); }
         const p = PERSONAS.find(x => x.id === id);
-        P.tts.persona = p.id; P.tts.pitch = p.pitch; P.tts.rate = p.rate; P.tts.gender = p.gender;
-        P.tts.voiceURI = "";                 // 換人格 → 回自動依性別挑語音
-        applyAndSave(); draw(); TTS.speak("こんにちは");
+        P.tts.persona = p.id; P.tts.pitch = p.pitch; P.tts.rate = p.rate; P.tts.gender = p.gender; P.tts.voiceURI = "";
+        applyVoice(); draw(); TTS.speak("こんにちは");
       }));
       const vsel = $app.querySelector("#voice");
-      if (vsel) vsel.addEventListener("change", () => { P.tts.voiceURI = vsel.value; applyAndSave(); TTS.speak("こんにちは"); });
+      if (vsel) vsel.addEventListener("change", () => { P.tts.voiceURI = vsel.value; applyVoice(); TTS.speak("こんにちは"); });
       const pit = $app.querySelector("#pitch"), rat = $app.querySelector("#rate");
-      pit.addEventListener("input", () => { P.tts.pitch = +pit.value; P.tts.persona = "custom"; $app.querySelector("#pv").textContent = P.tts.pitch.toFixed(2); applyAndSave(); });
-      rat.addEventListener("input", () => { P.tts.rate = +rat.value; P.tts.persona = "custom"; $app.querySelector("#rv").textContent = P.tts.rate.toFixed(2); applyAndSave(); });
+      pit.addEventListener("input", () => { P.tts.pitch = +pit.value; P.tts.persona = "custom"; $app.querySelector("#pv").textContent = P.tts.pitch.toFixed(2); applyVoice(); });
+      rat.addEventListener("input", () => { P.tts.rate = +rat.value; P.tts.persona = "custom"; $app.querySelector("#rv").textContent = P.tts.rate.toFixed(2); applyVoice(); });
       $app.querySelector("#preview").addEventListener("click", () => TTS.speak("こんにちは。あいうえお。"));
+      // 備份還原
+      const exportText = () => JSON.stringify(snapshot());
+      $app.querySelector("#export").addEventListener("click", () => {
+        const ok = downloadJSON("kana-progress-" + dayKey(Date.now()) + ".json", exportText());
+        setNote("#bknote", ok ? "已匯出 JSON 檔。" : "此環境無法下載，請改用「複製」。", !ok);
+      });
+      $app.querySelector("#copy").addEventListener("click", async () => {
+        try { await navigator.clipboard.writeText(exportText()); setNote("#bknote", "已複製進度 JSON 到剪貼簿。"); }
+        catch (e) { const t = $app.querySelector("#pastebox"); t.value = exportText(); t.select(); setNote("#bknote", "已填入下方文字框，請手動複製。"); }
+      });
+      $app.querySelector("#importbtn").addEventListener("click", () => $app.querySelector("#importfile").click());
+      $app.querySelector("#importfile").addEventListener("change", e => {
+        const f = e.target.files && e.target.files[0]; if (!f) return;
+        const r = new FileReader();
+        r.onload = () => { tryImport(String(r.result)); };
+        r.onerror = () => setNote("#bknote", "讀取檔案失敗。", true);
+        r.readAsText(f);
+      });
+      $app.querySelector("#pasteimport").addEventListener("click", () => tryImport($app.querySelector("#pastebox").value));
+      function tryImport(text) {
+        let obj; try { obj = JSON.parse(text); } catch (e) { return setNote("#bknote", "匯入失敗：JSON 格式錯誤。", true); }
+        if (!importSaved(obj)) return setNote("#bknote", "匯入失敗：不是有效的進度檔。", true);
+        homeScreen();
+      }
     }
     draw();
+  }
+  function intensityDesc(id) {
+    if (id === "high") return "每天 2 級 ＋ 弱項鍛鍊 ＋ 每日隨機考 ×2。";
+    if (id === "casual") return "每 2 天 1 級（與弱項交錯）＋ 每日隨機考（可取消）。";
+    return "每天 1 級 ＋ 弱項鍛鍊 ＋ 每日隨機考 ×1。";
   }
 
   /* =====================  聽音辨形（音先於形；平/片對照） ===================== */
@@ -997,6 +1199,57 @@ a{color:var(--ruri)}
     show();
   }
 
+  /* =====================  書寫練習（田字格 canvas 描寫；無辨識） ===================== */
+  function writeScreen() {
+    const set = unlockedKana();
+    if (!set.length) return homeScreen();
+    let i = 0, counted = false;
+    function show() {
+      if (i >= set.length) { render('<div class="result-box"><div class="big">✍️</div><div class="msg">書寫練習完成！</div>' +
+        '<div class="btn-col"><button id="again">再寫一輪</button><button class="ghost" id="back">回首頁</button></div></div>');
+        $app.querySelector("#again").addEventListener("click", () => { i = 0; counted = false; show(); });
+        $app.querySelector("#back").addEventListener("click", homeScreen); return; }
+      const x = set[i];
+      render(
+        '<div class="topbar"><div><h1>書寫練習</h1><div class="sub">田字格描寫 ・ ' + (i + 1) + " / " + set.length + "</div></div>" +
+        '<button class="ghost small" id="quit">結束</button></div>' +
+        '<div class="write-info"><span class="wk">' + esc(x.k) + '</span><span class="wr">' + esc(x.r) + "</span>" +
+        (TTS.enabled ? '<button class="ghost small" id="wplay">🔊</button>' : "") + "</div>" +
+        '<div class="write-stage"><canvas id="pad" width="320" height="320"></canvas></div>' +
+        '<div class="grade-btns"><button class="shu" id="clear">清除</button><button id="next">完成 →</button></div>'
+      );
+      $app.querySelector("#quit").addEventListener("click", homeScreen);
+      const wp = $app.querySelector("#wplay"); if (wp) wp.addEventListener("click", () => TTS.speak(x.k));
+      TTS.speak(x.k);
+      const cv = $app.querySelector("#pad"), ctx = cv.getContext("2d");
+      function paintGuide() {
+        ctx.clearRect(0, 0, cv.width, cv.height);
+        // 田字格
+        ctx.strokeStyle = "#e0dccf"; ctx.lineWidth = 1;
+        ctx.strokeRect(6, 6, cv.width - 12, cv.height - 12);
+        ctx.save(); ctx.setLineDash([8, 8]); ctx.strokeStyle = "#c9d4e6";
+        ctx.beginPath(); ctx.moveTo(cv.width / 2, 8); ctx.lineTo(cv.width / 2, cv.height - 8);
+        ctx.moveTo(8, cv.height / 2); ctx.lineTo(cv.width - 8, cv.height / 2); ctx.stroke(); ctx.restore();
+        // 描紅字（淡）
+        ctx.fillStyle = "#eadfae"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        ctx.font = (x.k.length > 1 ? 170 : 230) + 'px "Hiragino Sans","Noto Sans JP",sans-serif';
+        ctx.fillText(x.k, cv.width / 2, cv.height / 2 + 10);
+      }
+      paintGuide();
+      ctx.lineCap = "round"; ctx.lineJoin = "round";
+      let drawing = false;
+      const pos = e => { const r = cv.getBoundingClientRect(); const p = e.touches ? e.touches[0] : e; return { x: (p.clientX - r.left) * cv.width / r.width, y: (p.clientY - r.top) * cv.height / r.height }; };
+      const start = e => { e.preventDefault(); drawing = true; const p = pos(e); ctx.strokeStyle = "#1f4788"; ctx.lineWidth = 12; ctx.beginPath(); ctx.moveTo(p.x, p.y); };
+      const move = e => { if (!drawing) return; e.preventDefault(); const p = pos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); };
+      const end = () => { drawing = false; };
+      cv.addEventListener("pointerdown", start); cv.addEventListener("pointermove", move);
+      window.addEventListener("pointerup", end);
+      $app.querySelector("#clear").addEventListener("click", paintGuide);
+      $app.querySelector("#next").addEventListener("click", () => { if (!counted) { bumpPlan("write"); counted = true; } i++; show(); });
+    }
+    show();
+  }
+
   /* =====================  啟動  ===================== */
   (async function boot() {
     try {
@@ -1010,6 +1263,8 @@ a{color:var(--ruri)}
         if (typeof saved.unlocked === "number") P.unlocked = saved.unlocked;
         P.warmup = !!saved.warmup;
         if (saved.tts) Object.assign(P.tts, saved.tts);
+        if (saved.star) Object.assign(P.star, saved.star);
+        if (saved.plan) { Object.assign(P.plan, saved.plan); if (saved.plan.progress) Object.assign(P.plan.progress, saved.plan.progress); }
       }
     } catch (e) {}
     initKeys();
