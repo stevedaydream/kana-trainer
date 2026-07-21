@@ -4,11 +4,12 @@
  * img/*.png 配圖採 runtime cache（缺檔不影響，主程式會退回 SVG/emoji）。
  * 更新題庫或程式後，調高 VERSION 即可讓所有用戶端換新快取。
  * ========================================================= */
-const VERSION = "kana-trainer-v6";
+const VERSION = "kana-trainer-v7";
 const SHELL = [
   ".",
   "index.html",
   "data/levels.js",
+  "data/news.js",
   "manifest.webmanifest",
   "icon.svg",
   "img/icon-192.png",

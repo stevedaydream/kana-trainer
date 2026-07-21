@@ -217,11 +217,41 @@ a{color:var(--ruri)}
 .write-info .wr{font-size:1.2rem;color:var(--shu);font-weight:700}
 .write-stage{display:flex;justify-content:center}
 .write-stage canvas{width:min(86vw,320px);height:min(86vw,320px);background:var(--card);border:2px solid var(--ruri);border-radius:14px;touch-action:none;cursor:crosshair}
+/* ---- 每日新聞 ---- */
+.news-title{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+.news-title .nt-ja{font-size:1.3rem;font-weight:700;color:var(--sumi)}
+.news-title .nt-furi{font-size:.8rem;color:#a9a292;margin-top:2px}
+.news-title .nt-zh{font-size:.95rem;color:var(--ruri);margin-top:4px}
+.part-list .done{color:var(--ok);font-weight:700}
+.part-list .tag.lock{background:#a9a292}
+.news-reveal{text-align:center}
+.n-ja{font-size:1.15rem;line-height:1.6;color:var(--sumi)}
+.n-furi{font-size:.8rem;color:#a9a292;margin-top:2px}
+.n-zh{font-size:.92rem;color:var(--ruri);margin-top:4px}
+.n-en{font-size:.82rem;color:#8a8272;margin-top:2px}
+.n-link{font-size:.8rem;color:var(--shu);margin-top:3px}
+.read-body{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
+.rd-para{padding:8px 0;border-bottom:1px dashed #ece6d8}
+.toggles{margin-bottom:12px}
+.vocab-row{display:flex;gap:8px;align-items:baseline;padding:8px 4px;border-bottom:1px dashed #ece6d8;cursor:pointer}
+.vocab-row .vw{font-weight:700;min-width:64px}
+.vocab-row .vr{font-size:.8rem;color:#a9a292;min-width:80px}
+.vocab-row .vz{font-size:.9rem;color:var(--ruri)}
+.vocab-row .vz i{font-style:normal;color:#b7b0a0;font-size:.72rem}
+.gram-row{padding:8px 4px;border-bottom:1px dashed #ece6d8}
+.sp-body,.sp-line{text-align:center}
+.sp-line{padding:8px 0;border-bottom:1px dashed #ece6d8}
+.rec-box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;text-align:center;display:flex;flex-direction:column;gap:10px}
+.stepper{display:flex;gap:6px;margin-bottom:12px}
+.stepper span{flex:1;height:6px;border-radius:3px;background:#e5dfd2}
+.stepper span.past{background:var(--ruri-light)}
+.stepper span.now{background:var(--shu)}
 </style>
 </head>
 <body>
 <div id="app"></div>
 <script src="data/levels.js"></script>
+<script src="data/news.js"></script>
 <script>
 "use strict";
 /* =====================================================================
@@ -283,8 +313,11 @@ a{color:var(--ruri)}
     srs: {}, daily: { lastActiveDate: "", streakDays: 0, todayCount: 0, goal: 30 },
     tts: { persona: "default", voiceURI: "", rate: 0.85, pitch: 1.0, gender: "" },
     star: {},
-    plan: { intensity: "normal", casualRandom: true, progress: { date: "", level: 0, weak: 0, random: 0, write: 0 } }
+    plan: { intensity: "normal", casualRandom: true, progress: { date: "", level: 0, weak: 0, random: 0, write: 0 } },
+    news: { level: "N5", furigana: true, doneDays: {}, quizBest: {}, inputDone: {} }
   };
+  const NEWS = (window.KANA_NEWS && Array.isArray(window.KANA_NEWS.packs) && window.KANA_NEWS.packs.length)
+    ? window.KANA_NEWS.packs : null;
   // 學習強度預設：每日新級數、弱項頻率、隨機考次數、每 N 天一級
   const INTENSITY = {
     high: { id: "high", label: "高強度", levelsPerDay: 2, weakDaily: true, randomPerDay: 2, levelEveryNDays: 1 },
@@ -300,11 +333,11 @@ a{color:var(--ruri)}
   }
   function save() {
     store.set({ weights: P.weights, streak: P.streak, best: P.best, unlocked: P.unlocked,
-      warmup: P.warmup, srs: P.srs, daily: P.daily, tts: P.tts, star: P.star, plan: P.plan });
+      warmup: P.warmup, srs: P.srs, daily: P.daily, tts: P.tts, star: P.star, plan: P.plan, news: P.news });
   }
   function snapshot() {   // 供 JSON 備份：完整存檔物件
     return { weights: P.weights, streak: P.streak, best: P.best, unlocked: P.unlocked,
-      warmup: P.warmup, srs: P.srs, daily: P.daily, tts: P.tts, star: P.star, plan: P.plan };
+      warmup: P.warmup, srs: P.srs, daily: P.daily, tts: P.tts, star: P.star, plan: P.plan, news: P.news };
   }
 
   /* ----- FSRS-lite 間隔重複排程 ----- */
@@ -621,6 +654,7 @@ a{color:var(--ruri)}
       '<button class="act" id="challenge">🎯 總複習 / 挑戰</button>' +
       '<button class="act" id="confuse">🔀 易混淆特訓</button>' +
       '<button class="act" id="write">✍️ 書寫練習</button>' +
+      (NEWS ? '<button class="act" id="news">📰 每日新聞<span class="cnt">聽・讀・說</span></button>' : "") +
       (TTS.enabled ? '<button class="act" id="audio">🔊 聽音辨形</button><button class="act" id="shadow">🗣️ 跟讀練習</button>' : "") +
       "</div>" +
       '<div class="levels">' + rows + "</div>" +
@@ -639,6 +673,7 @@ a{color:var(--ruri)}
     $app.querySelector("#challenge").addEventListener("click", challengeSetupScreen);
     $app.querySelector("#confuse").addEventListener("click", confuseDrill);
     $app.querySelector("#write").addEventListener("click", writeScreen);
+    const nb = $app.querySelector("#news"); if (nb) nb.addEventListener("click", () => newsScreen(newsToday()));
     const ab = $app.querySelector("#audio"); if (ab) ab.addEventListener("click", audioFirstScreen);
     const sb = $app.querySelector("#shadow"); if (sb) sb.addEventListener("click", shadowScreen);
     const wd = $app.querySelector("#weakdrill"); if (wd) wd.addEventListener("click", weakDrill);
@@ -1035,6 +1070,7 @@ a{color:var(--ruri)}
     if (obj.daily) Object.assign(P.daily, obj.daily);
     if (obj.tts) Object.assign(P.tts, obj.tts);
     if (obj.plan) { Object.assign(P.plan, obj.plan); if (obj.plan.progress) Object.assign(P.plan.progress, obj.plan.progress); }
+    if (obj.news) Object.assign(P.news, obj.news);
     if (typeof obj.unlocked === "number") P.unlocked = Math.min(Math.max(1, obj.unlocked), LEVELS.length);
     if (typeof obj.warmup === "boolean") P.warmup = obj.warmup;
     initKeys(); TTS.configure(P.tts); save();
@@ -1250,6 +1286,259 @@ a{color:var(--ruri)}
     show();
   }
 
+  /* =====================  每日新聞（聽/聽寫/讀/小考/口說七步） ===================== */
+  function newsToday() { return NEWS ? (NEWS.find(p => p.level === P.news.level) || NEWS[0]) : null; }
+  const levelRank = l => ({ N5: 1, N4: 2, N3: 3, N2: 4, N1: 5 }[l] || 1);
+  function newsInput(date) { return P.news.inputDone[date] || {}; }
+  function markInput(pack, key) {
+    const d = P.news.inputDone[pack.date] || (P.news.inputDone[pack.date] = {});
+    d[key] = true; save();
+  }
+  function inputMastered(pack) { const d = newsInput(pack.date); return !!(d.listen && d.dictation && d.quizPassed); }
+  function speakUnlocked(pack) { return inputMastered(pack) || levelRank(pack.level) >= 3; }  // N3+ 或輸入達標
+  const normJa = s => String(s || "").replace(/[\s、。，．,.!！?？「」『』・]/g, "");
+
+  function newsScreen(pack) {
+    if (!pack) return homeScreen();
+    const d = newsInput(pack.date);
+    const tick = ok => ok ? ' <span class="done">✓</span>' : "";
+    const qb = P.news.quizBest[pack.date];
+    render(
+      '<div class="topbar"><div><h1>📰 每日新聞</h1><div class="sub">' + esc(pack.date) + " ・ " + esc(pack.level) + "</div></div>" +
+      '<button class="ghost small" id="back">← 返回</button></div>' +
+      '<div class="news-title"><div class="nt-ja">' + esc(pack.title.ja) + "</div>" +
+      (P.news.furigana ? '<div class="nt-furi">' + esc(pack.title.furigana) + "</div>" : "") +
+      '<div class="nt-zh">' + esc(pack.title.zh) + "</div></div>" +
+      '<div class="banner">📥 建議順序：聽 → 聽寫 → 讀（含小考）→ 口說。口說的「脫稿」需先完成輸入才解鎖。</div>' +
+      '<div class="part-list">' +
+      '<button data-go="listen">📻 聽力' + tick(d.listen) + ' <span class="tag">' + pack.summary.length + ' 句</span></button>' +
+      '<button data-go="dictation">✍️ 聽寫' + tick(d.dictation) + ' <span class="tag">' + pack.dictation.length + ' 句</span></button>' +
+      '<button data-go="read">📖 閱讀（單字・文法）</button>' +
+      '<button data-go="quiz" class="exam">📝 小考 5 題' + tick(d.quizPassed) + (qb != null ? ' <span class="tag">最佳 ' + qb + "/5</span>" : ' <span class="tag">≥3 及格</span>') + "</button>" +
+      '<button data-go="speak">🗣️ 口說（七步跟讀）' + (speakUnlocked(pack) ? "" : ' <span class="tag lock">🔒 脫稿</span>') + "</button>" +
+      "</div>" +
+      '<div class="panel"><div class="progress-note">摘要改寫自：' + esc(pack.source.publisher) + "。" + esc(pack.source.note) + "</div></div>"
+    );
+    $app.querySelector("#back").addEventListener("click", homeScreen);
+    const GO = { listen: newsListen, dictation: newsDictation, read: newsRead, quiz: newsQuiz, speak: newsSpeak };
+    $app.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => GO[b.dataset.go](pack)));
+  }
+
+  function newsListen(pack) {
+    const set = pack.summary; let i = 0;
+    function show() {
+      if (i >= set.length) { markInput(pack, "listen"); return newsScreen(pack); }
+      const s = set[i];
+      render(
+        '<div class="topbar"><div><h1>📻 聽力</h1><div class="sub">第 ' + (i + 1) + " / " + set.length + " 句</div></div>" +
+        '<button class="ghost small" id="quit">結束</button></div>' +
+        '<div class="card-stage"><div class="tazuke" id="card"><button class="shu" id="playf">🔊 播放</button>' +
+        '<div class="tap-hint">先聽，再點卡看文字</div></div></div>'
+      );
+      $app.querySelector("#quit").addEventListener("click", () => newsScreen(pack));
+      const pf = $app.querySelector("#playf");
+      pf.addEventListener("click", e => { e.stopPropagation(); TTS.speak(s.ja); });
+      TTS.speak(s.ja);
+      $app.querySelector("#card").addEventListener("click", () => {
+        render(
+          '<div class="topbar"><div><h1>📻 聽力</h1><div class="sub">第 ' + (i + 1) + " / " + set.length + " 句</div></div>" +
+          '<button class="ghost small" id="quit">結束</button></div>' +
+          '<div class="card-stage"><div class="reveal news-reveal">' +
+          '<div class="n-ja">' + esc(s.ja) + "</div>" +
+          (P.news.furigana ? '<div class="n-furi">' + esc(s.furigana) + "</div>" : "") +
+          '<div class="n-zh">' + esc(s.zh) + "</div><div class=\"n-en\">" + esc(s.en) + "</div>" +
+          '<button class="ghost small replay-btn" id="replay" style="margin-top:10px">🔊 再聽一次</button></div>' +
+          '<div class="grade-btns"><button id="next">' + (i + 1 >= set.length ? "完成" : "下一句 →") + "</button></div></div>"
+        );
+        $app.querySelector("#quit").addEventListener("click", () => newsScreen(pack));
+        $app.querySelector("#replay").addEventListener("click", () => TTS.speak(s.ja));
+        $app.querySelector("#next").addEventListener("click", () => { i++; show(); });
+      }, { once: true });
+    }
+    show();
+  }
+
+  function newsDictation(pack) {
+    const set = pack.dictation; let i = 0;
+    function show() {
+      if (i >= set.length) { markInput(pack, "dictation"); return newsScreen(pack); }
+      const d = set[i];
+      render(
+        '<div class="topbar"><div><h1>✍️ 聽寫</h1><div class="sub">第 ' + (i + 1) + " / " + set.length + " 句</div></div>" +
+        '<button class="ghost small" id="quit">結束</button></div>' +
+        '<div class="q-prompt"><div class="label">聽發音，打出聽到的句子（假名即可）</div>' +
+        '<button class="shu" id="playq">🔊 播放</button>' + (d.hint ? '<div class="progress-note">提示：' + esc(d.hint) + "</div>" : "") + "</div>" +
+        '<form class="typebox" id="typef"><input id="tin" type="text" autocomplete="off" placeholder="在此打字…"><button class="shu" type="submit">送出</button></form>' +
+        '<div id="dresult"></div>'
+      );
+      $app.querySelector("#quit").addEventListener("click", () => newsScreen(pack));
+      $app.querySelector("#playq").addEventListener("click", () => TTS.speak(d.ja));
+      TTS.speak(d.ja);
+      const inp = $app.querySelector("#tin"); inp.focus();
+      $app.querySelector("#typef").addEventListener("submit", e => {
+        e.preventDefault();
+        const v = normJa(inp.value);
+        const ok = !!v && (normJa(d.ja) === v || (d.accept || []).some(a => normJa(a) === v));
+        $app.querySelector("#dresult").innerHTML =
+          '<div class="summary"><div class="srow"><span>' + (ok ? "✅ 正確" : "❌ 再聽一次") + '</span></div>' +
+          '<div class="srow"><span>正解</span><b>' + esc(d.ja) + "</b></div></div>" +
+          '<div class="grade-btns"><button class="shu" id="replay2">🔊 再聽</button><button id="next">' + (i + 1 >= set.length ? "完成" : "下一句 →") + "</button></div>";
+        inp.disabled = true;
+        $app.querySelector("#replay2").addEventListener("click", () => TTS.speak(d.ja));
+        $app.querySelector("#next").addEventListener("click", () => { i++; show(); });
+      });
+    }
+    show();
+  }
+
+  function newsRead(pack) {
+    let showZh = true, showEn = false;
+    function draw() {
+      const paras = pack.summary.map(s =>
+        '<div class="rd-para"><div class="n-ja">' + esc(s.ja) + "</div>" +
+        (P.news.furigana ? '<div class="n-furi">' + esc(s.furigana) + "</div>" : "") +
+        (showZh ? '<div class="n-zh">' + esc(s.zh) + "</div>" : "") +
+        (showEn ? '<div class="n-en">' + esc(s.en) + "</div>" : "") + "</div>").join("");
+      const vocab = '<div class="sec-h">單字</div>' + pack.vocab.map((v, i) =>
+        '<div class="vocab-row" data-vi="' + i + '"><span class="vw">' + esc(v.word) + '</span><span class="vr">' + esc(v.reading) + '</span><span class="vz">' + esc(v.zh) + " <i>" + esc(v.jlpt) + "</i></span></div>").join("");
+      const grammar = '<div class="sec-h">文法重點</div>' + pack.grammar.map(g =>
+        '<div class="gram-row"><b>' + esc(g.point) + "</b> " + esc(g.zh) + '<div class="progress-note">' + esc(g.example.ja) + "　" + esc(g.example.zh) + "</div></div>").join("");
+      render(
+        '<div class="topbar"><div><h1>📖 閱讀</h1><div class="sub">' + esc(pack.title.zh) + "</div></div>" +
+        '<button class="ghost small" id="quit">結束</button></div>' +
+        '<div class="seg toggles">' +
+        '<button class="' + (showZh ? "on" : "") + '" id="tzh">中文</button>' +
+        '<button class="' + (showEn ? "on" : "") + '" id="ten">英文</button>' +
+        '<button class="' + (P.news.furigana ? "on" : "") + '" id="tfu">振假名</button></div>' +
+        '<div class="read-body">' + paras + vocab + grammar + "</div>"
+      );
+      $app.querySelector("#quit").addEventListener("click", () => newsScreen(pack));
+      $app.querySelector("#tzh").addEventListener("click", () => { showZh = !showZh; draw(); });
+      $app.querySelector("#ten").addEventListener("click", () => { showEn = !showEn; draw(); });
+      $app.querySelector("#tfu").addEventListener("click", () => { P.news.furigana = !P.news.furigana; save(); draw(); });
+      $app.querySelectorAll(".vocab-row").forEach(r => r.addEventListener("click", () => {
+        const v = pack.vocab[+r.dataset.vi];
+        alert(v.word + "（" + v.reading + "）\n" + v.zh + " / " + v.en + "\n例：" + v.example.ja + "　" + v.example.zh);
+      }));
+    }
+    draw();
+  }
+
+  function newsQuiz(pack) {
+    const qs = pack.quiz; let i = 0, score = 0, locked = false;
+    function show() {
+      if (i >= qs.length) return finish();
+      const q = qs[i]; locked = false;
+      const promptHtml = q.type === "listening"
+        ? '<div class="label">' + esc(q.prompt.zh) + '</div><button class="shu" id="playq">🔊 播放發音</button>'
+        : '<div class="label">' + esc(q.prompt.zh) + "</div>" + (q.prompt.ja ? '<div class="k" style="font-size:1.4rem">' + esc(q.prompt.ja) + "</div>" : "");
+      render(
+        '<div class="exam-head"><div class="exam-score">得分 ' + score + " / " + qs.length + "</div>" +
+        '<div class="progress-note">第 ' + (i + 1) + " / " + qs.length + " 題</div>" +
+        '<button class="ghost small" id="quit">放棄</button></div>' +
+        '<div class="q-prompt">' + promptHtml + "</div>" +
+        '<div class="opts">' + q.options.map((o, oi) => '<button data-oi="' + oi + '">' + esc(o) + "</button>").join("") + "</div>" +
+        '<div id="qexplain"></div>'
+      );
+      $app.querySelector("#quit").addEventListener("click", () => newsScreen(pack));
+      const pq = $app.querySelector("#playq");
+      if (pq) { pq.addEventListener("click", () => TTS.speak(q.audioText)); TTS.speak(q.audioText); }
+      $app.querySelectorAll(".opts button").forEach(b => b.addEventListener("click", () => {
+        if (locked) return; locked = true;
+        const pick = +b.dataset.oi, right = pick === q.answer;
+        if (right) { score++; b.classList.add("hit"); }
+        else { b.classList.add("miss"); $app.querySelectorAll(".opts button").forEach((x, xi) => { if (xi === q.answer) x.classList.add("hit"); }); }
+        $app.querySelector(".exam-score").textContent = "得分 " + score + " / " + qs.length;
+        $app.querySelector("#qexplain").innerHTML =
+          '<div class="summary"><div class="srow"><span>' + (right ? "✅ 答對" : "❌ 答錯") + "</span></div>" +
+          '<div class="srow"><span>解說</span><b>' + esc(q.explain.zh) + "</b></div></div>" +
+          '<div class="grade-btns"><button id="next">' + (i + 1 >= qs.length ? "看結果" : "下一題 →") + "</button></div>";
+        $app.querySelector("#next").addEventListener("click", () => { i++; show(); });
+      }));
+    }
+    function finish() {
+      const pass = score >= 3;
+      const prev = P.news.quizBest[pack.date];
+      if (prev == null || score > prev) P.news.quizBest[pack.date] = score;
+      if (pass) markInput(pack, "quizPassed"); else save();
+      render(
+        '<div class="result-box"><div class="big">' + score + " / 5</div>" +
+        '<div class="msg">' + (pass ? "🎉 通過！（≥ 3 題）" + (speakUnlocked(pack) ? "<br>口說「脫稿」已解鎖。" : "") : "未達 3 題，再試一次！") + "</div>" +
+        '<div class="btn-col"><button class="shu" id="again">再考一次</button><button class="ghost" id="back">回新聞</button></div></div>'
+      );
+      $app.querySelector("#again").addEventListener("click", () => newsQuiz(pack));
+      $app.querySelector("#back").addEventListener("click", () => newsScreen(pack));
+    }
+    show();
+  }
+
+  function newsSpeak(pack) {
+    const lines = pack.speaking;
+    const STEPS = ["音韻浸潤", "語音標記", "視讀哼唱", "盲聽節奏", "語意融合", "錄音診斷", "脫稿演繹"];
+    const HINT = ["整段聽 2–3 次，只感受語調與節奏（不看字）。", "看著文字與標記，注意連音／弱化／停頓。",
+      "看著文字小聲哼跟。", "不看字，像影子一樣緊跟原聲的節奏。", "一邊跟讀一邊想著中文意思。",
+      "錄下自己朗讀，跟原聲比對，自評語調與停頓。", "關掉原聲，只看中文提示，憑記憶說出來。"];
+    let step = 1, rec = null, chunks = [], mediaURL = null;
+    const playAll = () => { const t = lines.map(l => l.ja).join("。"); TTS.speak(t); };
+    function draw() {
+      const s = STEPS[step - 1], hint = HINT[step - 1];
+      const showText = step === 2 || step === 3 || step === 5;
+      const bodyLines = lines.map(l =>
+        '<div class="sp-line"><div class="n-ja">' + esc(l.ja) + "</div>" +
+        (P.news.furigana ? '<div class="n-furi">' + esc(l.furigana) + "</div>" : "") +
+        (step === 2 && l.linking ? '<div class="n-link">🔎 ' + esc(l.linking) + "</div>" : "") +
+        (step === 5 ? '<div class="n-zh">' + esc(l.zh) + "</div>" : "") + "</div>").join("");
+      const zhHints = lines.map(l => '<div class="n-zh">・' + esc(l.zh) + "</div>").join("");
+      let mid;
+      if (step === 6) {
+        mid = '<div class="rec-box"><button class="shu" id="playorig">🔊 播放原聲</button>' +
+          '<button id="recbtn">● 開始錄音</button><audio id="myaudio" controls style="display:none;width:100%;margin-top:10px"></audio>' +
+          '<div class="progress-note" id="recnote"></div></div>';
+      } else if (step === 7 && !speakUnlocked(pack)) {
+        mid = '<div class="banner">🔒 脫稿演繹尚未解鎖。先完成 <b>聽力＋聽寫＋小考(≥3)</b>，或程度達 N3 以上。目前先做前面的步驟即可。</div>';
+      } else if (step === 7) {
+        mid = '<div class="sp-body">' + zhHints + '<button class="ghost small replay-btn" id="peek" style="margin-top:10px">👁️ 看一眼日文</button></div>';
+      } else {
+        mid = '<div class="sp-body">' + (showText ? bodyLines : '<div class="progress-note">（此步不看字，專心聽/跟）</div>') +
+          '<button class="shu replay-btn" id="playall" style="margin-top:12px">🔊 播放</button></div>';
+      }
+      render(
+        '<div class="topbar"><div><h1>🗣️ 口說七步</h1><div class="sub">第 ' + step + " / 7 步 ・ " + esc(s) + "</div></div>" +
+        '<button class="ghost small" id="quit">結束</button></div>' +
+        '<div class="stepper">' + STEPS.map((_, k) => '<span class="' + (k + 1 === step ? "now" : (k + 1 < step ? "past" : "")) + '"></span>').join("") + "</div>" +
+        '<div class="banner">' + esc(hint) + "</div>" + mid +
+        '<div class="grade-btns">' + (step > 1 ? '<button class="ghost" id="prev">← 上一步</button>' : "") +
+        '<button id="next">' + (step >= 7 ? "完成" : "下一步 →") + "</button></div>"
+      );
+      $app.querySelector("#quit").addEventListener("click", () => { stopRec(); newsScreen(pack); });
+      const pa = $app.querySelector("#playall"); if (pa) { pa.addEventListener("click", playAll); if (step === 1 || step === 4) playAll(); }
+      const po = $app.querySelector("#playorig"); if (po) po.addEventListener("click", playAll);
+      const pk = $app.querySelector("#peek"); if (pk) pk.addEventListener("click", () => alert(lines.map(l => l.ja).join("\n")));
+      const rb = $app.querySelector("#recbtn"); if (rb) rb.addEventListener("click", toggleRec);
+      const pv = $app.querySelector("#prev"); if (pv) pv.addEventListener("click", () => { stopRec(); step--; draw(); });
+      $app.querySelector("#next").addEventListener("click", () => { stopRec(); if (step >= 7) return newsScreen(pack); step++; draw(); });
+    }
+    function stopRec() { try { if (rec && rec.state === "recording") rec.stop(); } catch (e) {} rec = null; }
+    function toggleRec() {
+      const note = $app.querySelector("#recnote"), btn = $app.querySelector("#recbtn");
+      if (rec && rec.state === "recording") { rec.stop(); return; }
+      if (!navigator.mediaDevices || !window.MediaRecorder) { note.textContent = "此裝置無法錄音；可改為自己聽原聲、跟著唸並自評。"; return; }
+      navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+        chunks = []; rec = new MediaRecorder(stream);
+        rec.ondataavailable = e => chunks.push(e.data);
+        rec.onstop = () => {
+          try { stream.getTracks().forEach(t => t.stop()); } catch (e) {}
+          const url = URL.createObjectURL(new Blob(chunks, { type: "audio/webm" }));
+          if (mediaURL) URL.revokeObjectURL(mediaURL); mediaURL = url;
+          const au = $app.querySelector("#myaudio"); if (au) { au.src = url; au.style.display = "block"; }
+          if (btn) btn.textContent = "● 重新錄音"; if (note) note.textContent = "錄好了！播放上方自錄，與原聲比對。";
+        };
+        rec.start(); if (btn) btn.textContent = "■ 停止錄音"; if (note) note.textContent = "錄音中…唸完再按停止。";
+      }).catch(() => { note.textContent = "無法取得麥克風權限；可改為聽原聲、跟著唸並自評。"; });
+    }
+    draw();
+  }
+
   /* =====================  啟動  ===================== */
   (async function boot() {
     try {
@@ -1265,6 +1554,7 @@ a{color:var(--ruri)}
         if (saved.tts) Object.assign(P.tts, saved.tts);
         if (saved.star) Object.assign(P.star, saved.star);
         if (saved.plan) { Object.assign(P.plan, saved.plan); if (saved.plan.progress) Object.assign(P.plan.progress, saved.plan.progress); }
+        if (saved.news) Object.assign(P.news, saved.news);
       }
     } catch (e) {}
     initKeys();
