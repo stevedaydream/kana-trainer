@@ -9,7 +9,9 @@ const ENDPOINT = m => `https://generativelanguage.googleapis.com/v1beta/models/$
 
 export function hasKey() { return !!process.env.GEMINI_API_KEY; }
 
-export async function geminiJSON(prompt, { temperature = 0.7, maxOutputTokens = 8192 } = {}) {
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+async function callOnce(prompt, { temperature, maxOutputTokens }) {
   const key = process.env.GEMINI_API_KEY;
   if (!key) throw new Error("缺少 GEMINI_API_KEY 環境變數（請於 GitHub Secrets 設定）");
   const res = await fetch(ENDPOINT(MODEL) + "?key=" + encodeURIComponent(key), {
@@ -17,17 +19,38 @@ export async function geminiJSON(prompt, { temperature = 0.7, maxOutputTokens = 
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
       contents: [{ role: "user", parts: [{ text: prompt }] }],
-      generationConfig: { temperature, maxOutputTokens, responseMimeType: "application/json" }
+      generationConfig: {
+        temperature, maxOutputTokens, responseMimeType: "application/json",
+        // 2.5 系列預設會用「思考」吃掉輸出額度 → 關閉，把 token 全留給 JSON，避免截斷
+        thinkingConfig: { thinkingBudget: 0 }
+      }
     })
   });
-  if (!res.ok) throw new Error(`Gemini API ${res.status}: ${(await res.text()).slice(0, 500)}`);
+  if (!res.ok) { const t = await res.text(); const e = new Error(`Gemini API ${res.status}: ${t.slice(0, 300)}`); e.status = res.status; throw e; }
   const data = await res.json();
-  const text = data?.candidates?.[0]?.content?.parts?.map(p => p.text).join("") || "";
-  if (!text) throw new Error("Gemini 回應為空：" + JSON.stringify(data).slice(0, 500));
-  try { return JSON.parse(text); }
-  catch (e) {
-    const m = text.match(/\{[\s\S]*\}/); // 容錯：抓出第一個 JSON 區塊
-    if (m) return JSON.parse(m[0]);
-    throw new Error("Gemini 回應非合法 JSON：" + text.slice(0, 500));
+  const cand = data?.candidates?.[0];
+  const text = cand?.content?.parts?.map(p => p.text).join("") || "";
+  if (!text) throw new Error("Gemini 回應為空（finishReason=" + (cand?.finishReason || "?") + "）：" + JSON.stringify(data).slice(0, 300));
+  if (cand?.finishReason && cand.finishReason !== "STOP") {
+    // MAX_TOKENS 等：內容可能被截斷；標記讓上層重試（提高 token）
+    const e = new Error("回應未正常結束（finishReason=" + cand.finishReason + "）");
+    e.truncated = true; throw e;
   }
+  try { return JSON.parse(text); }
+  catch (_) { const m = text.match(/\{[\s\S]*\}/); if (m) { try { return JSON.parse(m[0]); } catch (__) {} } const e = new Error("回應非合法 JSON：" + text.slice(-200)); e.truncated = true; throw e; }
+}
+
+// 重試：解析失敗/截斷時提高 maxOutputTokens 再試；429/5xx 退避重試。
+export async function geminiJSON(prompt, { temperature = 0.7, maxOutputTokens = 16384, retries = 3 } = {}) {
+  let tokens = maxOutputTokens, lastErr;
+  for (let i = 0; i < retries; i++) {
+    try { return await callOnce(prompt, { temperature, maxOutputTokens: tokens }); }
+    catch (e) {
+      lastErr = e;
+      if (e.truncated) tokens = Math.min(tokens * 2, 65536);        // 截斷 → 加大額度
+      else if (e.status && e.status !== 429 && e.status < 500) throw e; // 4xx（非限流）直接失敗
+      await sleep(1500 * (i + 1));
+    }
+  }
+  throw lastErr;
 }

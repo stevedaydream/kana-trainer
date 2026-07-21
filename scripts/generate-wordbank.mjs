@@ -19,7 +19,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const WB_PATH = path.join(ROOT, "data", "wordbank.js");
 const TARGET = 5;
 const argv = Object.fromEntries(process.argv.slice(2).map(a => { const m = a.match(/^--([^=]+)(?:=(.*))?$/); return m ? [m[1], m[2] ?? true] : [a, true]; }));
-const CHUNK = Number(argv.chunk) || 20;
+const CHUNK = Number(argv.chunk) || 12;
 const WHITELIST = new Set(["を", "ん", "ヲ", "ン", "ぢ", "づ", "ヂ", "ヅ"]);
 
 const HEADER = `/* =========================================================
@@ -74,20 +74,31 @@ async function main() {
   if (!todo.length) { console.log("辭庫已完整，無需產生。"); return; }
   console.log(`待補 ${todo.length} 音（每音 ${TARGET} 詞，每批 ${CHUNK}）…`);
 
+  const nBatches = Math.ceil(todo.length / CHUNK);
+  let okBatches = 0, failBatches = 0;
   for (let i = 0; i < todo.length; i += CHUNK) {
-    const batch = todo.slice(i, i + CHUNK);
-    let map;
-    if (argv.mock || (!hasKey() && argv["allow-nokey"])) map = mock(batch);
-    else { console.log(`  Gemini 批次 ${i / CHUNK + 1}…`); map = await geminiJSON(prompt(batch), { temperature: 0.8 }); }
-    batch.forEach(b => { const m = validMerge(b.k, map[b.k]); if (m.length) wb[b.k] = m; });
+    const batch = todo.slice(i, i + CHUNK), n = i / CHUNK + 1;
+    try {
+      let map;
+      if (argv.mock || (!hasKey() && argv["allow-nokey"])) map = mock(batch);
+      else { console.log(`  Gemini 批次 ${n}/${nBatches}…`); map = await geminiJSON(prompt(batch), { temperature: 0.8 }); }
+      let got = 0;
+      batch.forEach(b => { const m = validMerge(b.k, map[b.k]); if (m.length) { wb[b.k] = m; got++; } });
+      okBatches++;
+      console.log(`    批次 ${n} 完成（${got}/${batch.length} 音）`);
+    } catch (e) {
+      failBatches++;
+      console.warn(`    ⚠ 批次 ${n} 失敗，略過：${e.message}`);
+    }
   }
 
-  // 依題庫順序輸出，穩定 diff
+  // 依題庫順序輸出，穩定 diff；即使部分批次失敗也寫入已成功者（re-run 會續補）
   const ordered = {};
   kanas.forEach(x => { if (wb[x.k]) ordered[x.k] = wb[x.k]; });
   fs.writeFileSync(WB_PATH, HEADER + JSON.stringify(ordered, null, 2) + ";\n");
   execFileSync("node", [path.join(ROOT, "scripts", "validate-wordbank.mjs")], { stdio: "inherit" });
   const filled = Object.values(ordered).filter(l => l.length >= TARGET).length;
-  console.log(`✅ 已寫入辭庫：${Object.keys(ordered).length} 音（滿 ${TARGET} 詞者 ${filled} 音）。`);
+  console.log(`✅ 辭庫：${Object.keys(ordered).length} 音（滿 ${TARGET} 詞 ${filled} 音）；批次 成功 ${okBatches} / 失敗 ${failBatches}。`);
+  if (filled < kanas.length) console.log("（尚有未滿 5 詞者，可再次觸發同 workflow 續補。）");
 }
 main().catch(e => { console.error("❌ " + e.message); process.exit(1); });
