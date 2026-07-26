@@ -7,6 +7,259 @@ window.KANA_NEWS = {
   "packs": [
     {
       "title": {
+        "ja": "かわいい猫が電車のお手伝い！",
+        "furigana": "かわいいねこがでんしゃのおてつだい！",
+        "zh": "可愛的貓咪幫忙電車！",
+        "en": "Cute Cat Helps the Train!"
+      },
+      "source": {
+        "title": "JR九州の駅に「ねこ駅長」誕生",
+        "publisher": "Yahoo! ニュース",
+        "url": "https://news.yahoo.co.jp/articles/YOUR_ARTICLE_ID",
+        "note": "原創、分級改寫之摘要，非重製原文。"
+      },
+      "summary": [
+        {
+          "ja": "JR九州の駅に、新しい駅長さんが来ました。その駅長さんは、とてもかわいい猫です。",
+          "furigana": "じぇいあーるきゅうしゅうのえきに、あたらしいえきちょうさんがきました。そのえきちょうさんは、とてもかわいいねこです。",
+          "zh": "JR九州的車站來了一位新的站長。這位站長是一隻非常可愛的貓。",
+          "en": "A new stationmaster came to a JR Kyushu station. That stationmaster is a very cute cat."
+        },
+        {
+          "ja": "猫の名前は「にゃん太郎」です。にゃん太郎は駅でみんなを笑顔にします。",
+          "furigana": "ねこのなまえは「にゃんたろう」です。にゃんたろうはえきでみんなをえがおにします。",
+          "zh": "這隻貓的名字是「喵太郎」。喵太郎在車站讓大家露出笑容。",
+          "en": "The cat's name is \"Nyantaro\". Nyantaro makes everyone smile at the station."
+        },
+        {
+          "ja": "お客さんは、にゃん太郎に会いに駅に来ます。電車に乗るのがもっと楽しくなりますね。",
+          "furigana": "おきゃくさんは、にゃんたろうにあいにえきにきます。でんしゃにのるのがもっとたのしくなりますね。",
+          "zh": "乘客們會來車站見喵太郎。搭乘電車會變得更有趣呢。",
+          "en": "Customers come to the station to meet Nyantaro. Riding the train will be even more fun, won't it?"
+        }
+      ],
+      "vocab": [
+        {
+          "word": "駅",
+          "reading": "えき",
+          "zh": "車站",
+          "en": "station",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "これは駅です。",
+            "zh": "這是車站。"
+          }
+        },
+        {
+          "word": "駅長",
+          "reading": "えきちょう",
+          "zh": "站長",
+          "en": "stationmaster",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "駅長さんはとても親切です。",
+            "zh": "站長先生非常親切。"
+          }
+        },
+        {
+          "word": "猫",
+          "reading": "ねこ",
+          "zh": "貓",
+          "en": "cat",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "猫が好きです。",
+            "zh": "我喜歡貓。"
+          }
+        },
+        {
+          "word": "来る",
+          "reading": "くる",
+          "zh": "來",
+          "en": "to come",
+          "pos": "verb",
+          "jlpt": "N5",
+          "example": {
+            "ja": "明日、来ます。",
+            "zh": "我明天來。"
+          }
+        },
+        {
+          "word": "笑顔",
+          "reading": "えがお",
+          "zh": "笑容",
+          "en": "smile",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "彼女はいつも笑顔です。",
+            "zh": "她總是面帶笑容。"
+          }
+        }
+      ],
+      "grammar": [
+        {
+          "point": "〜が来ました",
+          "zh": "〜來了",
+          "en": "〜 came",
+          "example": {
+            "ja": "友達が来ました。",
+            "zh": "朋友來了。"
+          },
+          "note": "表示某人或某物到達。"
+        },
+        {
+          "point": "〜は〜です",
+          "zh": "〜是〜",
+          "en": "〜 is 〜",
+          "example": {
+            "ja": "これは猫です。",
+            "zh": "這是貓。"
+          },
+          "note": "最基本的肯定句型，用於描述或定義。"
+        },
+        {
+          "point": "〜を〜ます",
+          "zh": "做〜（動詞）",
+          "en": "do 〜 (verb)",
+          "example": {
+            "ja": "ご飯を食べます。",
+            "zh": "吃飯。"
+          },
+          "note": "「を」是受詞助詞，表示動詞的作用對象。"
+        },
+        {
+          "point": "〜がもっと〜",
+          "zh": "〜更〜",
+          "en": "〜 more 〜",
+          "example": {
+            "ja": "もっと大きいです。",
+            "zh": "更大。"
+          },
+          "note": "「もっと」表示程度的增加，後面接形容詞或副詞。"
+        }
+      ],
+      "quiz": [
+        {
+          "type": "reading",
+          "prompt": {
+            "ja": "「駅長」の正しい読み方はどれですか？",
+            "zh": "「駅長」的正確讀音是哪個？"
+          },
+          "audioText": "",
+          "options": [
+            "えきちょう",
+            "えきちよう",
+            "えきなが",
+            "えきおさ"
+          ],
+          "answer": 0,
+          "explain": {
+            "zh": "「駅長」的正確讀音是「えきちょう」。"
+          }
+        },
+        {
+          "type": "vocab",
+          "prompt": {
+            "ja": "「猫」の英語は何ですか？",
+            "zh": "「猫」的英文是什麼？"
+          },
+          "audioText": "",
+          "options": [
+            "dog",
+            "cat",
+            "bird",
+            "fish"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "「猫」的英文是「cat」。"
+          }
+        },
+        {
+          "type": "grammar",
+          "prompt": {
+            "ja": "「新しい___が来ました。」（車站）",
+            "zh": "「新的___來了。」（車站）"
+          },
+          "audioText": "",
+          "options": [
+            "えき",
+            "えきちょう",
+            "ねこ",
+            "でんしゃ"
+          ],
+          "answer": 0,
+          "explain": {
+            "zh": "句子缺少表示地點的名詞，「駅」是車站的意思，符合語境。"
+          }
+        },
+        {
+          "type": "cloze",
+          "prompt": {
+            "ja": "にゃん太郎は駅でみんなを____にします。",
+            "zh": "喵太郎在車站讓大家____。"
+          },
+          "audioText": "",
+          "options": [
+            "しんぱい",
+            "かなしい",
+            "えがお",
+            "こわい"
+          ],
+          "answer": 2,
+          "explain": {
+            "zh": "根據文章，喵太郎讓大家開心，所以是「笑顔」（笑容）。"
+          }
+        },
+        {
+          "type": "listening",
+          "prompt": {
+            "ja": "「かわいい猫」を聞いて、正しい日本語を選んでください。",
+            "zh": "請聽「かわいい猫」，然後選擇正確的日語。"
+          },
+          "audioText": "かわいいねこ",
+          "options": [
+            "かわいい犬",
+            "かわいい猫",
+            "かわいい鳥",
+            "かわいい魚"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "音頻讀出的是「かわいいねこ」，即「可愛的貓」。"
+          }
+        }
+      ],
+      "dictation": [
+        {
+          "ja": "猫の名前はにゃん太郎です。",
+          "furigana": "ねこのなまえはにゃんたろうです。",
+          "accept": [
+            "ねこのなまえはにゃんたろうです",
+            "猫の名前はにゃん太郎です"
+          ],
+          "hint": "貓的名字是喵太郎。"
+        }
+      ],
+      "speaking": [
+        {
+          "ja": "JR九州の駅に、新しい駅長さんが来ました。",
+          "furigana": "じぇいあーるきゅうしゅうのえきに、あたらしいえきちょうさんがきました。",
+          "zh": "JR九州的車站來了一位新的站長。",
+          "focus": "intonation",
+          "linking": "JR（じぇいあーる）九州（きゅうしゅう）の駅（えき）に、新（あたら）しい駅長（えきちょう）さんが来（き）ました。"
+        }
+      ],
+      "id": "daily-2026-07-26-N5",
+      "date": "2026-07-26",
+      "level": "N5"
+    },
+    {
+      "title": {
         "ja": "大阪で新しいパンダが生まれました！",
         "furigana": "おおさかで あたらしい ぱんだが うまれました！",
         "zh": "大阪誕生了新的熊貓寶寶！",
