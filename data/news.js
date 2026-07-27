@@ -7,6 +7,249 @@ window.KANA_NEWS = {
   "packs": [
     {
       "title": {
+        "ja": "桜の開花、今年は早い？",
+        "furigana": "さくらのかいか、ことしははやい？",
+        "zh": "櫻花開花，今年會比較早嗎？",
+        "en": "Cherry Blossom Blooming: Earlier This Year?"
+      },
+      "source": {
+        "title": "今年の桜、開花予想は？",
+        "publisher": "ウェザーニュース (Weather News)",
+        "url": "https://weathernews.jp/s/topics/202402/150095/",
+        "note": "原創、分級改寫之摘要，非重製原文。"
+      },
+      "summary": [
+        {
+          "ja": "日本の桜がもうすぐ咲きます。ウェザーニュースは、今年の開花は平年より早いと発表しました。東京は3月19日ごろ、福岡は3月18日ごろに咲き始めるでしょう。暖かい日が多いため、桜の準備が早く進んでいます。みんな、桜を見るのが楽しみですね。",
+          "furigana": "にほんのさくらがもうすぐさきます。ウェザーニュースは、ことしのかいかはへいねんよりはやいとはっぴょうしました。とうきょうはさんがつじゅうくにちごろ、ふくおかはさんがつじゅうはちにちごろにさきはじめるでしょう。あたたかいひがおおいため、さくらのじゅんびがはやくすすんでいます。みんな、さくらをみるのがたのしみですね。",
+          "zh": "日本的櫻花即將盛開。Weather News宣布，今年的開花時間會比往年早。東京大約在3月19日左右，福岡大約在3月18日左右開始開花。因為溫暖的日子很多，櫻花的準備工作進展很快。大家都很期待賞櫻呢。",
+          "en": "Cherry blossoms in Japan will bloom soon. Weather News announced that this year's blooming will be earlier than usual. Tokyo will start blooming around March 19th, and Fukuoka around March 18th. Because there have been many warm days, the cherry blossoms are preparing quickly. Everyone is looking forward to seeing the cherry blossoms."
+        }
+      ],
+      "vocab": [
+        {
+          "word": "桜",
+          "reading": "さくら",
+          "zh": "櫻花",
+          "en": "cherry blossom",
+          "pos": "名詞",
+          "jlpt": "N5",
+          "example": {
+            "ja": "桜がとてもきれいです。",
+            "zh": "櫻花非常漂亮。"
+          }
+        },
+        {
+          "word": "開花",
+          "reading": "かいか",
+          "zh": "開花",
+          "en": "blooming",
+          "pos": "名詞",
+          "jlpt": "N5",
+          "example": {
+            "ja": "桜の開花を待ちます。",
+            "zh": "等待櫻花開花。"
+          }
+        },
+        {
+          "word": "早い",
+          "reading": "はやい",
+          "zh": "早的",
+          "en": "early, fast",
+          "pos": "い形容詞",
+          "jlpt": "N5",
+          "example": {
+            "ja": "朝ごはんは早いです。",
+            "zh": "早餐吃得很早。"
+          }
+        },
+        {
+          "word": "発表します",
+          "reading": "はっぴょうします",
+          "zh": "發表、公布",
+          "en": "to announce, to present",
+          "pos": "動詞",
+          "jlpt": "N5",
+          "example": {
+            "ja": "先生がテストの結果を発表しました。",
+            "zh": "老師公布了考試結果。"
+          }
+        },
+        {
+          "word": "楽しみ",
+          "reading": "たのしみ",
+          "zh": "期待、樂趣",
+          "en": "enjoyment, anticipation",
+          "pos": "名詞/な形容詞",
+          "jlpt": "N5",
+          "example": {
+            "ja": "旅行が楽しみです。",
+            "zh": "我很期待旅行。"
+          }
+        }
+      ],
+      "grammar": [
+        {
+          "point": "～でしょう",
+          "zh": "表示推測，相當於「會...吧」、「可能...」",
+          "en": "Expresses conjecture or probability, similar to 'probably will' or 'might'.",
+          "example": {
+            "ja": "明日は雨が降るでしょう。",
+            "zh": "明天可能會下雨吧。"
+          },
+          "note": "動詞普通形/い形容詞普通形/な形容詞語幹+でしょう"
+        },
+        {
+          "point": "～ため、",
+          "zh": "表示原因或理由，相當於「因為...」",
+          "en": "Indicates reason or cause, similar to 'because of' or 'due to'.",
+          "example": {
+            "ja": "雨のため、試合は中止になりました。",
+            "zh": "因為下雨，比賽取消了。"
+          },
+          "note": "名詞+の+ため、動詞普通形+ため、い形容詞普通形+ため、な形容詞語幹+な+ため"
+        },
+        {
+          "point": "～ごろ",
+          "zh": "表示大約的時間點，相當於「大約...」",
+          "en": "Indicates an approximate time point, similar to 'around' or 'about'.",
+          "example": {
+            "ja": "5時ごろに駅に着きます。",
+            "zh": "大約5點會到車站。"
+          },
+          "note": "時間詞+ごろ"
+        }
+      ],
+      "quiz": [
+        {
+          "type": "reading",
+          "prompt": {
+            "ja": "この記事によると、今年の桜の開花はいつごろですか？",
+            "zh": "根據這篇文章，今年的櫻花大約什麼時候開花？"
+          },
+          "options": [
+            "平年より遅い",
+            "平年と同じくらい",
+            "平年より早い",
+            "まだわからない"
+          ],
+          "answer": 2,
+          "explain": {
+            "zh": "文章中提到「今年の開花は平年より早いと発表しました。」（宣布今年的開花會比往年早。）"
+          }
+        },
+        {
+          "type": "vocab",
+          "prompt": {
+            "ja": "「開花」のひらがなは何ですか？",
+            "zh": "「開花」的平假名是什麼？"
+          },
+          "options": [
+            "かいか",
+            "はなびら",
+            "さくら",
+            "まんかい"
+          ],
+          "answer": 0,
+          "explain": {
+            "zh": "「開花」的平假名是 かいか。"
+          }
+        },
+        {
+          "type": "grammar",
+          "prompt": {
+            "ja": "「暖かい日が多いため、桜の準備が早く進んでいます。」この文で「～ため」は何を表していますか？",
+            "zh": "在「因為溫暖的日子很多，櫻花的準備工作進展很快。」這句話中，「～ため」表示什麼？"
+          },
+          "options": [
+            "目的",
+            "結果",
+            "原因",
+            "場所"
+          ],
+          "answer": 2,
+          "explain": {
+            "zh": "「～ため」在這裡表示原因或理由，說明櫻花準備工作進展快的原因是「溫暖的日子很多」。"
+          }
+        },
+        {
+          "type": "listening",
+          "prompt": {
+            "ja": "東京の桜はいつごろ咲き始めますか？",
+            "zh": "東京的櫻花大約什麼時候開始開花？"
+          },
+          "audioText": "とうきょうのさくらはいつごろさきはじめますか？",
+          "options": [
+            "3月18日ごろ",
+            "3月19日ごろ",
+            "4月1日ごろ",
+            "まだ決まっていない"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "文章中提到「東京は3月19日ごろに咲き始めるでしょう。」（東京大約在3月19日左右開始開花。）"
+          }
+        },
+        {
+          "type": "cloze",
+          "prompt": {
+            "ja": "みんな、桜を見るのが＿＿＿ですね。",
+            "zh": "大家都很＿＿＿看櫻花呢。"
+          },
+          "options": [
+            "難しい",
+            "楽しみ",
+            "怖い",
+            "悲しい"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "根據文章內容，大家對於賞櫻應該是感到「楽しみ」（期待、樂趣）。"
+          }
+        }
+      ],
+      "dictation": [
+        {
+          "ja": "日本の桜がもうすぐ咲きます。",
+          "furigana": "にほんのさくらがもうすぐさきます。",
+          "accept": [
+            "にほんのさくらがもうすぐさきます。",
+            "日本の桜がもうすぐ咲きます。"
+          ],
+          "hint": "關於日本櫻花開花的句子。"
+        },
+        {
+          "ja": "暖かい日が多いため、早く進んでいます。",
+          "furigana": "あたたかいひがおおいため、はやくすすんでいます。",
+          "accept": [
+            "あたたかいひがおおいため、はやくすすんでいます。",
+            "暖かい日が多いため、早く進んでいます。"
+          ],
+          "hint": "關於溫暖天氣和進展的句子。"
+        }
+      ],
+      "speaking": [
+        {
+          "ja": "今年の桜は早いですね。",
+          "furigana": "ことしのさくらははやいですね。",
+          "zh": "今年的櫻花開得早呢。",
+          "focus": "intonation",
+          "linking": "「はやいですね」的「ね」語氣上揚，表示同意或確認。"
+        },
+        {
+          "ja": "桜を見るのが楽しみです。",
+          "furigana": "さくらをみるのがたのしみです。",
+          "zh": "我很期待賞櫻。",
+          "focus": "pacing",
+          "linking": "語速平穩，表達期待的心情。"
+        }
+      ],
+      "id": "daily-2026-07-27-N5",
+      "date": "2026-07-27",
+      "level": "N5"
+    },
+    {
+      "title": {
         "ja": "かわいい猫が電車のお手伝い！",
         "furigana": "かわいいねこがでんしゃのおてつだい！",
         "zh": "可愛的貓咪幫忙電車！",
