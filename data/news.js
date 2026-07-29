@@ -7,6 +7,227 @@ window.KANA_NEWS = {
   "packs": [
     {
       "title": {
+        "ja": "桜の開花、日本で始まる",
+        "furigana": "さくらのかいか、にほんではじまる",
+        "zh": "櫻花開花，在日本開始了",
+        "en": "Cherry Blossoms Start Blooming in Japan"
+      },
+      "source": {
+        "title": "日本全国の桜の開花情報",
+        "publisher": "ウェザーニュース",
+        "url": "https://weathernews.jp/sakura/",
+        "note": "原創、分級改寫之摘要，非重製原文。"
+      },
+      "summary": [
+        {
+          "ja": "日本で桜の花が咲き始めました。これは春が来たことを知らせます。東京では、靖国神社に桜があります。この桜は、開花を測るための基準です。今年は、例年より少し早く咲きました。多くの人が桜を見に行きます。",
+          "furigana": "にほんでさくらのはながさきはじめました。これははるがきたことをしらせます。とうきょうでは、やすくにじんじゃにさくらがあります。このさくらは、かいかをはかるためのきじゅんです。ことしは、れいねんよりすこしはやくさきました。おおくのひとがさくらをみにいきます。",
+          "zh": "日本的櫻花開始開花了。這預告著春天來了。在東京，靖國神社有櫻花。這棵櫻花是測量開花的標準。今年，它比往年開得稍微早一些。很多人都會去看櫻花。",
+          "en": "Cherry blossoms have started blooming in Japan. This announces that spring has arrived. In Tokyo, there are cherry trees at Yasukuni Shrine. This cherry tree is a standard for measuring the blooming. This year, it bloomed a little earlier than usual. Many people go to see the cherry blossoms."
+        }
+      ],
+      "vocab": [
+        {
+          "word": "桜",
+          "reading": "さくら",
+          "zh": "櫻花",
+          "en": "cherry blossom",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "桜の花がとてもきれいです。",
+            "zh": "櫻花非常漂亮。"
+          }
+        },
+        {
+          "word": "開花",
+          "reading": "かいか",
+          "zh": "開花",
+          "en": "blooming, flowering",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "桜の開花が始まりました。",
+            "zh": "櫻花開花了。"
+          }
+        },
+        {
+          "word": "始まる",
+          "reading": "はじまる",
+          "zh": "開始",
+          "en": "to begin (intransitive)",
+          "pos": "verb",
+          "jlpt": "N5",
+          "example": {
+            "ja": "授業が九時に始まります。",
+            "zh": "課程九點開始。"
+          }
+        },
+        {
+          "word": "春",
+          "reading": "はる",
+          "zh": "春天",
+          "en": "spring",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "春は暖かい季節です。",
+            "zh": "春天是溫暖的季節。"
+          }
+        },
+        {
+          "word": "早い",
+          "reading": "はやい",
+          "zh": "早的",
+          "en": "early, fast",
+          "pos": "adjective",
+          "jlpt": "N5",
+          "example": {
+            "ja": "今日は早く起きました。",
+            "zh": "我今天很早起床了。"
+          }
+        }
+      ],
+      "grammar": [
+        {
+          "point": "～始めます",
+          "zh": "表示動作的開始",
+          "en": "to begin doing ~",
+          "example": {
+            "ja": "桜が咲き始めました。",
+            "zh": "櫻花開始開花了。"
+          },
+          "note": "動詞ます形去ます + 始めます"
+        },
+        {
+          "point": "～より",
+          "zh": "表示比較的基準，比...更...",
+          "en": "than ~",
+          "example": {
+            "ja": "今年は例年より早いです。",
+            "zh": "今年比往年早。"
+          },
+          "note": "AはBより adjective/verb (A比B更...)"
+        }
+      ],
+      "quiz": [
+        {
+          "type": "reading",
+          "prompt": {
+            "ja": "「桜」の正しい読み方はどれですか。",
+            "zh": "「桜」的正確讀音是什麼？"
+          },
+          "audioText": "",
+          "options": [
+            "はる",
+            "さくら",
+            "かいか",
+            "はな"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "桜（さくら）是櫻花的意思。"
+          }
+        },
+        {
+          "type": "vocab",
+          "prompt": {
+            "ja": "「開花」の英語の意味は何ですか。",
+            "zh": "「開花」的英文意思是什麼？"
+          },
+          "audioText": "",
+          "options": [
+            "Spring",
+            "Flower",
+            "Blooming",
+            "Beginning"
+          ],
+          "answer": 2,
+          "explain": {
+            "zh": "開花（かいか）的意思是 blooming 或 flowering。"
+          }
+        },
+        {
+          "type": "grammar",
+          "prompt": {
+            "ja": "以下の文の空欄に最も適切な言葉を選びなさい。「日本で桜の花が（　　　）始めました。」",
+            "zh": "請選擇最適合填入以下句子空格的詞。「在日本櫻花（　　　）開始了。」"
+          },
+          "audioText": "",
+          "options": [
+            "咲く",
+            "咲き",
+            "咲いて",
+            "咲いた"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "動詞ます形去ます + 始めます，所以咲きます的ます形去ます是咲き。"
+          }
+        },
+        {
+          "type": "listening",
+          "prompt": {
+            "ja": "「春が来ました」の意味は何ですか。",
+            "zh": "「春が来ました」是什麼意思？"
+          },
+          "audioText": "春が来ました。",
+          "options": [
+            "夏天來了。",
+            "冬天來了。",
+            "秋天來了。",
+            "春天來了。"
+          ],
+          "answer": 3,
+          "explain": {
+            "zh": "春（はる）是春天的意思，来ました（きました）是來了的意思。"
+          }
+        },
+        {
+          "type": "cloze",
+          "prompt": {
+            "ja": "「今年は、例年（　　）少し早く咲きました。」",
+            "zh": "「今年，它比往年（　　）稍微早一些開花了。」"
+          },
+          "audioText": "",
+          "options": [
+            "と",
+            "に",
+            "より",
+            "が"
+          ],
+          "answer": 2,
+          "explain": {
+            "zh": "「～より」表示比較，意思是「比～」。"
+          }
+        }
+      ],
+      "dictation": [
+        {
+          "ja": "桜の花が咲き始めました。",
+          "furigana": "さくらのはながさきはじめました。",
+          "accept": [
+            "さくらのはながさきはじめました",
+            "桜の花が咲き始めました"
+          ],
+          "hint": "櫻花開始開花了。"
+        }
+      ],
+      "speaking": [
+        {
+          "ja": "日本で桜の花が咲き始めました。",
+          "furigana": "にほんでさくらのはながさきはじめました。",
+          "zh": "日本的櫻花開始開花了。",
+          "focus": "intonation",
+          "linking": ""
+        }
+      ],
+      "id": "daily-2026-07-29-N5",
+      "date": "2026-07-29",
+      "level": "N5"
+    },
+    {
+      "title": {
         "ja": "かわいいパンダの赤ちゃん、名前は？",
         "furigana": "かわいいパンダのあかちゃん、なまえは？",
         "zh": "可爱熊猫宝宝，名字是什么？",
