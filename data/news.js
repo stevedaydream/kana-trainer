@@ -7,6 +7,227 @@ window.KANA_NEWS = {
   "packs": [
     {
       "title": {
+        "ja": "かわいいパンダの赤ちゃん、名前は「シャオシャオ」と「レイレイ」！",
+        "furigana": "かわいいパンダのあかちゃん、なまえは「シャオシャオ」と「レイレイ」！",
+        "zh": "可愛熊貓寶寶，名字是「曉曉」和「蕾蕾」！",
+        "en": "Cute Panda Babies Named 'Xiao Xiao' and 'Lei Lei'!"
+      },
+      "source": {
+        "title": "上野動物園の双子パンダ、名前は「シャオシャオ」と「レイレイ」に決定！",
+        "publisher": "東京新聞",
+        "url": "https://www.tokyo-np.co.jp/article/135676",
+        "note": "原創、分級改寫之摘要，非重製原文。"
+      },
+      "summary": [
+        {
+          "ja": "上野動物園に、パンダの赤ちゃんが二人います。この二人は双子です。男の子と女の子です。名前は「シャオシャオ」と「レイレイ」に決まりました。たくさんの人が名前を考えました。動物園は、みんなに感謝しています。赤ちゃんパンダは、とてもかわいいです。",
+          "furigana": "うえのどうぶつえんに、パンダのあかちゃんがふたりいます。このふたりはふたごです。おとこのことおんなのこです。なまえは「シャオシャオ」と「レイレイ」にきまりました。たくさんのひとがなまえをかんがえました。どうぶつえんは、みんなにかんしゃしています。あかちゃんパンダは、とてもかわいいです。",
+          "zh": "在上野動物園，有兩隻熊貓寶寶。這兩隻是雙胞胎。一隻是男生，一隻是女生。名字決定是「曉曉」和「蕾蕾」。很多人想了名字。動物園感謝大家。熊貓寶寶非常可愛。",
+          "en": "At Ueno Zoo, there are two panda babies. These two are twins. One is a boy and one is a girl. Their names have been decided as 'Xiao Xiao' and 'Lei Lei'. Many people thought of names. The zoo is grateful to everyone. The baby pandas are very cute."
+        }
+      ],
+      "vocab": [
+        {
+          "word": "動物園",
+          "reading": "どうぶつえん",
+          "zh": "動物園",
+          "en": "zoo",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "動物園にパンダがいます。",
+            "zh": "動物園裡有熊貓。"
+          }
+        },
+        {
+          "word": "赤ちゃん",
+          "reading": "あかちゃん",
+          "zh": "嬰兒",
+          "en": "baby",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "かわいい赤ちゃんですね。",
+            "zh": "真是可愛的寶寶呢。"
+          }
+        },
+        {
+          "word": "双子",
+          "reading": "ふたご",
+          "zh": "雙胞胎",
+          "en": "twins",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "彼らは双子です。",
+            "zh": "他們是雙胞胎。"
+          }
+        },
+        {
+          "word": "決まる",
+          "reading": "きまる",
+          "zh": "決定",
+          "en": "to be decided",
+          "pos": "verb",
+          "jlpt": "N5",
+          "example": {
+            "ja": "名前が決まりました。",
+            "zh": "名字決定了。"
+          }
+        },
+        {
+          "word": "感謝する",
+          "reading": "かんしゃする",
+          "zh": "感謝",
+          "en": "to thank, to be grateful",
+          "pos": "verb",
+          "jlpt": "N5",
+          "example": {
+            "ja": "みんなに感謝します。",
+            "zh": "感謝大家。"
+          }
+        }
+      ],
+      "grammar": [
+        {
+          "point": "～に決まる",
+          "zh": "決定為～",
+          "en": "to be decided as ~",
+          "example": {
+            "ja": "名前は「シャオシャオ」に決まりました。",
+            "zh": "名字決定為「曉曉」了。"
+          },
+          "note": "表示某事被決定或確定下來。常用於被動語態。"
+        },
+        {
+          "point": "～がいます",
+          "zh": "有～（指人或動物）",
+          "en": "there is/are ~ (for animate objects)",
+          "example": {
+            "ja": "パンダの赤ちゃんが二人います。",
+            "zh": "有兩隻熊貓寶寶。"
+          },
+          "note": "用於表示人或動物的存在，與「～があります」（用於無生命物體）相對。"
+        }
+      ],
+      "quiz": [
+        {
+          "type": "reading",
+          "prompt": {
+            "ja": "「動物園」の正しい読み方はどれですか？",
+            "zh": "「動物園」的正確讀法是哪個？"
+          },
+          "audioText": "",
+          "options": [
+            "どうぶつえん",
+            "どぶつえん",
+            "どうぶえん",
+            "どうぶつぜん"
+          ],
+          "answer": 0,
+          "explain": {
+            "zh": "「動物園」的正確讀法是「どうぶつえん」。"
+          }
+        },
+        {
+          "type": "vocab",
+          "prompt": {
+            "ja": "「赤ちゃん」は日本語で何ですか？",
+            "zh": "「Baby」用日語怎麼說？"
+          },
+          "audioText": "",
+          "options": [
+            "こども",
+            "おとな",
+            "あかちゃん",
+            "ともだち"
+          ],
+          "answer": 2,
+          "explain": {
+            "zh": "「赤ちゃん」是「baby」的意思。"
+          }
+        },
+        {
+          "type": "grammar",
+          "prompt": {
+            "ja": "「上野動物園に、パンダの赤ちゃんが二人＿＿＿＿。」に入る正しい言葉を選んでください。",
+            "zh": "請選擇填入「上野動物園に、パンダの赤ちゃんが二人＿＿＿＿。」的正確詞語。"
+          },
+          "audioText": "",
+          "options": [
+            "あります",
+            "います",
+            "します",
+            "できます"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "「います」用於表示人或動物的存在。「あります」用於無生命物體。"
+          }
+        },
+        {
+          "type": "listening",
+          "prompt": {
+            "ja": "この文を聞いて、正しい意味を選んでください：「名前はシャオシャオに決まりました。」",
+            "zh": "請聽此句並選擇正確的含義：「名前はシャオシャオに決まりました。」"
+          },
+          "audioText": "名前はシャオシャオに決まりました。",
+          "options": [
+            "The name is Xiao Xiao.",
+            "The name was decided as Xiao Xiao.",
+            "I decided on the name Xiao Xiao.",
+            "Xiao Xiao decided the name."
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "「～に決まりました」表示「被決定為～」。"
+          }
+        },
+        {
+          "type": "cloze",
+          "prompt": {
+            "ja": "動物園は、みんなに＿＿＿＿しています。",
+            "zh": "動物園＿＿＿＿大家。"
+          },
+          "audioText": "",
+          "options": [
+            "大好き",
+            "感謝",
+            "有名",
+            "嬉しい"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "根據文章內容，動物園感謝大家為熊貓寶寶想名字。「感謝する」是正確的動詞。"
+          }
+        }
+      ],
+      "dictation": [
+        {
+          "ja": "パンダの赤ちゃんはとてもかわいいです。",
+          "furigana": "パンダのあかちゃんはとてもかわいいです。",
+          "accept": [
+            "パンダのあかちゃんはとてもかわいいです。",
+            "パンダの赤ちゃんはとてもかわいいです。"
+          ],
+          "hint": "關於熊貓寶寶的形容詞"
+        }
+      ],
+      "speaking": [
+        {
+          "ja": "上野動物園に、パンダの赤ちゃんが二人います。",
+          "furigana": "うえのどうぶつえんに、パンダのあかちゃんがふたりいます。",
+          "zh": "在上野動物園，有兩隻熊貓寶寶。",
+          "focus": "intonation",
+          "linking": "「動物園に」的「に」輕讀"
+        }
+      ],
+      "id": "daily-2026-07-30-N5",
+      "date": "2026-07-30",
+      "level": "N5"
+    },
+    {
+      "title": {
         "ja": "桜の開花、日本で始まる",
         "furigana": "さくらのかいか、にほんではじまる",
         "zh": "櫻花開花，在日本開始了",
