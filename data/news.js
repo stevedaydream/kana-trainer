@@ -7,6 +7,281 @@ window.KANA_NEWS = {
   "packs": [
     {
       "title": {
+        "ja": "猫が人気！駅長さんのお仕事",
+        "furigana": "ねこがにんき！えきちょうさんのおしごと",
+        "zh": "貓咪很受歡迎！站長的工作",
+        "en": "Cats are Popular! Stationmaster's Job"
+      },
+      "source": {
+        "title": "和歌山電鐵貴志川線貴志駅のたま駅長",
+        "publisher": "Yahoo!ニュース (トピックス)",
+        "url": "https://news.yahoo.co.jp/topics/business",
+        "note": "原創、分級改寫之摘要，非重製原文。"
+      },
+      "summary": [
+        {
+          "ja": "和歌山県に「たま駅長」という猫がいました。この猫は駅の仕事をして、とても人気がありました。たくさんの人がたま駅長に会いに来ました。駅が有名になり、電車に乗る人も増えました。",
+          "furigana": "わかやまけんに「たまえきちょう」というねこがいました。このねこはえきのしごとをして、とてもにんきがありました。たくさんのひとがたまえきちょうにあいにきました。えきがゆうめいになり、でんしゃにのるひともふえました。",
+          "zh": "在和歌山縣有一隻名叫「小玉站長」的貓。這隻貓在車站工作，非常受歡迎。許多人特地來見小玉站長。車站變得有名，搭乘電車的人也增加了。",
+          "en": "There was a cat named 'Tama Stationmaster' in Wakayama Prefecture. This cat worked at the station and was very popular. Many people came to see Tama Stationmaster. The station became famous, and more people started taking the train."
+        },
+        {
+          "ja": "たま駅長は、駅の制服を着ていました。お客さんを歓迎する大切な仕事です。残念ながら、たま駅長はもういません。でも、今は「ニタマ駅長」という別の猫が駅長をしています。ニタマ駅長も、たま駅長と同じように頑張っています。",
+          "furigana": "たまえきちょうは、えきのせいふくをきていました。おきゃくさんをかんげいするたいせつなしごとです。ざんねんながら、たまえきちょうはもういません。でも、いまは「にたまえきちょう」というべつのねこがえきちょうをしています。にたまえきちょうも、たまえきちょうとおなじようにがんばっています。",
+          "zh": "小玉站長穿著車站制服。這是一項歡迎顧客的重要工作。很遺憾，小玉站長已經不在了。但是，現在有另一隻名叫「二玉站長」的貓咪擔任站長。二玉站長也和小玉站長一樣努力工作著。",
+          "en": "Tama Stationmaster wore a station uniform. It was an important job to welcome customers. Unfortunately, Tama Stationmaster is no longer with us. However, now another cat named 'Nitama Stationmaster' is working as the stationmaster. Nitama Stationmaster is also working hard, just like Tama Stationmaster."
+        }
+      ],
+      "vocab": [
+        {
+          "word": "駅長",
+          "reading": "えきちょう",
+          "zh": "站長",
+          "en": "stationmaster",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "駅長さんはとても親切です。",
+            "zh": "站長非常親切。"
+          }
+        },
+        {
+          "word": "人気",
+          "reading": "にんき",
+          "zh": "受歡迎",
+          "en": "popular, popularity",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "この歌は人気があります。",
+            "zh": "這首歌很受歡迎。"
+          }
+        },
+        {
+          "word": "制服",
+          "reading": "せいふく",
+          "zh": "制服",
+          "en": "uniform",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "学校の制服を着ます。",
+            "zh": "穿學校制服。"
+          }
+        },
+        {
+          "word": "歓迎する",
+          "reading": "かんげいする",
+          "zh": "歡迎",
+          "en": "to welcome",
+          "pos": "verb",
+          "jlpt": "N5",
+          "example": {
+            "ja": "お客さんを歓迎します。",
+            "zh": "歡迎客人。"
+          }
+        },
+        {
+          "word": "増える",
+          "reading": "ふえる",
+          "zh": "增加",
+          "en": "to increase",
+          "pos": "verb",
+          "jlpt": "N5",
+          "example": {
+            "ja": "日本に来る外国人が増えました。",
+            "zh": "來日本的外國人增加了。"
+          }
+        }
+      ],
+      "grammar": [
+        {
+          "point": "～という",
+          "zh": "叫做～的",
+          "en": "named ~, called ~",
+          "example": {
+            "ja": "「たま駅長」という猫がいました。",
+            "zh": "有一隻叫做「小玉站長」的貓。"
+          },
+          "note": "用於介紹人或事物的名稱。名詞 + という + 名詞。"
+        },
+        {
+          "point": "～に会いに来る",
+          "zh": "來見～",
+          "en": "come to meet ~",
+          "example": {
+            "ja": "たくさんの人がたま駅長に会いに来ました。",
+            "zh": "許多人特地來見小玉站長。"
+          },
+          "note": "動詞ます形 + に + 来る/行く。表示目的。"
+        },
+        {
+          "point": "～て、～",
+          "zh": "～，然後～ (表示動作的順序或原因)",
+          "en": "~ and then ~, ~ing (connecting clauses, often implying sequence or cause)",
+          "example": {
+            "ja": "駅が有名になり、電車に乗る人も増えました。",
+            "zh": "車站變得有名，搭乘電車的人也增加了。"
+          },
+          "note": "動詞て形或い形容詞語幹+くて、な形容詞/名詞+で連接兩個句子。"
+        },
+        {
+          "point": "～と同じように",
+          "zh": "和～一樣",
+          "en": "just like ~",
+          "example": {
+            "ja": "たま駅長と同じように頑張っています。",
+            "zh": "和小玉站長一樣努力著。"
+          },
+          "note": "名詞 + と同じように。表示比較或相似。"
+        }
+      ],
+      "quiz": [
+        {
+          "type": "reading",
+          "prompt": {
+            "ja": "「駅長」の正しい読み方はどれですか。",
+            "zh": "「駅長」的正確讀音是哪一個？"
+          },
+          "options": [
+            "えきちょう",
+            "えきなが",
+            "えきおさ",
+            "えきだい"
+          ],
+          "answer": 0,
+          "explain": {
+            "zh": "「駅長」的正確讀音是「えきちょう」。"
+          }
+        },
+        {
+          "type": "vocab",
+          "prompt": {
+            "ja": "「人気」の意味はどれですか。",
+            "zh": "「人気」的意思是哪一個？"
+          },
+          "options": [
+            "お金",
+            "食べ物",
+            "受歡迎",
+            "時間"
+          ],
+          "answer": 2,
+          "explain": {
+            "zh": "「人気（にんき）」的意思是「受歡迎」。"
+          }
+        },
+        {
+          "type": "grammar",
+          "prompt": {
+            "ja": "「私は田中さん＿＿＿会いに来ました。」に当てはまる助詞はどれですか。",
+            "zh": "「我來見田中先生。」填入空格的助詞是哪一個？"
+          },
+          "options": [
+            "が",
+            "を",
+            "に",
+            "で"
+          ],
+          "answer": 2,
+          "explain": {
+            "zh": "動詞「会う」的對象用助詞「に」。所以是「田中さんに会いに来ました」。"
+          }
+        },
+        {
+          "type": "cloze",
+          "prompt": {
+            "ja": "たま駅長は、駅の（＿＿＿＿）を着ていました。",
+            "zh": "小玉站長穿著車站的（＿＿＿＿）。"
+          },
+          "options": [
+            "服",
+            "制服",
+            "帽子",
+            "靴"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "根據文章，小玉站長穿著車站的「制服」。"
+          }
+        },
+        {
+          "type": "listening",
+          "prompt": {
+            "ja": "「お客さんを歓迎する大切な仕事です。」この文の意味は何ですか。",
+            "zh": "「お客さんを歓迎する大切な仕事です。」這句話是什麼意思？"
+          },
+          "audioText": "お客さんを歓迎する大切な仕事です。",
+          "options": [
+            "這是賣東西的重要工作。",
+            "這是歡迎客人的重要工作。",
+            "這是打掃車站的重要工作。",
+            "這是開電車的重要工作。"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "「歓迎する」是歡迎的意思，「お客さん」是客人。所以這句話是「這是歡迎客人的重要工作」。"
+          }
+        }
+      ],
+      "dictation": [
+        {
+          "ja": "猫が人気！",
+          "furigana": "ねこがにんき！",
+          "accept": [
+            "ねこがにんき",
+            "猫が人気"
+          ],
+          "hint": "貓咪很受歡迎！"
+        },
+        {
+          "ja": "駅長さんのお仕事。",
+          "furigana": "えきちょうさんのおしごと。",
+          "accept": [
+            "えきちょうさんのおしごと",
+            "駅長さんのお仕事"
+          ],
+          "hint": "站長的工作。"
+        },
+        {
+          "ja": "たくさんの人が来ました。",
+          "furigana": "たくさんのひとがきました。",
+          "accept": [
+            "たくさんのひとがきました",
+            "たくさんの人が来ました"
+          ],
+          "hint": "許多人來了。"
+        }
+      ],
+      "speaking": [
+        {
+          "ja": "猫が人気！",
+          "furigana": "ねこがにんき！",
+          "zh": "貓咪很受歡迎！",
+          "focus": "intonation",
+          "linking": ""
+        },
+        {
+          "ja": "駅長さんのお仕事です。",
+          "furigana": "えきちょうさんのおしごとです。",
+          "zh": "是站長的工作。",
+          "focus": "pacing",
+          "linking": ""
+        },
+        {
+          "ja": "頑張っています。",
+          "furigana": "がんばっています。",
+          "zh": "正在努力。",
+          "focus": "intonation",
+          "linking": ""
+        }
+      ],
+      "id": "daily-2026-08-05-N5",
+      "date": "2026-08-05",
+      "level": "N5"
+    },
+    {
+      "title": {
         "ja": "かわいいパンダの赤ちゃん、名前は？",
         "furigana": "かわいいパンダのあかちゃん、なまえは？",
         "zh": "可爱熊猫宝宝，名字是什么？",
