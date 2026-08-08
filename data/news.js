@@ -7,6 +7,261 @@ window.KANA_NEWS = {
   "packs": [
     {
       "title": {
+        "ja": "猫はいつも人気ですね！",
+        "furigana": "ねこはいつもにんきですね！",
+        "zh": "貓咪總是那麼受歡迎呢！",
+        "en": "Cats are always popular!"
+      },
+      "source": {
+        "title": "猫の動画を見る人は多いです",
+        "publisher": "Yahoo!ニュース",
+        "url": "https://news.yahoo.co.jp/topics/animal",
+        "note": "原創、分級改寫之摘要，非重製原文。"
+      },
+      "summary": [
+        {
+          "ja": "最近、猫の動画がとても人気があります。",
+          "furigana": "さいきん、ねこのどうががとてもにんきがあります。",
+          "zh": "最近，貓咪的影片非常受歡迎。",
+          "en": "Recently, cat videos are very popular."
+        },
+        {
+          "ja": "多くの人がインターネットで猫を見ます。",
+          "furigana": "おおくのひとがインターネットでねこをみます。",
+          "zh": "很多人在網路上看貓咪。",
+          "en": "Many people watch cats on the internet."
+        },
+        {
+          "ja": "猫はかわいいです。面白い動きもします。",
+          "furigana": "ねこはかわいいです。おもしろいうごきもします。",
+          "zh": "貓咪很可愛。牠們也會做出有趣的動作。",
+          "en": "Cats are cute. They also make funny movements."
+        },
+        {
+          "ja": "だから、みんな猫の動画が好きです。",
+          "furigana": "だから、みんなねこのどうががすきです。",
+          "zh": "所以，大家都喜歡貓咪的影片。",
+          "en": "Therefore, everyone likes cat videos."
+        }
+      ],
+      "vocab": [
+        {
+          "word": "最近",
+          "reading": "さいきん",
+          "zh": "最近",
+          "en": "recently",
+          "pos": "名詞",
+          "jlpt": "N5",
+          "example": {
+            "ja": "最近、忙しいですか。",
+            "zh": "你最近忙嗎？"
+          }
+        },
+        {
+          "word": "動画",
+          "reading": "どうが",
+          "zh": "影片",
+          "en": "video",
+          "pos": "名詞",
+          "jlpt": "N5",
+          "example": {
+            "ja": "この動画は面白いです。",
+            "zh": "這個影片很有趣。"
+          }
+        },
+        {
+          "word": "人気",
+          "reading": "にんき",
+          "zh": "受歡迎、人氣",
+          "en": "popular, popularity",
+          "pos": "名詞",
+          "jlpt": "N5",
+          "example": {
+            "ja": "この歌は人気があります。",
+            "zh": "這首歌很受歡迎。"
+          }
+        },
+        {
+          "word": "見る",
+          "reading": "みる",
+          "zh": "看",
+          "en": "to see, to watch",
+          "pos": "動詞",
+          "jlpt": "N5",
+          "example": {
+            "ja": "テレビを見ます。",
+            "zh": "看電視。"
+          }
+        },
+        {
+          "word": "面白い",
+          "reading": "おもしろい",
+          "zh": "有趣的",
+          "en": "interesting, funny",
+          "pos": "形容詞",
+          "jlpt": "N5",
+          "example": {
+            "ja": "この本は面白いです。",
+            "zh": "這本書很有趣。"
+          }
+        }
+      ],
+      "grammar": [
+        {
+          "point": "名詞 + が + あります/います",
+          "zh": "表示存在，用於非生物/生物。",
+          "en": "Indicates existence, used for inanimate objects/animate beings.",
+          "example": {
+            "ja": "猫がいます。本があります。",
+            "zh": "有貓。有書。"
+          },
+          "note": "が助詞表示主語。"
+        },
+        {
+          "point": "名詞 + は + 形容詞 + です",
+          "zh": "描述名詞的性質。",
+          "en": "Describes the quality of a noun.",
+          "example": {
+            "ja": "猫はかわいいです。",
+            "zh": "貓咪很可愛。"
+          },
+          "note": "は助詞表示主題。"
+        }
+      ],
+      "quiz": [
+        {
+          "type": "reading",
+          "prompt": {
+            "ja": "「猫の動画が人気です。」の正しい読み方はどれですか。",
+            "zh": "「猫の動画が人気です。」的正確讀音是哪一個？"
+          },
+          "audioText": "",
+          "options": [
+            "ねこのどうががにんきです。",
+            "いぬのどうががにんきです。",
+            "ねこのえいががにんきです。",
+            "ねこのうたがにんきです。"
+          ],
+          "answer": 0,
+          "explain": {
+            "zh": "「猫 (ねこ)」是貓，「動画 (どうが)」是影片，「人気 (にんき)」是受歡迎。"
+          }
+        },
+        {
+          "type": "vocab",
+          "prompt": {
+            "ja": "「最近」の英語の意味は何ですか。",
+            "zh": "「最近」的英文意思是什麼？"
+          },
+          "audioText": "",
+          "options": [
+            "Today",
+            "Tomorrow",
+            "Recently",
+            "Yesterday"
+          ],
+          "answer": 2,
+          "explain": {
+            "zh": "「最近 (さいきん)」的意思是 recently。"
+          }
+        },
+        {
+          "type": "grammar",
+          "prompt": {
+            "ja": "次の文で正しいのはどれですか。「猫＿＿かわいいです。」",
+            "zh": "下列哪個句子是正確的？「貓＿＿很可愛。」"
+          },
+          "audioText": "",
+          "options": [
+            "が",
+            "は",
+            "を",
+            "と"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "用「は」來標示主題，描述貓咪的可愛。"
+          }
+        },
+        {
+          "type": "listening",
+          "prompt": {
+            "ja": "「面白い動きもします。」この文は何と言っていますか。",
+            "zh": "「面白い動きもします。」這句話說了什麼？"
+          },
+          "audioText": "おもしろいうごきもします。",
+          "options": [
+            "貓咪不喜歡動。",
+            "貓咪會做有趣的動作。",
+            "貓咪只會睡覺。",
+            "貓咪很安靜。"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "「面白い (おもしろい)」是有趣的，「動き (うごき)」是動作，「する (します)」是做。"
+          }
+        },
+        {
+          "type": "cloze",
+          "prompt": {
+            "ja": "多くの人がインターネットで猫を＿＿＿＿。",
+            "zh": "很多人在網路上看貓咪。"
+          },
+          "audioText": "",
+          "options": [
+            "食べます",
+            "買います",
+            "見ます",
+            "話します"
+          ],
+          "answer": 2,
+          "explain": {
+            "zh": "「見る (みる/見ます)」意思是看。"
+          }
+        }
+      ],
+      "dictation": [
+        {
+          "ja": "猫はかわいいです。",
+          "furigana": "ねこはかわいいです。",
+          "accept": [
+            "ねこはかわいいです",
+            "猫はかわいいです"
+          ],
+          "hint": "動物の名前です"
+        },
+        {
+          "ja": "動画を見ます。",
+          "furigana": "どうがをみます。",
+          "accept": [
+            "どうがをみます",
+            "動画を見ます"
+          ],
+          "hint": "インターネットでよく見ます"
+        }
+      ],
+      "speaking": [
+        {
+          "ja": "猫はいつも人気ですね。",
+          "furigana": "ねこはいつもにんきですね。",
+          "zh": "貓咪總是那麼受歡迎呢。",
+          "focus": "intonation",
+          "linking": ""
+        },
+        {
+          "ja": "私も猫の動画が好きです。",
+          "furigana": "わたしもねこのどうががすきです。",
+          "zh": "我也喜歡貓咪的影片。",
+          "focus": "pacing",
+          "linking": ""
+        }
+      ],
+      "id": "daily-2026-08-08-N5",
+      "date": "2026-08-08",
+      "level": "N5"
+    },
+    {
+      "title": {
         "ja": "かわいいパンダの赤ちゃん、名前は「シャオシャオ」と「レイレイ」！",
         "furigana": "かわいいパンダのあかちゃん、なまえは「シャオシャオ」と「レイレイ」！",
         "zh": "可愛熊貓寶寶，名字是「曉曉」和「蕾蕾」！",
