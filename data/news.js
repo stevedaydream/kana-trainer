@@ -7,6 +7,278 @@ window.KANA_NEWS = {
   "packs": [
     {
       "title": {
+        "ja": "動物園の赤ちゃんパンダ",
+        "furigana": "どうぶつえんのあかちゃんパンダ",
+        "zh": "動物園的熊貓寶寶",
+        "en": "Zoo's Baby Panda"
+      },
+      "source": {
+        "title": "上野動物園のジャイアントパンダ「シャンシャン」",
+        "publisher": "東京ズーネット",
+        "url": "https://www.tokyo-zoo.net/topic/topics_detail?topic_id=313",
+        "note": "原創、分級改寫之摘要，非重製原文。"
+      },
+      "summary": [
+        {
+          "ja": "東京の動物園に、かわいい赤ちゃんパンダがいます。",
+          "furigana": "とうきょうのどうぶつえんに、かわいいあかちゃんパンダがいます。",
+          "zh": "東京的動物園裡，有一隻可愛的熊貓寶寶。",
+          "en": "There is a cute baby panda at a zoo in Tokyo."
+        },
+        {
+          "ja": "名前はシャオシャオとレイレイです。双子のパンダです。",
+          "furigana": "なまえはシャオシャオとレイレイです。ふたごのパンダです。",
+          "zh": "牠們的名字是曉曉和蕾蕾。是雙胞胎熊貓。",
+          "en": "Their names are Xiao Xiao and Lei Lei. They are twin pandas."
+        },
+        {
+          "ja": "彼らはとても元気です。たくさん遊びます。",
+          "furigana": "かれらはとてもげんきです。たくさんあそびます。",
+          "zh": "牠們非常有活力。玩很多遊戲。",
+          "en": "They are very energetic. They play a lot."
+        },
+        {
+          "ja": "毎日、たくさんの人がパンダを見に来ます。",
+          "furigana": "まいにち、たくさんのひとがパンダをみにきます。",
+          "zh": "每天都有很多人來看熊貓。",
+          "en": "Many people come to see the pandas every day."
+        },
+        {
+          "ja": "パンダはみんなを笑顔にします。",
+          "furigana": "パンダはみんなをえがおにします。",
+          "zh": "熊貓讓大家露出笑容。",
+          "en": "Pandas make everyone smile."
+        }
+      ],
+      "vocab": [
+        {
+          "word": "動物園",
+          "reading": "どうぶつえん",
+          "zh": "動物園",
+          "en": "zoo",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "私は動物園が好きです。",
+            "zh": "我喜歡動物園。"
+          }
+        },
+        {
+          "word": "赤ちゃん",
+          "reading": "あかちゃん",
+          "zh": "嬰兒、寶寶",
+          "en": "baby",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "赤ちゃんが寝ています。",
+            "zh": "寶寶正在睡覺。"
+          }
+        },
+        {
+          "word": "双子",
+          "reading": "ふたご",
+          "zh": "雙胞胎",
+          "en": "twins",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "彼らは双子です。",
+            "zh": "他們是雙胞胎。"
+          }
+        },
+        {
+          "word": "元気",
+          "reading": "げんき",
+          "zh": "有活力、健康",
+          "en": "energetic, healthy",
+          "pos": "adj-na",
+          "jlpt": "N5",
+          "example": {
+            "ja": "彼はとても元気です。",
+            "zh": "他非常有活力。"
+          }
+        },
+        {
+          "word": "笑顔",
+          "reading": "えがお",
+          "zh": "笑容",
+          "en": "smile",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "彼女はいつも笑顔です。",
+            "zh": "她總是面帶笑容。"
+          }
+        }
+      ],
+      "grammar": [
+        {
+          "point": "〜がいます / 〜があります",
+          "zh": "表示「有」生命或無生命物體的存在。",
+          "en": "Indicates the existence of animate or inanimate objects.",
+          "example": {
+            "ja": "動物園にパンダがいます。",
+            "zh": "動物園裡有熊貓。"
+          },
+          "note": "「います」用於人或動物，「あります」用於無生命物體。"
+        },
+        {
+          "point": "〜と〜です",
+          "zh": "用於連接兩個名詞，表示「和」。",
+          "en": "Used to connect two nouns, meaning 'and'.",
+          "example": {
+            "ja": "シャオシャオとレイレイです。",
+            "zh": "是曉曉和蕾蕾。"
+          },
+          "note": "常用於列舉或介紹多個項目。"
+        },
+        {
+          "point": "たくさん",
+          "zh": "表示「很多」的數量或程度。",
+          "en": "Indicates 'a lot' of quantity or degree.",
+          "example": {
+            "ja": "たくさん遊びます。",
+            "zh": "玩很多遊戲。"
+          },
+          "note": "可修飾動詞或名詞。"
+        },
+        {
+          "point": "〜を見に来ます",
+          "zh": "表示「來做某事」的目的，這裡指「來看」。",
+          "en": "Expresses the purpose of coming to do something, here 'come to see'.",
+          "example": {
+            "ja": "パンダを見に来ます。",
+            "zh": "來看熊貓。"
+          },
+          "note": "動詞ます形 + に来ます/行きます。"
+        },
+        {
+          "point": "〜を笑顔にします",
+          "zh": "表示「使某人/某物變成某種狀態」，這裡指「使人笑容」。",
+          "en": "Indicates 'making someone/something into a certain state', here 'make people smile'.",
+          "example": {
+            "ja": "パンダはみんなを笑顔にします。",
+            "zh": "熊貓讓大家露出笑容。"
+          },
+          "note": "名詞 + を + 形容詞/名詞 + にします。"
+        }
+      ],
+      "quiz": [
+        {
+          "type": "reading",
+          "prompt": {
+            "ja": "「動物園」の正しい読み方はどれですか？",
+            "zh": "「動物園」的正確讀法是哪個？"
+          },
+          "options": [
+            "どうぶつえん",
+            "どうぶつえん",
+            "どうぶつえん",
+            "どうぶつえん"
+          ],
+          "answer": 0,
+          "explain": {
+            "zh": "「動物園」的讀音是「どうぶつえん」。"
+          }
+        },
+        {
+          "type": "vocab",
+          "prompt": {
+            "ja": "「元気」の日本語の意味は何ですか？",
+            "zh": "「元気」的日文意思是什麼？"
+          },
+          "audioText": "",
+          "options": [
+            "Sad",
+            "Energetic",
+            "Sleepy",
+            "Hungry"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "「元気」的意思是有活力、健康。"
+          }
+        },
+        {
+          "type": "grammar",
+          "prompt": {
+            "ja": "次の文の空欄に適切な助詞を入れてください：「東京＿＿動物園に、パンダがいます。」",
+            "zh": "請在以下句子的空格中填入適當的助詞：「東京＿＿動物園に、パンダがいます。」"
+          },
+          "options": [
+            "を",
+            "で",
+            "に",
+            "の"
+          ],
+          "answer": 3,
+          "explain": {
+            "zh": "「東京の動物園」表示「東京的動物園」，用助詞「の」來修飾名詞。"
+          }
+        },
+        {
+          "type": "cloze",
+          "prompt": {
+            "ja": "パンダはみんなを＿＿にします。",
+            "zh": "熊貓讓大家＿＿。"
+          },
+          "options": [
+            "悲しい",
+            "怒り",
+            "笑顔",
+            "疲れ"
+          ],
+          "answer": 2,
+          "explain": {
+            "zh": "根據原文，熊貓讓大家露出笑容，所以是「笑顔」。"
+          }
+        },
+        {
+          "type": "listening",
+          "prompt": {
+            "ja": "「双子のパンダです。」と聞こえます。これは何と言っていますか？",
+            "zh": "你聽到「双子のパンダです。」。這是什麼意思？"
+          },
+          "audioText": "双子のパンダです。",
+          "options": [
+            "They are big pandas.",
+            "They are twin pandas.",
+            "They are baby pandas.",
+            "They are sleeping pandas."
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "「双子（ふたご）」的意思是雙胞胎。"
+          }
+        }
+      ],
+      "dictation": [
+        {
+          "ja": "東京の動物園に、かわいい赤ちゃんパンダがいます。",
+          "furigana": "とうきょうのどうぶつえんに、かわいいあかちゃんパンダがいます。",
+          "accept": [
+            "とうきょうのどうぶつえんに、かわいいあかちゃんパンダがいます。",
+            "東京の動物園に、かわいい赤ちゃんパンダがいます。"
+          ],
+          "hint": "東京/動物園/かわいい/赤ちゃん/パンダ/います"
+        }
+      ],
+      "speaking": [
+        {
+          "ja": "パンダはみんなを笑顔にします。",
+          "furigana": "パンダはみんなをえがおにします。",
+          "zh": "熊貓讓大家露出笑容。",
+          "focus": "intonation",
+          "linking": ""
+        }
+      ],
+      "id": "daily-2026-08-09-N5",
+      "date": "2026-08-09",
+      "level": "N5"
+    },
+    {
+      "title": {
         "ja": "猫はいつも人気ですね！",
         "furigana": "ねこはいつもにんきですね！",
         "zh": "貓咪總是那麼受歡迎呢！",
