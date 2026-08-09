@@ -201,6 +201,14 @@ a{color:var(--ruri)}
 .btn-row{display:flex;gap:10px;margin-top:10px}
 .btn-row button{flex:1}
 .settings textarea{width:100%;min-height:64px;margin-top:10px;font-family:inherit;font-size:.85rem;padding:10px;border:1.5px solid var(--line);border-radius:10px;background:var(--card);color:var(--sumi);resize:vertical}
+/* ---- 版本更新提示 ---- */
+.updatebar{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:50;
+  display:flex;align-items:center;gap:10px;max-width:calc(100% - 24px);
+  background:var(--ruri);color:#fff;border-radius:12px;padding:10px 12px;font-size:.88rem;
+  box-shadow:0 6px 20px rgba(31,71,136,.28)}
+.updatebar button{padding:7px 12px;font-size:.82rem;border-radius:8px;white-space:nowrap}
+.updatebar .go{background:#fff;color:var(--ruri);font-weight:700}
+.updatebar .later{background:transparent;color:#dfe7f5;border:1px solid rgba(255,255,255,.45)}
 /* ---- 辭庫管理 ---- */
 .settings .wb-sel{display:flex;gap:8px;margin-top:6px}
 .settings .wb-sel select{flex:1 1 0;min-width:0}
@@ -1770,9 +1778,40 @@ a{color:var(--ruri)}
   })();
 
   /* ---------- PWA：file:// 開啟時自動略過，不影響運作 ---------- */
+  function updateBanner(worker) {
+    if (document.querySelector(".updatebar")) return;   // 已經提示過就不重複
+    const bar = document.createElement("div");
+    bar.className = "updatebar";
+    bar.innerHTML = '<span>🆕 有新版本</span><button class="go">立即更新</button><button class="later">稍後</button>';
+    bar.querySelector(".go").addEventListener("click", () => {
+      bar.querySelector(".go").textContent = "更新中…";
+      worker.postMessage({ type: "SKIP_WAITING" });   // 接管後 controllerchange 會觸發重新載入
+    });
+    bar.querySelector(".later").addEventListener("click", () => bar.remove());
+    document.body.appendChild(bar);
+  }
   if ("serviceWorker" in navigator && /^https?:$/.test(location.protocol)) {
+    const hadController = !!navigator.serviceWorker.controller;   // 首次安裝不該提示、也不該自動重整
+    let reloading = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (!hadController || reloading) return;
+      reloading = true; location.reload();
+    });
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("sw.js").catch(() => {});
+      navigator.serviceWorker.register("sw.js").then(reg => {
+        if (reg.waiting && hadController) updateBanner(reg.waiting);   // 上次沒按「立即更新」
+        reg.addEventListener("updatefound", () => {
+          const sw = reg.installing;
+          if (!sw) return;
+          sw.addEventListener("statechange", () => {
+            if (sw.state === "installed" && navigator.serviceWorker.controller) updateBanner(sw);
+          });
+        });
+        // 長時間開著同一頁的情況：切回前景時再問一次有沒有新版
+        document.addEventListener("visibilitychange", () => {
+          if (!document.hidden) reg.update().catch(() => {});
+        });
+      }).catch(() => {});
     });
   }
 })();

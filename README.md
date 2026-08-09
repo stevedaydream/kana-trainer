@@ -7,6 +7,12 @@
 - **本機直接開**：雙擊 `index.html` 即可（file:// 下自動略過 Service Worker，功能完整）。
 - **PWA 安裝**：以任一靜態伺服器託管（例如 `npx serve` 或 GitHub Pages），瀏覽器網址列會出現「安裝」按鈕；安裝後可離線使用。
 
+### 更新機制
+
+`sw.js` 對**主程式與資料檔**（`index.html`、`data/*.js`）採 network-first：連線時一律取最新，所以每日新聞包、題庫、辭庫的更新會直接送達，**不依賴你記得調 `VERSION`**；離線時才退回快取。圖示與配圖維持 cache-first。
+
+新版 Service Worker 安裝後不會自動接管（不呼叫 `skipWaiting`），改在畫面下方跳出「🆕 有新版本 — 立即更新／稍後」橫幅，按下才接管並重新載入——避免有人正在做 60 秒考試時被硬重整。改動 app shell 後仍建議調高 `sw.js` 的 `VERSION`：它負責重建預快取、清掉舊快取。
+
 ## 玩法
 
 1. **翻牌練習**（每級 Part 1 平假名 / Part 2 片假名 / Part 3 混合）：亮假名 → 先在心裡唸 → 點卡揭曉（羅馬音＋字源＋圖＋單詞＋播音）→ 自評「✓記得 / ✗忘了」。
@@ -75,7 +81,7 @@ kana-trainer/
 ├─ data/news.js          # 每日新聞包歷史（AI 離線管線產出）
 ├─ scripts/validate.mjs  # 題庫驗證：node scripts/validate.mjs
 ├─ manifest.webmanifest  # PWA manifest
-├─ sw.js                 # Service Worker（app shell 預快取 + 配圖 runtime cache）
+├─ sw.js                 # Service Worker（主程式/資料檔 network-first、圖片 cache-first）
 ├─ icon.svg              # 應用圖示（img/icon-192.png、img/icon-512.png 為 PNG 版）
 └─ project.md            # 專案規格
 ```
