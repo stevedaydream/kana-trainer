@@ -201,6 +201,20 @@ a{color:var(--ruri)}
 .btn-row{display:flex;gap:10px;margin-top:10px}
 .btn-row button{flex:1}
 .settings textarea{width:100%;min-height:64px;margin-top:10px;font-family:inherit;font-size:.85rem;padding:10px;border:1.5px solid var(--line);border-radius:10px;background:var(--card);color:var(--sumi);resize:vertical}
+/* ---- 辭庫管理 ---- */
+.settings .wb-sel{display:flex;gap:8px;margin-top:6px}
+.settings .wb-sel select{flex:1 1 0;min-width:0}
+.settings .wb-row{display:flex;align-items:center;gap:8px;padding:9px 4px;border-bottom:1px dashed #ece6d8}
+.settings .wb-row .ww{font-size:1.05rem;font-weight:700;flex:0 0 auto}
+.settings .wb-row .wz{flex:1 1 0;min-width:0;font-size:.82rem;color:#8a8272;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.settings .wb-row .src{flex:0 0 auto;font-size:.68rem;border-radius:5px;padding:1px 5px}
+.settings .wb-row .src.own{background:#fff4d6;color:#a2643a;border:1px solid #f0d98a}
+.settings .wb-row .src.std{background:#eef2fa;color:var(--ruri);border:1px solid #d3ddf0}
+.settings .wb-row button{flex:0 0 auto;padding:6px 9px;font-size:.8rem;border-radius:8px}
+.settings .wb-empty{font-size:.85rem;color:#8a8272;padding:10px 4px}
+.settings .wb-add{display:flex;gap:8px;margin-top:10px}
+.settings .wb-add input{flex:1 1 0;min-width:0;font-family:inherit;font-size:.95rem;padding:10px;border:1.5px solid var(--line);border-radius:10px;background:var(--card);color:var(--sumi)}
+.settings .wb-add button{flex:0 0 auto}
 /* ---- 今日計畫 ---- */
 .panel.plan .task{display:flex;justify-content:space-between;align-items:center;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;margin-top:8px;cursor:pointer;background:var(--paper)}
 .panel.plan .task.ok{opacity:.6;background:#eef4ee;border-color:#cfe3cf;cursor:default}
@@ -315,15 +329,66 @@ a{color:var(--ruri)}
     tts: { persona: "default", voiceURI: "", rate: 0.85, pitch: 1.0, gender: "" },
     star: {},
     plan: { intensity: "normal", casualRandom: true, progress: { date: "", level: 0, weak: 0, random: 0, write: 0 } },
-    news: { level: "N5", furigana: true, doneDays: {}, quizBest: {}, inputDone: {} }
+    news: { level: "N5", furigana: true, doneDays: {}, quizBest: {}, inputDone: {} },
+    wb: {}   // 辭庫自訂層：{ "<假名>": { add: [{w,zh}], hide: ["<被隱藏的內建詞>"] } }
   };
   const NEWS = (window.KANA_NEWS && Array.isArray(window.KANA_NEWS.packs) && window.KANA_NEWS.packs.length)
     ? window.KANA_NEWS.packs : null;
   const WORDBANK = (window.KANA_WORDBANK && typeof window.KANA_WORDBANK === "object") ? window.KANA_WORDBANK : {};
-  // 讀音辭庫：某假名若有多詞則隨機抽一個，否則退回題庫單一 w/zh
+  /* ---------- 讀音辭庫（內建內容檔 + 使用者自訂層） ----------
+   * data/wordbank.js 是唯讀內容檔；使用者在設定裡的增刪只寫進存檔的 P.wb，
+   * 所以換辭庫內容檔不會沖掉自訂，自訂也會一起進備份 JSON。
+   * 詞首規則比照題庫：這些音不作詞首，改為「詞中含該假名」。 */
+  const WB_PREFIX_FREE = new Set(["を", "ん", "ヲ", "ン", "ぢ", "づ", "ヂ", "ヅ"]);
+  const WB_KANA_ONLY = /^[ぁ-ゖゝゞァ-ヺー-ヾ]+$/;   // 平/片假名＋長音符・繰り返し記号
+  function wbBase(k) { const l = WORDBANK[k]; return Array.isArray(l) ? l.filter(c => c && c.w && c.zh) : []; }
+  function wbOwn(k) { const e = P.wb[k]; return (e && Array.isArray(e.add)) ? e.add.filter(c => c && c.w && c.zh) : []; }
+  function wbHidden(k) { const e = P.wb[k]; return new Set((e && Array.isArray(e.hide)) ? e.hide : []); }
+  function wbEnsure(k) {
+    const e = P.wb[k] || (P.wb[k] = { add: [], hide: [] });
+    if (!Array.isArray(e.add)) e.add = [];
+    if (!Array.isArray(e.hide)) e.hide = [];
+    return e;
+  }
+  function wbList(k) {   // 合併結果：內建（扣掉隱藏）＋ 自訂；同 w 的自訂覆蓋內建（可改中文）
+    const hide = wbHidden(k), own = wbOwn(k), ownMap = new Map(own.map(c => [c.w, c]));
+    const out = [];
+    wbBase(k).forEach(c => { if (!hide.has(c.w)) out.push(ownMap.get(c.w) || c); });
+    own.forEach(c => { if (!hide.has(c.w) && !out.some(o => o.w === c.w)) out.push(c); });
+    return out;
+  }
+  function wbCustomised(k) { const e = P.wb[k]; return !!(e && ((e.add && e.add.length) || (e.hide && e.hide.length))); }
+  function wbValidate(k, w, zh, ignoreW) {   // ignoreW：編輯時排除自己，才能只改中文
+    if (!w) return "請輸入單詞。";
+    if (!zh) return "請輸入中文意思。";
+    if (!WB_KANA_ONLY.test(w)) return "單詞請只用假名（可含長音符「ー」），不要漢字或空白。";
+    if (WB_PREFIX_FREE.has(k)) { if (w.indexOf(k) < 0) return "「" + k + "」不作詞首，單詞須「包含」" + k + "。"; }
+    else if (w.indexOf(k) !== 0) return "單詞必須以「" + k + "」開頭。";
+    if (w !== ignoreW && wbList(k).some(c => c.w === w)) return "「" + w + "」已經在這個音的辭庫裡了。";
+    return "";
+  }
+  function wbAdd(k, w, zh) {   // 新增或覆寫（同 w 視為改中文）
+    const e = wbEnsure(k);
+    const i = e.hide.indexOf(w); if (i >= 0) e.hide.splice(i, 1);   // 曾隱藏的內建詞：加回來＝取消隱藏
+    const base = wbBase(k).find(c => c.w === w);
+    const j = e.add.findIndex(c => c.w === w);
+    if (base && base.zh === zh) { if (j >= 0) e.add.splice(j, 1); } // 改回跟內建一樣就不用存
+    else if (j >= 0) e.add[j] = { w, zh };
+    else e.add.push({ w, zh });
+    save();
+  }
+  function wbRemove(k, w) {
+    const e = wbEnsure(k);
+    const j = e.add.findIndex(c => c.w === w); if (j >= 0) e.add.splice(j, 1);
+    // 內建詞不能真的刪（內容檔唯讀），改記在 hide；純自訂詞上面已移除
+    if (wbBase(k).some(c => c.w === w) && !e.hide.includes(w)) e.hide.push(w);
+    save();
+  }
+  function wbReset(k) { delete P.wb[k]; save(); }
+  // 練習揭曉：某假名若有多詞則隨機抽一個，全被隱藏或本來就沒有時退回題庫單一 w/zh
   function pickWord(x) {
-    const list = WORDBANK[x.k];
-    if (Array.isArray(list) && list.length) { const c = list[Math.floor(Math.random() * list.length)]; if (c && c.w) return c; }
+    const list = wbList(x.k);
+    if (list.length) { const c = list[Math.floor(Math.random() * list.length)]; if (c && c.w) return c; }
     return { w: x.w, zh: x.zh };
   }
   // 學習強度預設：每日新級數、弱項頻率、隨機考次數、每 N 天一級
@@ -341,11 +406,11 @@ a{color:var(--ruri)}
   }
   function save() {
     store.set({ weights: P.weights, streak: P.streak, best: P.best, unlocked: P.unlocked,
-      warmup: P.warmup, srs: P.srs, daily: P.daily, tts: P.tts, star: P.star, plan: P.plan, news: P.news });
+      warmup: P.warmup, srs: P.srs, daily: P.daily, tts: P.tts, star: P.star, plan: P.plan, news: P.news, wb: P.wb });
   }
   function snapshot() {   // 供 JSON 備份：完整存檔物件
     return { weights: P.weights, streak: P.streak, best: P.best, unlocked: P.unlocked,
-      warmup: P.warmup, srs: P.srs, daily: P.daily, tts: P.tts, star: P.star, plan: P.plan, news: P.news };
+      warmup: P.warmup, srs: P.srs, daily: P.daily, tts: P.tts, star: P.star, plan: P.plan, news: P.news, wb: P.wb };
   }
 
   /* ----- FSRS-lite 間隔重複排程 ----- */
@@ -510,6 +575,14 @@ a{color:var(--ruri)}
   function kanaSizeClass(k) { return k.length > 1 ? "kana-big multi" : "kana-big"; }
   function unlockedLevels() { return LEVELS.filter(lv => lv.id <= P.unlocked); }
   function unlockedKana() { const out = []; unlockedLevels().forEach(lv => out.push(...lv.hira, ...lv.kata)); return out; }
+  // 「已練習」＝該級至少有一個假名被自評或考過（srs.reps > 0）。
+  // 剛考完 N 級解鎖 N+1 級、但還沒練過 N+1 級時，隨機考不該把 N+1 級算進去。
+  function isLevelStudied(lv) { return lv.hira.concat(lv.kata).some(x => { const s = P.srs[x.k]; return !!(s && s.reps > 0); }); }
+  function studiedLevels() {
+    const out = unlockedLevels().filter(isLevelStudied);
+    return out.length ? out : unlockedLevels().slice(0, 1);   // 全新使用者：至少給第 1 級，避免空池
+  }
+  function studiedKana() { const out = []; studiedLevels().forEach(lv => out.push(...lv.hira, ...lv.kata)); return out; }
   function rangeKana(loId, hiId, kinds) {   // kinds: "hira" | "kata" | "both"
     const out = [];
     LEVELS.forEach(lv => {
@@ -657,7 +730,7 @@ a{color:var(--ruri)}
       planHtml +
       '<div class="actions">' +
       '<button class="act primary" id="review"' + (due ? "" : " disabled") + '>📅 今日複習<span class="cnt">' + (due ? due + " 張到期" : "已完成 ✅") + '</span></button>' +
-      '<button class="act" id="random">🎲 每日隨機考<span class="cnt">60 題 ・ 45 及格</span></button>' +
+      '<button class="act" id="random">🎲 每日隨機考<span class="cnt">' + esc(randomExamLevelLabel()) + ' ・ 60 題 ・ 45 及格</span></button>' +
       '<button class="act" id="weak">💪 弱項鍛鍊</button>' +
       '<button class="act" id="challenge">🎯 總複習 / 挑戰</button>' +
       '<button class="act" id="confuse">🔀 易混淆特訓</button>' +
@@ -1062,13 +1135,19 @@ a{color:var(--ruri)}
     practiceScreen({ title: "弱項鍛鍊", sub: "依權重・忘記次數・星號加權", set, onBack: homeScreen, rounds: 1, planKind: "weak" });
   }
 
-  /* =====================  每日隨機考（已解鎖隨機 60 題，≥45 及格） ===================== */
+  /* =====================  每日隨機考（已練習級別隨機 60 題，≥45 及格） ===================== */
+  function randomExamLevelLabel() {
+    const ids = studiedLevels().map(lv => lv.id);
+    if (ids.length === 1) return "第 " + ids[0] + " 級";
+    const contiguous = ids[ids.length - 1] - ids[0] + 1 === ids.length;   // 跳級練習時可能不連續
+    return contiguous ? ids[0] + "–" + ids[ids.length - 1] + " 級" : "已練習 " + ids.length + " 級";
+  }
   function dailyRandomExam() {
-    const pool = unlockedKana();
+    const pool = studiedKana();   // 只考已練習過的級別；剛解鎖還沒練的級別不納入
     examScreen({ title: "每日隨機考", set: pool, poolAll: pool, qTotal: 60, passN: 45, bestKey: "daily-random", onBack: homeScreen, planKind: "random" });
   }
 
-  /* =====================  設定中心（學習強度 / 語音 / 備份還原） ===================== */
+  /* =====================  設定中心（學習強度 / 語音 / 辭庫 / 備份還原） ===================== */
   function importSaved(obj) {   // 併入外部存檔（與 boot 相同邏輯）
     if (!obj || typeof obj !== "object" || (!obj.srs && !obj.weights && typeof obj.unlocked !== "number")) return false;
     if (obj.weights) P.weights = obj.weights;
@@ -1080,6 +1159,7 @@ a{color:var(--ruri)}
     if (obj.tts) Object.assign(P.tts, obj.tts);
     if (obj.plan) { Object.assign(P.plan, obj.plan); if (obj.plan.progress) Object.assign(P.plan.progress, obj.plan.progress); }
     if (obj.news) Object.assign(P.news, obj.news);
+    if (obj.wb && typeof obj.wb === "object") P.wb = obj.wb;
     if (typeof obj.unlocked === "number") P.unlocked = Math.min(Math.max(1, obj.unlocked), LEVELS.length);
     if (typeof obj.warmup === "boolean") P.warmup = obj.warmup;
     initKeys(); TTS.configure(P.tts); save();
@@ -1098,12 +1178,96 @@ a{color:var(--ruri)}
     const voices = TTS.voices();
     function applyVoice() { TTS.configure(P.tts); save(); }
     const setNote = (id, msg, err) => { const n = $app.querySelector(id); if (n) { n.textContent = msg; n.className = "note" + (err ? " err" : ""); } };
+    // 辭庫管理的區域狀態：只重繪 #wbpanel，不整頁 redraw（設定頁很長，整頁重繪會跳回頂端）
+    let wbLv = LEVELS[0].id, wbK = LEVELS[0].hira[0].k, wbEditing = "", wbArmed = false;
+    function wbLevelKana(id) { const lv = LEVELS.find(l => l.id === id) || LEVELS[0]; return lv.hira.concat(lv.kata); }
+    function drawWb(msg, err) {
+      const box = $app.querySelector("#wbpanel"); if (!box) return;
+      const kanaList = wbLevelKana(wbLv);
+      if (!kanaList.some(x => x.k === wbK)) wbK = kanaList[0].k;
+      const list = wbList(wbK), hiddenN = wbHidden(wbK).size;
+      const ownW = new Set(wbOwn(wbK).map(c => c.w));
+      const ownN = list.filter(c => ownW.has(c.w)).length;
+      const customLv = ALL_KANA.reduce((n, x) => n + (wbCustomised(x.k) ? 1 : 0), 0);
+      const status = msg || ("共 " + list.length + " 詞（內建 " + (list.length - ownN) + " ・ 自訂 " + ownN +
+        (hiddenN ? " ・ 已隱藏 " + hiddenN : "") + "）");
+      box.innerHTML =
+        '<div class="wb-sel">' +
+        '<select id="wblv" aria-label="級別">' + LEVELS.map(l =>
+          '<option value="' + l.id + '"' + (l.id === wbLv ? " selected" : "") + ">" + esc(l.name) + "</option>").join("") + "</select>" +
+        '<select id="wbk" aria-label="假名">' + kanaList.map(x =>
+          '<option value="' + esc(x.k) + '"' + (x.k === wbK ? " selected" : "") + ">" + esc(x.k) + "（" + esc(x.r) + "）・" +
+          wbList(x.k).length + " 詞" + (wbCustomised(x.k) ? " ✎" : "") + "</option>").join("") + "</select>" +
+        "</div>" +
+        (list.length
+          ? list.map(c =>
+              '<div class="wb-row" data-w="' + esc(c.w) + '">' +
+              '<span class="ww">' + esc(c.w) + "</span>" +
+              '<span class="src ' + (ownW.has(c.w) ? "own\">自訂" : "std\">內建") + "</span>" +
+              '<span class="wz">' + esc(c.zh) + "</span>" +
+              '<button class="ghost" data-act="say" title="試聽">🔊</button>' +
+              '<button class="ghost" data-act="edit" title="編輯">✎</button>' +
+              '<button class="ghost" data-act="del" title="' + (ownW.has(c.w) ? "刪除" : "隱藏") + '">✕</button>' +
+              "</div>").join("")
+          : '<div class="wb-empty">這個音沒有辭庫詞，練習時會退回題庫預設單詞。</div>') +
+        '<div class="wb-add">' +
+        '<input id="wbw" placeholder="單詞（假名）" autocomplete="off">' +
+        '<input id="wbz" placeholder="中文" autocomplete="off">' +
+        '<button class="shu" id="wbadd">' + (wbEditing ? "✓" : "＋") + "</button></div>" +
+        '<div class="note' + (err ? " err" : "") + '" id="wbnote">' + esc(status) + "</div>" +
+        '<div class="btn-row">' +
+        '<button class="ghost" id="wbreset"' + (wbCustomised(wbK) ? "" : " disabled") + ">↩︎ 還原此音</button>" +
+        '<button class="ghost" id="wbresetall"' + (customLv ? "" : " disabled") + ">" +
+        (wbArmed ? "⚠︎ 再按一次確定" : "↩︎ 全部還原（" + customLv + " 音）") + "</button></div>";
+
+      $app.querySelector("#wblv").addEventListener("change", e => { wbLv = +e.target.value; wbEditing = ""; drawWb(); });
+      $app.querySelector("#wbk").addEventListener("change", e => { wbK = e.target.value; wbEditing = ""; drawWb(); });
+      const wIn = $app.querySelector("#wbw"), zIn = $app.querySelector("#wbz");
+      if (wbEditing) {
+        const cur = list.find(c => c.w === wbEditing);
+        if (cur) { wIn.value = cur.w; zIn.value = cur.zh; }
+      }
+      $app.querySelectorAll(".wb-row").forEach(row => row.querySelectorAll("button").forEach(b =>
+        b.addEventListener("click", () => {
+          const w = row.dataset.w;
+          wbArmed = false;
+          if (b.dataset.act === "say") return TTS.speak(w);
+          if (b.dataset.act === "edit") { wbEditing = w; return drawWb("改好後按 ✓ 儲存（內建詞會轉為自訂詞，隨時可還原）。"); }
+          const wasOwn = ownW.has(w);
+          wbRemove(wbK, w); wbEditing = "";
+          drawWb((wasOwn ? "已刪除自訂詞「" : "已隱藏內建詞「") + w + "」。");
+        })));
+      function keepDraw(m, w, zh) {   // 驗證失敗：重繪後把使用者打的字填回去
+        drawWb(m, true);
+        const a = $app.querySelector("#wbw"), b2 = $app.querySelector("#wbz");
+        if (a) a.value = w; if (b2) b2.value = zh;
+      }
+      function submit() {
+        const w = wIn.value.trim(), zh = zIn.value.trim();
+        wbArmed = false;
+        const bad = wbValidate(wbK, w, zh, wbEditing);
+        if (bad) return keepDraw(bad, w, zh);
+        if (wbEditing && wbEditing !== w) wbRemove(wbK, wbEditing);   // 改了單詞本身：舊的移掉
+        wbAdd(wbK, w, zh);
+        const was = wbEditing; wbEditing = "";
+        drawWb(was ? "已更新「" + w + "」。" : "已加入「" + w + "」。");
+      }
+      $app.querySelector("#wbadd").addEventListener("click", submit);
+      [wIn, zIn].forEach(el => el.addEventListener("keydown", ev => { if (ev.key === "Enter") { ev.preventDefault(); submit(); } }));
+      $app.querySelector("#wbreset").addEventListener("click", () => {
+        wbReset(wbK); wbEditing = ""; wbArmed = false; drawWb("已還原「" + wbK + "」的內建辭庫。");
+      });
+      $app.querySelector("#wbresetall").addEventListener("click", () => {
+        if (!wbArmed) { wbArmed = true; return drawWb("這會清掉所有假名的自訂與隱藏紀錄，再按一次確定。", true); }
+        P.wb = {}; save(); wbEditing = ""; wbArmed = false; drawWb("已全部還原為內建辭庫。");
+      });
+    }
     function draw() {
       const curP = P.tts.persona, inten = P.plan.intensity;
       const voiceOpts = '<option value="">自動（依人格挑選）</option>' +
         voices.map(v => '<option value="' + esc(v.voiceURI) + '"' + (P.tts.voiceURI === v.voiceURI ? " selected" : "") + ">" + esc(v.name) + "</option>").join("");
       render(
-        '<div class="topbar"><div><h1>設定</h1><div class="sub">學習強度 ・ 語音 ・ 備份還原</div></div>' +
+        '<div class="topbar"><div><h1>設定</h1><div class="sub">學習強度 ・ 語音 ・ 辭庫 ・ 備份還原</div></div>' +
         '<button class="ghost small" id="back">← 返回</button></div>' +
         '<div class="settings">' +
         // ---- 學習強度 ----
@@ -1130,6 +1294,10 @@ a{color:var(--ruri)}
         '<div class="setlabel rowval">語速 <b id="rv">' + P.tts.rate.toFixed(2) + "</b></div>" +
         '<input type="range" id="rate" min="0.5" max="1.3" step="0.05" value="' + P.tts.rate + '">' +
         '<button class="shu preview" id="preview">🔊 試聽</button>' +
+        // ---- 讀音辭庫 ----
+        '<div class="sec-h">🔤 讀音辭庫</div>' +
+        '<div class="note">翻牌揭曉時會從這裡隨機抽一個單詞。增刪只存在你的進度檔（會跟著備份 JSON 走），不會改動 <code>data/wordbank.js</code>；內建詞只能「隱藏」，隨時可還原。</div>' +
+        '<div id="wbpanel"></div>' +
         // ---- 備份還原 ----
         '<div class="sec-h">💾 備份還原</div>' +
         '<div class="note">進度僅存在本機。跨瀏覽器或未來 APK 之間，請用下方匯出/匯入 JSON 手動搬遷。</div>' +
@@ -1162,6 +1330,8 @@ a{color:var(--ruri)}
       pit.addEventListener("input", () => { P.tts.pitch = +pit.value; P.tts.persona = "custom"; $app.querySelector("#pv").textContent = P.tts.pitch.toFixed(2); applyVoice(); });
       rat.addEventListener("input", () => { P.tts.rate = +rat.value; P.tts.persona = "custom"; $app.querySelector("#rv").textContent = P.tts.rate.toFixed(2); applyVoice(); });
       $app.querySelector("#preview").addEventListener("click", () => TTS.speak("こんにちは。あいうえお。"));
+      // 辭庫管理
+      drawWb();
       // 備份還原
       const exportText = () => JSON.stringify(snapshot());
       $app.querySelector("#export").addEventListener("click", () => {
@@ -1589,6 +1759,7 @@ a{color:var(--ruri)}
         if (saved.star) Object.assign(P.star, saved.star);
         if (saved.plan) { Object.assign(P.plan, saved.plan); if (saved.plan.progress) Object.assign(P.plan.progress, saved.plan.progress); }
         if (saved.news) Object.assign(P.news, saved.news);
+        if (saved.wb && typeof saved.wb === "object") Object.assign(P.wb, saved.wb);
       }
     } catch (e) {}
     initKeys();
