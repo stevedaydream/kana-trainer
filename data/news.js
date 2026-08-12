@@ -7,6 +7,261 @@ window.KANA_NEWS = {
   "packs": [
     {
       "title": {
+        "ja": "桜の開花、今年は早い？",
+        "furigana": "さくらのかいか、ことしははやい？",
+        "zh": "櫻花開花，今年會早嗎？",
+        "en": "Cherry Blossom Blooming: Early This Year?"
+      },
+      "source": {
+        "title": "桜の開花予想",
+        "publisher": "ウェザーニュース (WeatherNews)",
+        "url": "https://weathernews.jp/sakura/",
+        "note": "原創、分級改寫之摘要，非重製原文。"
+      },
+      "summary": [
+        {
+          "ja": "今年は桜が早く咲くかもしれません。",
+          "furigana": "ことしはさくらがはやくさくかもしれません。",
+          "zh": "今年的櫻花可能會提早開。",
+          "en": "Cherry blossoms might bloom early this year."
+        },
+        {
+          "ja": "暖かい日が多かったからです。",
+          "furigana": "あたたかいひがおおかったからです。",
+          "zh": "因為溫暖的日子很多。",
+          "en": "This is because there have been many warm days."
+        },
+        {
+          "ja": "東京では3月20日ごろに見られそうです。",
+          "furigana": "とうきょうではさんがつはつかごろにみられそうです。",
+          "zh": "在東京，大約3月20日可以看到。",
+          "en": "In Tokyo, they are expected around March 20th."
+        },
+        {
+          "ja": "みんなでお花見に行きましょう。",
+          "furigana": "みんなでおはなみにいきましょう。",
+          "zh": "大家一起去賞花吧。",
+          "en": "Let's all go cherry blossom viewing."
+        }
+      ],
+      "vocab": [
+        {
+          "word": "開花",
+          "reading": "かいか",
+          "zh": "開花",
+          "en": "blooming, flowering",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "桜の開花が楽しみです。",
+            "zh": "我很期待櫻花開花。"
+          }
+        },
+        {
+          "word": "早い",
+          "reading": "はやい",
+          "zh": "早的",
+          "en": "early, fast",
+          "pos": "i-adjective",
+          "jlpt": "N5",
+          "example": {
+            "ja": "朝早く起きます。",
+            "zh": "我早上很早起床。"
+          }
+        },
+        {
+          "word": "暖かい",
+          "reading": "あたたかい",
+          "zh": "溫暖的",
+          "en": "warm",
+          "pos": "i-adjective",
+          "jlpt": "N5",
+          "example": {
+            "ja": "今日は暖かい日です。",
+            "zh": "今天是溫暖的一天。"
+          }
+        },
+        {
+          "word": "多い",
+          "reading": "おおい",
+          "zh": "多的",
+          "en": "many, much",
+          "pos": "i-adjective",
+          "jlpt": "N5",
+          "example": {
+            "ja": "この店はお客さんが多いです。",
+            "zh": "這家店的客人很多。"
+          }
+        },
+        {
+          "word": "ごろ",
+          "reading": "ごろ",
+          "zh": "左右、大約",
+          "en": "around, about (time)",
+          "pos": "suffix",
+          "jlpt": "N5",
+          "example": {
+            "ja": "5時ごろに帰ります。",
+            "zh": "我大約5點回家。"
+          }
+        }
+      ],
+      "grammar": [
+        {
+          "point": "かもしれません",
+          "zh": "可能、或許",
+          "en": "might, may (possibility)",
+          "example": {
+            "ja": "雨が降るかもしれません。",
+            "zh": "可能會下雨。"
+          },
+          "note": "表示可能性，語氣比「でしょう」更不確定。"
+        },
+        {
+          "point": "～からです",
+          "zh": "因為～",
+          "en": "because of ~",
+          "example": {
+            "ja": "日本語が好きだからです。",
+            "zh": "因為我喜歡日語。"
+          },
+          "note": "用於句尾，說明原因。前接普通形。"
+        },
+        {
+          "point": "～そうです",
+          "zh": "看起來～、聽說～",
+          "en": "it seems that ~ (from observation/hearsay)",
+          "example": {
+            "ja": "雨が降りそうです。",
+            "zh": "好像要下雨了。"
+          },
+          "note": "用於表示從外觀判斷或聽說的情報。這裡用於從外觀判斷。"
+        },
+        {
+          "point": "～に行きましょう",
+          "zh": "我們去～吧",
+          "en": "Let's go to ~",
+          "example": {
+            "ja": "映画を見に行きましょう。",
+            "zh": "我們去看電影吧。"
+          },
+          "note": "「～に行きます」的意向形，表示提議或邀請。"
+        }
+      ],
+      "quiz": [
+        {
+          "type": "reading",
+          "prompt": {
+            "ja": "「暖かい」の正しい読み方はどれですか？",
+            "zh": "「暖かい」的正確讀音是哪個？"
+          },
+          "options": [
+            "あたたかい",
+            "あたかい",
+            "あったかい",
+            "あたたかいです"
+          ],
+          "answer": 0,
+          "explain": {
+            "zh": "「暖かい」的正確讀音是「あたたかい」。"
+          }
+        },
+        {
+          "type": "grammar",
+          "prompt": {
+            "ja": "空が暗いです。雨が_____。",
+            "zh": "天空很暗。好像會下雨。"
+          },
+          "options": [
+            "降るかもしれません",
+            "降るそうです",
+            "降ります",
+            "降りたいです"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "從天空很暗的觀察來判斷，使用「～そうです」表示「看起來會～」。選項1「かもしれません」表示可能性，但「そうです」更強調從觀察得出的判斷。"
+          }
+        },
+        {
+          "type": "vocab",
+          "prompt": {
+            "ja": "「早起き」の「早い」は、どういう意味ですか？",
+            "zh": "「早起き」（早起）中的「早い」是什麼意思？"
+          },
+          "options": [
+            "遅い (late)",
+            "速い (fast)",
+            "早い (early)",
+            "短い (short)"
+          ],
+          "answer": 2,
+          "explain": {
+            "zh": "「早い」在「早起き」中是「早的」意思。"
+          }
+        },
+        {
+          "type": "cloze",
+          "prompt": {
+            "ja": "今年は桜が早く咲く_____。",
+            "zh": "今年的櫻花可能會提早開。"
+          },
+          "options": [
+            "です",
+            "ましょう",
+            "かもしれません",
+            "ください"
+          ],
+          "answer": 2,
+          "explain": {
+            "zh": "句意表示可能性，所以選擇「かもしれません」。"
+          }
+        },
+        {
+          "type": "listening",
+          "prompt": {
+            "ja": "「みんなでお花見に行きましょう。」この文の意味は何ですか？",
+            "zh": "「みんなでお花見に行きましょう。」這句話是什麼意思？"
+          },
+          "audioText": "みんなでお花見に行きましょう。",
+          "options": [
+            "I want to go cherry blossom viewing alone.",
+            "Let's go cherry blossom viewing together.",
+            "Did you go cherry blossom viewing?",
+            "Cherry blossom viewing is fun."
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "「みんなで」是「大家一起」，「～に行きましょう」是「我們去～吧」的提議，所以是「大家一起去賞花吧」。"
+          }
+        }
+      ],
+      "dictation": [
+        {
+          "ja": "桜が早く咲くかもしれません。",
+          "furigana": "さくらがはやくさくかもしれません。",
+          "accept": [
+            "さくらがはやくさくかもしれません",
+            "桜が早く咲くかもしれません"
+          ],
+          "hint": "今年的櫻花可能會提早開。"
+        }
+      ],
+      "speaking": [
+        {
+          "ja": "東京では3月20日ごろに見られそうです。",
+          "furigana": "とうきょうではさんがつはつかごろにみられそうです。",
+          "zh": "在東京，大約3月20日可以看到。",
+          "focus": "intonation",
+          "linking": "「3月20日ごろに」的「に」可以輕讀或弱化。"
+        }
+      ],
+      "id": "daily-2026-08-12-N5",
+      "date": "2026-08-12",
+      "level": "N5"
+    },
+    {
+      "title": {
         "ja": "かわいいパンダの赤ちゃん、名前が決まった！",
         "furigana": "かわいいパンダのあかちゃん、なまえがきまった！",
         "zh": "可爱熊猫宝宝，名字决定了！",
