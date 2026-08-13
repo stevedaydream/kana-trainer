@@ -7,6 +7,223 @@ window.KANA_NEWS = {
   "packs": [
     {
       "title": {
+        "ja": "猫が人気！SNSで話題に",
+        "furigana": "ねこがにんき！えすえぬえすでわだいに",
+        "zh": "貓咪很受歡迎！在社群媒體上成為話題",
+        "en": "Cats are popular! They are a hot topic on SNS"
+      },
+      "source": {
+        "title": "SNSトレンド",
+        "publisher": "SNS Trends",
+        "url": "https://example.com/sns-trends-cat-popularity",
+        "note": "原創、分級改寫之摘要，非重製原文。"
+      },
+      "summary": [
+        {
+          "ja": "最近、インターネットで猫の動画や写真がたくさん見られます。多くの人が猫のかわいい姿を見て、心が温かくなっています。特に、SNSでは猫の面白い行動や寝ている姿が人気です。猫はみんなを笑顔にしています。",
+          "furigana": "さいきん、いんたーねっとでねこのどうがやしゃしんがたくさんみられます。おおくのひとがねこのかわいいすがたをみて、こころがあたたかくなっています。とくに、えすえぬえすではねこのおもしろいこうどうやねているすがたがにんきです。ねこはみんなをえがおにしています。",
+          "zh": "最近，在網路上可以看到很多貓咪的影片和照片。很多人看到貓咪可愛的樣子，心裡都變得溫暖起來。特別是在社群媒體上，貓咪有趣的動作和睡覺的樣子很受歡迎。貓咪讓大家露出笑容。",
+          "en": "Recently, many cat videos and photos can be seen on the internet. Many people see the cute appearance of cats, and their hearts become warm. Especially on social media, cats' interesting actions and sleeping figures are popular. Cats make everyone smile."
+        }
+      ],
+      "vocab": [
+        {
+          "word": "猫",
+          "reading": "ねこ",
+          "zh": "貓",
+          "en": "cat",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "私は猫が好きです。",
+            "zh": "我喜歡貓。"
+          }
+        },
+        {
+          "word": "人気",
+          "reading": "にんき",
+          "zh": "受歡迎",
+          "en": "popular, popularity",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "この歌はとても人気があります。",
+            "zh": "這首歌非常受歡迎。"
+          }
+        },
+        {
+          "word": "見る",
+          "reading": "みる",
+          "zh": "看",
+          "en": "to see, to look",
+          "pos": "verb",
+          "jlpt": "N5",
+          "example": {
+            "ja": "テレビを見ます。",
+            "zh": "我看電視。"
+          }
+        },
+        {
+          "word": "かわいい",
+          "reading": "かわいい",
+          "zh": "可愛的",
+          "en": "cute, lovely",
+          "pos": "i-adjective",
+          "jlpt": "N5",
+          "example": {
+            "ja": "あのかばんはかわいいです。",
+            "zh": "那個包包很可愛。"
+          }
+        },
+        {
+          "word": "笑顔",
+          "reading": "えがお",
+          "zh": "笑容",
+          "en": "smile, smiling face",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "彼女はいつも笑顔です。",
+            "zh": "她總是面帶笑容。"
+          }
+        }
+      ],
+      "grammar": [
+        {
+          "point": "～が見られます",
+          "zh": "可以看到～ (被動語態，表示某物是可見的)",
+          "en": "can be seen (passive voice, indicating something is visible)",
+          "example": {
+            "ja": "ここでは富士山が見られます。",
+            "zh": "在這裡可以看到富士山。"
+          },
+          "note": "動詞「見る（みる）」的可能形「見られる（みられる）」或被動形「見られる（みられる）」。在這裡表示「某物可被看見」的客觀事實。"
+        },
+        {
+          "point": "～て、～ます",
+          "zh": "～，然後～ (連接兩個動作或狀態，表示順序或原因)",
+          "en": "~, and then ~ (connects two actions or states, indicating sequence or reason)",
+          "example": {
+            "ja": "ご飯を食べて、寝ます。",
+            "zh": "吃飯，然後睡覺。"
+          },
+          "note": "動詞的て形連接，表示動作的順序或因果關係。在N5階段常用於描述簡單的連續動作。"
+        }
+      ],
+      "quiz": [
+        {
+          "type": "reading",
+          "prompt": {
+            "ja": "「猫が人気！」の「人気」は何と読みますか？",
+            "zh": "「猫が人気！」中的「人気」怎麼讀？"
+          },
+          "options": [
+            "ひとけ",
+            "にんき",
+            "じんき",
+            "ひとぎ"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "「人気」的正確讀音是「にんき」。"
+          }
+        },
+        {
+          "type": "vocab",
+          "prompt": {
+            "ja": "「猫はみんなを笑顔にしています。」の「笑顔」の意味は何ですか？",
+            "zh": "「猫はみんなを笑顔にしています。」中「笑顔」是什麼意思？"
+          },
+          "options": [
+            "眼睛",
+            "哭泣",
+            "笑容",
+            "生氣"
+          ],
+          "answer": 2,
+          "explain": {
+            "zh": "「笑顔」的意思是「笑容」。"
+          }
+        },
+        {
+          "type": "grammar",
+          "prompt": {
+            "ja": "「インターネットで猫の動画や写真がたくさん（　　　　）。」に適切な言葉を選びなさい。",
+            "zh": "「在網路上可以看到很多貓咪的影片和照片。」請選擇適合的詞填入括號中。"
+          },
+          "options": [
+            "見ます",
+            "見ません",
+            "見られます",
+            "見たいです"
+          ],
+          "answer": 2,
+          "explain": {
+            "zh": "這裡需要表達「可被看到」的客觀事實，所以使用「見られます」。"
+          }
+        },
+        {
+          "type": "cloze",
+          "prompt": {
+            "ja": "多くの人が猫の（　　　　）姿を見て、心が温かくなっています。",
+            "zh": "很多人看到貓咪（　　　　）的樣子，心裡都變得溫暖起來。"
+          },
+          "options": [
+            "大きい",
+            "忙しい",
+            "かわいい",
+            "古い"
+          ],
+          "answer": 2,
+          "explain": {
+            "zh": "根據上下文，貓咪的「可愛」姿態讓人心暖。選項「かわいい」是正確答案。"
+          }
+        },
+        {
+          "type": "listening",
+          "prompt": {
+            "ja": "「猫はみんなを笑顔にしています。」",
+            "zh": "請聽並理解句子意思。"
+          },
+          "audioText": "猫はみんなを笑顔にしています。",
+          "options": [
+            "貓咪讓大家生氣。",
+            "貓咪讓大家露出笑容。",
+            "貓咪讓大家變得很忙。",
+            "貓咪讓大家變得很安靜。"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "「笑顔にしています」表示「讓…露出笑容」。"
+          }
+        }
+      ],
+      "dictation": [
+        {
+          "ja": "猫はみんなを笑顔にしています。",
+          "furigana": "ねこはみんなをえがおにしています。",
+          "accept": [
+            "ねこはみんなをえがおにしています",
+            "猫はみんなを笑顔にしています"
+          ],
+          "hint": "句子描述貓咪帶給大家的影響。"
+        }
+      ],
+      "speaking": [
+        {
+          "ja": "SNSで猫の動画を見ますか？",
+          "furigana": "えすえぬえすでねこのどうがをみますか？",
+          "zh": "你在社群媒體上看貓咪影片嗎？",
+          "focus": "intonation",
+          "linking": "「SNSで」的「で」是助詞，發音輕快。疑問句「～ますか」語調上揚。"
+        }
+      ],
+      "id": "daily-2026-08-13-N5",
+      "date": "2026-08-13",
+      "level": "N5"
+    },
+    {
+      "title": {
         "ja": "桜の開花、今年は早い？",
         "furigana": "さくらのかいか、ことしははやい？",
         "zh": "櫻花開花，今年會早嗎？",
