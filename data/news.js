@@ -7,6 +7,227 @@ window.KANA_NEWS = {
   "packs": [
     {
       "title": {
+        "ja": "桜の開花、今年は早い！",
+        "furigana": "さくらのかいか、ことしははやい！",
+        "zh": "櫻花開花，今年很早！",
+        "en": "Cherry Blossoms Bloom Early This Year!"
+      },
+      "source": {
+        "title": "桜の開花予想2024",
+        "publisher": "ウェザーニュース",
+        "url": "https://weathernews.jp/s/topics/202403/050115_pc/",
+        "note": "原創、分級改寫之摘要，非重製原文。"
+      },
+      "summary": [
+        {
+          "ja": "今年の桜は、早く咲きます。東京では3月20日ごろです。これは、去年より少し遅いです。でも、いつもよりは早いです。暖かい日が多いから、桜は早く咲きます。",
+          "furigana": "ことしのさくらは、はやくさきます。とうきょうではさんがつはつかごろです。これは、きょねんよりすこしおそいです。でも、いつもよりははやいです。あたたかいひがおおいから、さくらははやくさきます。",
+          "zh": "今年的櫻花會很早開。在東京大約是3月20日左右。這比去年稍微晚一點。但是，比往年還是早的。因為溫暖的日子很多，所以櫻花會很早開。",
+          "en": "This year's cherry blossoms will bloom early. In Tokyo, it will be around March 20th. This is a little later than last year, but still earlier than usual. Cherry blossoms bloom early because there are many warm days."
+        }
+      ],
+      "vocab": [
+        {
+          "word": "開花",
+          "reading": "かいか",
+          "zh": "開花",
+          "en": "blooming",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "桜の開花はきれいです。",
+            "zh": "櫻花開花很美。"
+          }
+        },
+        {
+          "word": "早い",
+          "reading": "はやい",
+          "zh": "早的",
+          "en": "early, fast",
+          "pos": "adjective",
+          "jlpt": "N5",
+          "example": {
+            "ja": "朝は早いです。",
+            "zh": "早上很早。"
+          }
+        },
+        {
+          "word": "東京",
+          "reading": "とうきょう",
+          "zh": "東京",
+          "en": "Tokyo",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "東京は大きい町です。",
+            "zh": "東京是個大城市。"
+          }
+        },
+        {
+          "word": "ごろ",
+          "reading": "ごろ",
+          "zh": "大約",
+          "en": "approximately, around",
+          "pos": "suffix",
+          "jlpt": "N5",
+          "example": {
+            "ja": "3時ごろ来てください。",
+            "zh": "請大約3點來。"
+          }
+        },
+        {
+          "word": "暖かい",
+          "reading": "あたたかい",
+          "zh": "溫暖的",
+          "en": "warm",
+          "pos": "adjective",
+          "jlpt": "N5",
+          "example": {
+            "ja": "今日は暖かいです。",
+            "zh": "今天很溫暖。"
+          }
+        }
+      ],
+      "grammar": [
+        {
+          "point": "～より",
+          "zh": "比～",
+          "en": "than ~",
+          "example": {
+            "ja": "これは、去年より少し遅いです。",
+            "zh": "這比去年稍微晚一點。"
+          },
+          "note": "用於比較兩個事物。"
+        },
+        {
+          "point": "～から",
+          "zh": "因為～所以...",
+          "en": "because ~",
+          "example": {
+            "ja": "暖かい日が多いから、桜は早く咲きます。",
+            "zh": "因為溫暖的日子很多，所以櫻花會很早開。"
+          },
+          "note": "表示原因或理由。"
+        }
+      ],
+      "quiz": [
+        {
+          "type": "reading",
+          "prompt": {
+            "ja": "今年の桜は、いつ咲きますか？",
+            "zh": "今年的櫻花什麼時候開？"
+          },
+          "audioText": "",
+          "options": [
+            "3月10日ごろ",
+            "3月20日ごろ",
+            "4月1日ごろ",
+            "4月10日ごろ"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "文章中提到「東京では3月20日ごろです。」（在東京大約是3月20日左右。）"
+          }
+        },
+        {
+          "type": "vocab",
+          "prompt": {
+            "ja": "「開花」の正しい読み方はどれですか？",
+            "zh": "「開花」的正確讀音是什麼？"
+          },
+          "audioText": "",
+          "options": [
+            "かいはな",
+            "かいか",
+            "あきか",
+            "ひらきはな"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "「開花」的讀音是「かいか」。"
+          }
+        },
+        {
+          "type": "grammar",
+          "prompt": {
+            "ja": "「いつもよりは早いです。」この文で「より」は何を意味しますか？",
+            "zh": "在「いつもよりは早いです。」這句話中，「より」是什麼意思？"
+          },
+          "audioText": "",
+          "options": [
+            "和",
+            "但是",
+            "比",
+            "然後"
+          ],
+          "answer": 2,
+          "explain": {
+            "zh": "「より」用於比較，表示「比...」。"
+          }
+        },
+        {
+          "type": "cloze",
+          "prompt": {
+            "ja": "暖かい日が多い____、桜は早く咲きます。",
+            "zh": "溫暖的日子很多____，櫻花會很早開。"
+          },
+          "audioText": "",
+          "options": [
+            "と",
+            "で",
+            "から",
+            "が"
+          ],
+          "answer": 2,
+          "explain": {
+            "zh": "「から」用於表示原因，意為「因為...所以...」。"
+          }
+        },
+        {
+          "type": "listening",
+          "prompt": {
+            "ja": "今年の桜は、早く咲きます。",
+            "zh": "今年的櫻花會很早開。"
+          },
+          "audioText": "ことしのさくらは、はやくさきます。",
+          "options": [
+            "今年の桜は、遅く咲きます。",
+            "今年の桜は、早く咲きます。",
+            "今年の桜は、咲きません。",
+            "今年の桜は、来年咲きます。"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "音頻說的是「今年の桜は、早く咲きます。」，意思是「今年的櫻花會很早開。」"
+          }
+        }
+      ],
+      "dictation": [
+        {
+          "ja": "東京では3月20日ごろです。",
+          "furigana": "とうきょうではさんがつはつかごろです。",
+          "accept": [
+            "とうきょうではさんがつはつかごろです",
+            "東京では3月20日ごろです"
+          ],
+          "hint": "在東京大約是3月20日左右。"
+        }
+      ],
+      "speaking": [
+        {
+          "ja": "今年の桜は、早く咲きます。",
+          "furigana": "ことしのさくらは、はやくさきます。",
+          "zh": "今年的櫻花會很早開。",
+          "focus": "intonation",
+          "linking": ""
+        }
+      ],
+      "id": "daily-2026-08-16-N5",
+      "date": "2026-08-16",
+      "level": "N5"
+    },
+    {
+      "title": {
         "ja": "かわいいパンダの赤ちゃん、名前は？",
         "furigana": "かわいいパンダのあかちゃん、なまえは？",
         "zh": "可爱熊猫宝宝，名字是什么？",
