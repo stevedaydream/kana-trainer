@@ -9,6 +9,239 @@ window.KANA_NEWS = {
       "title": {
         "ja": "桜の開花、今年は早いです",
         "furigana": "さくらのかいか、ことしははやいです",
+        "zh": "櫻花開花，今年比較早",
+        "en": "Cherry Blossoms Bloom Early This Year"
+      },
+      "source": {
+        "title": "桜の開花予想2024",
+        "publisher": "ウェザーニュース",
+        "url": "https://weathernews.jp/s/topics/202403/080035/",
+        "note": "原創、分級改寫之摘要，非重製原文。"
+      },
+      "summary": [
+        {
+          "ja": "日本の桜が咲き始めます。今年は暖かい日が多いです。だから、桜の開花は早いです。東京では、3月20日ごろに桜が咲くでしょう。皆で桜を見に行きましょう。",
+          "furigana": "にほんのさくらがさきはじめます。ことしはあたたかいひがおおいです。だから、さくらのかいかははやいです。とうきょうでは、さんがつはつかごろにさくらがさくでしょう。みんなでさくらをみにいきましょう。",
+          "zh": "日本的櫻花開始開了。今年溫暖的日子很多。所以，櫻花開花比較早。在東京，大概3月20日櫻花會開。大家一起去看櫻花吧。",
+          "en": "Cherry blossoms in Japan are starting to bloom. There have been many warm days this year. Therefore, the cherry blossoms are blooming early. In Tokyo, the cherry blossoms will probably bloom around March 20th. Let's all go see the cherry blossoms."
+        }
+      ],
+      "vocab": [
+        {
+          "word": "桜",
+          "reading": "さくら",
+          "zh": "櫻花",
+          "en": "cherry blossom",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "桜がとてもきれいです。",
+            "zh": "櫻花非常漂亮。"
+          }
+        },
+        {
+          "word": "開花",
+          "reading": "かいか",
+          "zh": "開花",
+          "en": "blooming, flowering",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "桜の開花はいつですか。",
+            "zh": "櫻花什麼時候開？"
+          }
+        },
+        {
+          "word": "早い",
+          "reading": "はやい",
+          "zh": "早的、快的",
+          "en": "early, fast",
+          "pos": "i-adjective",
+          "jlpt": "N5",
+          "example": {
+            "ja": "朝ごはんは早いです。",
+            "zh": "早餐很早。"
+          }
+        },
+        {
+          "word": "暖かい",
+          "reading": "あたたかい",
+          "zh": "溫暖的",
+          "en": "warm",
+          "pos": "i-adjective",
+          "jlpt": "N5",
+          "example": {
+            "ja": "今日は暖かい日です。",
+            "zh": "今天是溫暖的一天。"
+          }
+        },
+        {
+          "word": "ごろ",
+          "reading": "ごろ",
+          "zh": "左右、大約",
+          "en": "around, about (time/quantity)",
+          "pos": "suffix",
+          "jlpt": "N5",
+          "example": {
+            "ja": "3時ごろに会いましょう。",
+            "zh": "3點左右見面吧。"
+          }
+        }
+      ],
+      "grammar": [
+        {
+          "point": "～始めます",
+          "zh": "表示動作的開始",
+          "en": "indicates the start of an action (verb stem + 始めます)",
+          "example": {
+            "ja": "桜が咲き始めます。",
+            "zh": "櫻花開始開了。"
+          },
+          "note": "動詞ます形去掉ます後，加上「始めます」。"
+        },
+        {
+          "point": "～でしょう",
+          "zh": "表示推測、可能",
+          "en": "expresses probability, conjecture (will probably, might)",
+          "example": {
+            "ja": "桜が咲くでしょう。",
+            "zh": "櫻花大概會開吧。"
+          },
+          "note": "用於動詞基本形、い形容詞、な形容詞詞幹+でしょう、名詞+でしょう。比「～と思います」語氣更為客觀。"
+        }
+      ],
+      "quiz": [
+        {
+          "type": "reading",
+          "prompt": {
+            "ja": "「桜」の読み方はどれですか。",
+            "zh": "「桜」的讀音是哪個？"
+          },
+          "options": [
+            "さくら",
+            "はな",
+            "きのこ",
+            "ふゆ"
+          ],
+          "answer": 0,
+          "explain": {
+            "zh": "「桜」的讀音是「さくら」。"
+          }
+        },
+        {
+          "type": "vocab",
+          "prompt": {
+            "ja": "「warm」という意味の日本語の単語は何ですか。",
+            "zh": "「warm」意思的日語單字是什麼？"
+          },
+          "options": [
+            "さむい",
+            "あつい",
+            "あたたかい",
+            "つめたい"
+          ],
+          "answer": 2,
+          "explain": {
+            "zh": "「あたたかい」的意思是「溫暖的」。"
+          }
+        },
+        {
+          "type": "grammar",
+          "prompt": {
+            "ja": "「桜が咲く」に「～始めます」を付けてください。",
+            "zh": "請將「桜が咲く」加上「～始めます」。"
+          },
+          "options": [
+            "桜が咲きます始めます",
+            "桜が咲き始めます",
+            "桜が咲く始めます",
+            "桜が咲け始めます"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "「咲く」的ます形是「咲きます」。去掉ます後加上「始めます」，所以是「咲き始めます」。"
+          }
+        },
+        {
+          "type": "cloze",
+          "prompt": {
+            "ja": "東京では、3月20日（　　）に桜が咲くでしょう。",
+            "zh": "在東京，大概3月20日櫻花會開。"
+          },
+          "options": [
+            "から",
+            "ごろ",
+            "まで",
+            "と"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "「ごろ」表示大約的時間。"
+          }
+        },
+        {
+          "type": "listening",
+          "prompt": {
+            "ja": "今から流れる文章を聞いて、内容に合うものを選んでください。",
+            "zh": "請聽接下來的句子，選擇符合內容的選項。"
+          },
+          "audioText": "今年は暖かい日が多いです。",
+          "options": [
+            "今年は寒い日が多いです。",
+            "今年は暖かい日が多いです。",
+            "今年は雨の日が多いです。",
+            "今年は雪の日が多いです。"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "音檔說「今年は暖かい日が多いです。」，意思是「今年溫暖的日子很多。」"
+          }
+        }
+      ],
+      "dictation": [
+        {
+          "ja": "日本の桜が咲き始めます。",
+          "furigana": "にほんのさくらがさきはじめます。",
+          "accept": [
+            "にほんのさくらがさきはじめます",
+            "日本の桜が咲き始めます"
+          ],
+          "hint": "日本的櫻花開始開了。"
+        },
+        {
+          "ja": "今年は暖かい日が多いです。",
+          "furigana": "ことしはあたたかいひがおおいです。",
+          "accept": [
+            "ことしはあたたかいひがおおいです",
+            "今年は暖かい日が多いです"
+          ],
+          "hint": "今年溫暖的日子很多。"
+        }
+      ],
+      "speaking": [
+        {
+          "ja": "桜を見に行きましょう。",
+          "furigana": "さくらをみにいきましょう。",
+          "zh": "我們去看櫻花吧。",
+          "focus": "intonation",
+          "linking": "「見に」的「に」和「行きましょう」的「い」可以輕輕連讀。"
+        },
+        {
+          "ja": "今年は早いです。",
+          "furigana": "ことしははやいです。",
+          "zh": "今年比較早。",
+          "focus": "pacing",
+          "linking": "「は」通常發音為「わ」。"
+        }
+      ],
+      "id": "daily-2026-08-18-N5",
+      "date": "2026-08-18",
+      "level": "N5"
+    },
+    {
+      "title": {
+        "ja": "桜の開花、今年は早いです",
+        "furigana": "さくらのかいか、ことしははやいです",
         "zh": "櫻花開放，今年早了",
         "en": "Cherry Blossoms Bloom Early This Year"
       },
