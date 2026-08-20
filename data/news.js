@@ -7,6 +7,243 @@ window.KANA_NEWS = {
   "packs": [
     {
       "title": {
+        "ja": "桜はもうすぐ咲きます！",
+        "furigana": "さくらはもうすぐさきます！",
+        "zh": "櫻花即將盛開！",
+        "en": "Cherry Blossoms Will Bloom Soon!"
+      },
+      "source": {
+        "title": "桜の開花予想",
+        "publisher": "ウェザーニュース",
+        "url": "https://weathernews.jp/s/topics/202403/130175/",
+        "note": "原創、分級改寫之摘要，非重製原文。"
+      },
+      "summary": [
+        {
+          "ja": "ウェザーニュースは、今年の桜の開花予想を発表しました。東京では、3月20日に桜が咲き始めます。大阪では、3月25日です。福岡では、もうすぐ咲きそうです。皆で桜を見に行きましょう！",
+          "furigana": "ウェザーニュースは、ことしのさくらのかいかよそうをはっぴょうしました。とうきょうでは、さんがつはつかにさくらがさきはじめます。おおさかでは、さんがつにじゅうごにちです。ふくおかでは、もうすぐさきそうです。みんなでさくらをみにいきましょう！",
+          "zh": "Weather News 公布了今年的櫻花開花預測。在東京，櫻花將於3月20日開始綻放。大阪則是在3月25日。福岡的櫻花也快開了。大家一起去看櫻花吧！",
+          "en": "Weather News announced this year's cherry blossom forecast. In Tokyo, cherry blossoms will start blooming on March 20th. In Osaka, it will be March 25th. In Fukuoka, they seem to be blooming very soon. Let's all go see the cherry blossoms!"
+        }
+      ],
+      "vocab": [
+        {
+          "word": "桜",
+          "reading": "さくら",
+          "zh": "櫻花",
+          "en": "cherry blossom",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "桜はとてもきれいです。",
+            "zh": "櫻花非常漂亮。"
+          }
+        },
+        {
+          "word": "開花",
+          "reading": "かいか",
+          "zh": "開花",
+          "en": "blooming, flowering",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "桜の開花が楽しみです。",
+            "zh": "我很期待櫻花開花。"
+          }
+        },
+        {
+          "word": "予想",
+          "reading": "よそう",
+          "zh": "預測",
+          "en": "prediction, forecast",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "天気予報は雨です。",
+            "zh": "天氣預報說會下雨。"
+          }
+        },
+        {
+          "word": "発表します",
+          "reading": "はっぴょうします",
+          "zh": "發表、公布",
+          "en": "to announce, to present",
+          "pos": "verb",
+          "jlpt": "N5",
+          "example": {
+            "ja": "先生がテストの結果を発表しました。",
+            "zh": "老師公布了考試結果。"
+          }
+        },
+        {
+          "word": "咲きます",
+          "reading": "さきます",
+          "zh": "開花",
+          "en": "to bloom",
+          "pos": "verb",
+          "jlpt": "N5",
+          "example": {
+            "ja": "花が咲きます。",
+            "zh": "花開了。"
+          }
+        }
+      ],
+      "grammar": [
+        {
+          "point": "〜ます",
+          "zh": "動詞肯定禮貌形",
+          "en": "Polite affirmative form of verbs",
+          "example": {
+            "ja": "食べます。",
+            "zh": "吃。"
+          },
+          "note": "用於表示動作或狀態，禮貌的表達方式。"
+        },
+        {
+          "point": "〜に",
+          "zh": "時間點助詞",
+          "en": "Particle indicating a specific time",
+          "example": {
+            "ja": "3月20日に。",
+            "zh": "在3月20日。"
+          },
+          "note": "用於表示特定的時間點。"
+        },
+        {
+          "point": "〜で",
+          "zh": "地點助詞",
+          "en": "Particle indicating a place where an action occurs",
+          "example": {
+            "ja": "東京で。",
+            "zh": "在東京。"
+          },
+          "note": "用於表示動作發生的場所。"
+        },
+        {
+          "point": "〜ましょう",
+          "zh": "表示建議或邀請",
+          "en": "Let's do ~",
+          "example": {
+            "ja": "見に行きましょう！",
+            "zh": "我們去看吧！"
+          },
+          "note": "動詞ます形去ます，加上ましょう。"
+        }
+      ],
+      "quiz": [
+        {
+          "type": "vocab",
+          "prompt": {
+            "ja": "「さくら」の漢字は何ですか？",
+            "zh": "「さくら」的漢字是什麼？"
+          },
+          "options": [
+            "桜",
+            "花",
+            "木",
+            "春"
+          ],
+          "answer": 0,
+          "explain": {
+            "zh": "「桜」是櫻花的漢字。"
+          }
+        },
+        {
+          "type": "grammar",
+          "prompt": {
+            "ja": "来週、映画を（　　　）に行きましょう。",
+            "zh": "下週，我們去看電影吧。"
+          },
+          "options": [
+            "見ます",
+            "見る",
+            "見ますか",
+            "見に"
+          ],
+          "answer": 3,
+          "explain": {
+            "zh": "「〜に行きます」表示去某地做某事，動詞需為ます形去ます後加に。"
+          }
+        },
+        {
+          "type": "reading",
+          "prompt": {
+            "ja": "東京では、3月20日に桜が咲き始めます。",
+            "zh": "請選出這句話的正確意思。"
+          },
+          "options": [
+            "東京的櫻花在3月20日開始謝了。",
+            "東京的櫻花在3月20日開始開花。",
+            "東京的櫻花在3月20日預計不會開花。",
+            "東京的櫻花在3月20日已經開了。"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "「咲き始めます」是開始開花的意思。"
+          }
+        },
+        {
+          "type": "listening",
+          "prompt": {
+            "ja": "「桜はもうすぐ咲きます。」と聞こえます。どれが正しいですか？",
+            "zh": "你聽到「桜はもうすぐ咲きます。」。哪一個是正確的？"
+          },
+          "audioText": "桜はもうすぐ咲きます。",
+          "options": [
+            "桜はもうすぐ咲きません。",
+            "桜はもうすぐ咲きます。",
+            "桜はもうすぐ枯れます。",
+            "桜はもうすぐ食べます。"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "音頻說的是「桜はもうすぐ咲きます。」，意思是櫻花即將盛開。"
+          }
+        },
+        {
+          "type": "cloze",
+          "prompt": {
+            "ja": "ウェザーニュースは、今年の桜の開花（　　　）を発表しました。",
+            "zh": "Weather News 公布了今年的櫻花開花（　　　）。"
+          },
+          "options": [
+            "時間",
+            "場所",
+            "予想",
+            "写真"
+          ],
+          "answer": 2,
+          "explain": {
+            "zh": "根據文章，Weather News 公布的是櫻花的「開花予想」（開花預測）。"
+          }
+        }
+      ],
+      "dictation": [
+        {
+          "ja": "桜が咲きます。",
+          "furigana": "さくらがさきます。",
+          "accept": [
+            "さくらがさきます",
+            "桜が咲きます"
+          ],
+          "hint": "櫻花開了。"
+        }
+      ],
+      "speaking": [
+        {
+          "ja": "皆で桜を見に行きましょう！",
+          "furigana": "みんなでさくらをみにいきましょう！",
+          "zh": "大家一起去看櫻花吧！",
+          "focus": "intonation",
+          "linking": ""
+        }
+      ],
+      "id": "daily-2026-08-20-N5",
+      "date": "2026-08-20",
+      "level": "N5"
+    },
+    {
+      "title": {
         "ja": "かわいいパンダの赤ちゃん、名前は？",
         "furigana": "かわいいパンダのあかちゃん、なまえは？",
         "zh": "可爱熊猫宝宝，名字是什么？",
