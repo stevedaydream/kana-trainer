@@ -7,6 +7,237 @@ window.KANA_NEWS = {
   "packs": [
     {
       "title": {
+        "ja": "桜の開花、今年は早いです",
+        "furigana": "さくらのかいか、ことしははやいです",
+        "zh": "櫻花開花，今年很早",
+        "en": "Cherry Blossom Bloom is Early This Year"
+      },
+      "source": {
+        "title": "今年の桜、開花は早め？",
+        "publisher": "ウェザーニュース",
+        "url": "https://weathernews.jp/s/topics/202403/190015/",
+        "note": "原創、分級改寫之摘要，非重製原文。"
+      },
+      "summary": [
+        {
+          "ja": "日本の桜が咲き始めました。今年は、いつもの年より早く咲いています。暖かい日が多いからです。東京では、もう桜が見られます。みんな、桜を見に行くのが楽しみです。",
+          "furigana": "にほんのさくらがさきはじめました。ことしは、いつものとしよりはやくさいています。あたたかいひがおおいからです。とうきょうでは、もうさくらがみられます。みんな、さくらをみにいくのがたのしみです。",
+          "zh": "日本的櫻花開始開了。今年比往年開得早。因為溫暖的日子很多。在東京，已經可以看到櫻花了。大家都很期待去賞櫻。",
+          "en": "Cherry blossoms in Japan have started to bloom. This year, they are blooming earlier than usual. This is because there have been many warm days. In Tokyo, you can already see cherry blossoms. Everyone is looking forward to going to see the cherry blossoms."
+        }
+      ],
+      "vocab": [
+        {
+          "word": "桜",
+          "reading": "さくら",
+          "zh": "櫻花",
+          "en": "cherry blossom",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "桜がとてもきれいです。",
+            "zh": "櫻花非常漂亮。"
+          }
+        },
+        {
+          "word": "開花",
+          "reading": "かいか",
+          "zh": "開花",
+          "en": "blooming, flowering",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "桜の開花が始まりました。",
+            "zh": "櫻花開始開花了。"
+          }
+        },
+        {
+          "word": "早い",
+          "reading": "はやい",
+          "zh": "早的",
+          "en": "early, fast",
+          "pos": "i-adjective",
+          "jlpt": "N5",
+          "example": {
+            "ja": "今日は早く起きました。",
+            "zh": "我今天很早起床。"
+          }
+        },
+        {
+          "word": "暖かい",
+          "reading": "あたたかい",
+          "zh": "溫暖的",
+          "en": "warm",
+          "pos": "i-adjective",
+          "jlpt": "N5",
+          "example": {
+            "ja": "今日は暖かい日です。",
+            "zh": "今天是一個溫暖的日子。"
+          }
+        },
+        {
+          "word": "楽しみ",
+          "reading": "たのしみ",
+          "zh": "期待，樂趣",
+          "en": "enjoyment, pleasure, anticipation",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "旅行が楽しみです。",
+            "zh": "我很期待旅行。"
+          }
+        }
+      ],
+      "grammar": [
+        {
+          "point": "～始めます",
+          "zh": "表示動作的開始",
+          "en": "indicates the start of an action (verb stem + 始めます)",
+          "example": {
+            "ja": "桜が咲き始めました。",
+            "zh": "櫻花開始開了。"
+          },
+          "note": "動詞ます形去ます後，加上「始めます」。"
+        },
+        {
+          "point": "～より",
+          "zh": "表示比較（比...更...）",
+          "en": "indicates comparison (more...than...)",
+          "example": {
+            "ja": "今年は去年より早いです。",
+            "zh": "今年比去年早。"
+          },
+          "note": "AはBよりCです。(A比B更C)"
+        },
+        {
+          "point": "～からです",
+          "zh": "表示原因或理由",
+          "en": "indicates reason or cause (because of...)",
+          "example": {
+            "ja": "暖かい日が多いからです。",
+            "zh": "因為溫暖的日子很多。"
+          },
+          "note": "句子的原因部分後接「からです」。"
+        }
+      ],
+      "quiz": [
+        {
+          "type": "reading",
+          "prompt": {
+            "ja": "「桜」の正しい読み方はどれですか？",
+            "zh": "「桜」的正確讀法是哪一個？"
+          },
+          "audioText": "",
+          "options": [
+            "さくら",
+            "はな",
+            "き",
+            "はる"
+          ],
+          "answer": 0,
+          "explain": {
+            "zh": "「桜」的讀法是「さくら」。"
+          }
+        },
+        {
+          "type": "vocab",
+          "prompt": {
+            "ja": "「blooming」という意味の日本語の単語は何ですか？",
+            "zh": "「blooming」的日語單字是什麼？"
+          },
+          "audioText": "",
+          "options": [
+            "開花",
+            "早い",
+            "暖かい",
+            "楽しみ"
+          ],
+          "answer": 0,
+          "explain": {
+            "zh": "「開花（かいか）」的意思是「blooming」。"
+          }
+        },
+        {
+          "type": "grammar",
+          "prompt": {
+            "ja": "「日本の桜が（　　　）始めました。」かっこに正しい動詞を入れてください。",
+            "zh": "「日本的櫻花（　　　）了。」請在括號中填入正確的動詞。"
+          },
+          "audioText": "",
+          "options": [
+            "咲き",
+            "見る",
+            "行く",
+            "食べる"
+          ],
+          "answer": 0,
+          "explain": {
+            "zh": "動詞「咲きます」的ます形去ます後接「始めました」表示「開始開了」。"
+          }
+        },
+        {
+          "type": "cloze",
+          "prompt": {
+            "ja": "今年は、いつもの年（　　）早く咲いています。",
+            "zh": "今年比往年開得早。"
+          },
+          "audioText": "",
+          "options": [
+            "に",
+            "で",
+            "より",
+            "と"
+          ],
+          "answer": 2,
+          "explain": {
+            "zh": "「～より」表示比較，意為「比...更...」。"
+          }
+        },
+        {
+          "type": "listening",
+          "prompt": {
+            "ja": "東京では、もう桜が見られます。",
+            "zh": "請聽錄音，並選擇正確的句子。"
+          },
+          "audioText": "とうきょうでは、もうさくらがみられます。",
+          "options": [
+            "東京では、もう桜が見られます。",
+            "東京では、まだ桜が見られません。",
+            "東京では、桜が咲きません。",
+            "東京では、桜はきれいです。"
+          ],
+          "answer": 0,
+          "explain": {
+            "zh": "音檔內容為「東京では、もう桜が見られます。」意為「在東京，已經可以看到櫻花了。」"
+          }
+        }
+      ],
+      "dictation": [
+        {
+          "ja": "桜が咲き始めました。",
+          "furigana": "さくらがさきはじめました。",
+          "accept": [
+            "さくらがさきはじめました",
+            "桜が咲き始めました"
+          ],
+          "hint": "櫻花開始開了。"
+        }
+      ],
+      "speaking": [
+        {
+          "ja": "桜を見るのが楽しみです。",
+          "furigana": "さくらをみるのがたのしみです。",
+          "zh": "我很期待賞櫻。",
+          "focus": "intonation",
+          "linking": "「見るのが」の「が」は弱く発音されることが多いです。"
+        }
+      ],
+      "id": "daily-2026-09-26-N5",
+      "date": "2026-09-26",
+      "level": "N5"
+    },
+    {
+      "title": {
         "ja": "可愛いパンダの赤ちゃん、名前は「暁暁」と「蕾蕾」！",
         "furigana": "かわいいパンダのあかちゃん、なまえは「シャオシャオ」と「レイレイ」！",
         "zh": "可愛熊貓寶寶，名字是「曉曉」和「蕾蕾」！",
@@ -14150,237 +14381,6 @@ window.KANA_NEWS = {
       ],
       "id": "daily-2026-07-25-N5",
       "date": "2026-07-25",
-      "level": "N5"
-    },
-    {
-      "title": {
-        "ja": "かわいいパンダの赤ちゃん、名前が決まったよ！",
-        "furigana": "かわいいパンダのあかちゃん、なまえがきまったよ！",
-        "zh": "可愛熊貓寶寶，名字決定了！",
-        "en": "Cute Panda Baby's Name Decided!"
-      },
-      "source": {
-        "title": "かわいいパンダの赤ちゃん、名前が決まったよ！",
-        "publisher": "上野動物園 / Ueno Zoo",
-        "url": "https://www.ueno-zoo.jp/news/",
-        "note": "原創、分級改寫之摘要，非重製原文。"
-      },
-      "summary": [
-        {
-          "ja": "上野動物園に新しいパンダの赤ちゃんが生まれました。名前は「シャンシャン」です。たくさんの人が名前を考えました。動物園は赤ちゃんパンダの成長を楽しみにしています。",
-          "furigana": "うえのどうぶつえんにあたらしいパンダのあかちゃんがうまれました。なまえは「シャンシャン」です。たくさんのひとがなまえをかんがえました。どうぶつえんはあかちゃんパンダのせいちょうをたのしみにしています。",
-          "zh": "上野動物園誕生了一隻新的熊貓寶寶。牠的名字是「香香」。很多人為牠想了名字。動物園期待著熊貓寶寶的成長。",
-          "en": "A new panda baby was born at Ueno Zoo. Its name is \"Xiang Xiang.\" Many people thought of names for it. The zoo is looking forward to the baby panda's growth."
-        }
-      ],
-      "vocab": [
-        {
-          "word": "動物園",
-          "reading": "どうぶつえん",
-          "zh": "動物園",
-          "en": "zoo",
-          "pos": "noun",
-          "jlpt": "N5",
-          "example": {
-            "ja": "私は動物園が好きです。",
-            "zh": "我喜歡動物園。"
-          }
-        },
-        {
-          "word": "赤ちゃん",
-          "reading": "あかちゃん",
-          "zh": "嬰兒，寶寶",
-          "en": "baby",
-          "pos": "noun",
-          "jlpt": "N5",
-          "example": {
-            "ja": "赤ちゃんが寝ています。",
-            "zh": "寶寶正在睡覺。"
-          }
-        },
-        {
-          "word": "生まれる",
-          "reading": "うまれる",
-          "zh": "出生",
-          "en": "to be born",
-          "pos": "verb",
-          "jlpt": "N5",
-          "example": {
-            "ja": "新しい命が生まれました。",
-            "zh": "新的生命誕生了。"
-          }
-        },
-        {
-          "word": "名前",
-          "reading": "なまえ",
-          "zh": "名字",
-          "en": "name",
-          "pos": "noun",
-          "jlpt": "N5",
-          "example": {
-            "ja": "あなたの名前は何ですか。",
-            "zh": "你叫什麼名字？"
-          }
-        },
-        {
-          "word": "成長",
-          "reading": "せいちょう",
-          "zh": "成長",
-          "en": "growth",
-          "pos": "noun",
-          "jlpt": "N5",
-          "example": {
-            "ja": "子どもの成長は早いです。",
-            "zh": "孩子的成長很快。"
-          }
-        }
-      ],
-      "grammar": [
-        {
-          "point": "〜に〜が生まれる",
-          "zh": "在〜出生了〜",
-          "en": "Something is born in/at...",
-          "example": {
-            "ja": "上野動物園にパンダの赤ちゃんが生まれました。",
-            "zh": "上野動物園出生了一隻熊貓寶寶。"
-          },
-          "note": "表示某物在某地誕生。"
-        },
-        {
-          "point": "〜は〜です",
-          "zh": "〜是〜",
-          "en": "~ is ~",
-          "example": {
-            "ja": "名前は「シャンシャン」です。",
-            "zh": "名字是「香香」。"
-          },
-          "note": "最基本的肯定句型，用於陳述事實或定義。"
-        },
-        {
-          "point": "〜を楽しみしています",
-          "zh": "期待著〜",
-          "en": "looking forward to ~",
-          "example": {
-            "ja": "動物園は赤ちゃんパンダの成長を楽しみにしています。",
-            "zh": "動物園期待著熊貓寶寶的成長。"
-          },
-          "note": "表示對某事物的期待或盼望。"
-        }
-      ],
-      "quiz": [
-        {
-          "type": "reading",
-          "prompt": {
-            "ja": "「動物園」の読み方はどれですか？",
-            "zh": "「動物園」的讀音是哪一個？"
-          },
-          "audioText": "",
-          "options": [
-            "どうぶつえん",
-            "どうぶつえ",
-            "どうぶつその",
-            "どうぶつねん"
-          ],
-          "answer": 0,
-          "explain": {
-            "zh": "「動物園」的正確讀音是「どうぶつえん」。"
-          }
-        },
-        {
-          "type": "vocab",
-          "prompt": {
-            "ja": "「赤ちゃん」の英語の意味は何ですか？",
-            "zh": "「赤ちゃん」的英文意思是什麼？"
-          },
-          "audioText": "",
-          "options": [
-            "child",
-            "baby",
-            "adult",
-            "student"
-          ],
-          "answer": 1,
-          "explain": {
-            "zh": "「赤ちゃん」的意思是「baby」。"
-          }
-        },
-        {
-          "type": "grammar",
-          "prompt": {
-            "ja": "「上野動物園（　）新しいパンダの赤ちゃんが生まれました。」（括號中應填入哪個助詞？）",
-            "zh": "「上野動物園（　）新しいパンダの赤ちゃんが生まれました。」（括號中應該填入哪個助詞？）"
-          },
-          "audioText": "",
-          "options": [
-            "で",
-            "に",
-            "を",
-            "と"
-          ],
-          "answer": 1,
-          "explain": {
-            "zh": "表示事物發生的地點時，常用「に」。"
-          }
-        },
-        {
-          "type": "listening",
-          "prompt": {
-            "ja": "上野動物園に新しいパンダの赤ちゃんが生まれました。",
-            "zh": "請聽錄音並選出正確的句子。"
-          },
-          "audioText": "うえのどうぶつえんにあたらしいパンダのあかちゃんがうまれました。",
-          "options": [
-            "上野動物園に新しいパンダの赤ちゃんが生まれました。",
-            "上野動物園は新しいパンダの赤ちゃんが生まれました。",
-            "上野動物園と新しいパンダの赤ちゃんが生まれました。",
-            "上野動物園も新しいパンダの赤ちゃんが生まれました。"
-          ],
-          "answer": 0,
-          "explain": {
-            "zh": "錄音內容是「上野動物園に新しいパンダの赤ちゃんが生まれました。」"
-          }
-        },
-        {
-          "type": "cloze",
-          "prompt": {
-            "ja": "動物園は赤ちゃんパンダの（　）を楽しみにしています。",
-            "zh": "動物園期待著熊貓寶寶的（　）。"
-          },
-          "audioText": "",
-          "options": [
-            "名前",
-            "食べ物",
-            "成長",
-            "遊び"
-          ],
-          "answer": 2,
-          "explain": {
-            "zh": "根據文章內容，動物園期待的是熊貓寶寶的「成長」。"
-          }
-        }
-      ],
-      "dictation": [
-        {
-          "ja": "名前はシャンシャンです。",
-          "furigana": "なまえはシャンシャンです。",
-          "accept": [
-            "なまえはシャンシャンです",
-            "名前はシャンシャンです"
-          ],
-          "hint": "牠的名字是香香。"
-        }
-      ],
-      "speaking": [
-        {
-          "ja": "パンダの赤ちゃん、かわいいですね。",
-          "furigana": "パンダのあかちゃん、かわいいですね。",
-          "zh": "熊貓寶寶很可愛呢。",
-          "focus": "intonation",
-          "linking": "「パンダの」的「の」讀音較輕，幾乎與「パンダ」連讀。"
-        }
-      ],
-      "id": "daily-2026-07-24-N5",
-      "date": "2026-07-24",
       "level": "N5"
     }
   ]
