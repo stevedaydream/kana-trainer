@@ -7,6 +7,283 @@ window.KANA_NEWS = {
   "packs": [
     {
       "title": {
+        "ja": "桜の開花、今年は早い！",
+        "furigana": "さくらのかいか、ことしははやい！",
+        "zh": "櫻花開了，今年特別早！",
+        "en": "Cherry Blossoms Bloom Early This Year!"
+      },
+      "source": {
+        "title": "今年の桜、東京で早く開花 気象庁が発表",
+        "publisher": "NHKニュース",
+        "url": "https://www3.nhk.or.jp/news/html/20240329/k10014406231000.html",
+        "note": "原創、分級改寫之摘要，非重製原文。"
+      },
+      "summary": [
+        {
+          "ja": "東京で、桜の花が咲きました。",
+          "furigana": "とうきょうで、さくらのはながさきました。",
+          "zh": "在東京，櫻花開了。",
+          "en": "Cherry blossoms bloomed in Tokyo."
+        },
+        {
+          "ja": "これは、去年より５日早いです。",
+          "furigana": "これは、きょねんよりいつかはやいです。",
+          "zh": "這比去年早了五天。",
+          "en": "This is five days earlier than last year."
+        },
+        {
+          "ja": "そして、いつもより６日早いです。",
+          "furigana": "そして、いつもよりむいかはやいです。",
+          "zh": "而且，這比往年早了六天。",
+          "en": "And it is six days earlier than usual."
+        },
+        {
+          "ja": "３月は、暖かい日が多くありました。",
+          "furigana": "さんがつは、あたたかいひがおおくありました。",
+          "zh": "三月有很多溫暖的日子。",
+          "en": "There were many warm days in March."
+        },
+        {
+          "ja": "それで、花が早く咲いたと思います。",
+          "furigana": "それで、はながはやくさいたとおもいます。",
+          "zh": "因此，我認為花開得比較早。",
+          "en": "Because of that, I think the flowers bloomed early."
+        },
+        {
+          "ja": "これから、日本中で桜が見られます。",
+          "furigana": "これから、にほんじゅうでさくらがみられます。",
+          "zh": "從現在開始，日本各地都能看到櫻花。",
+          "en": "From now on, cherry blossoms can be seen all over Japan."
+        }
+      ],
+      "vocab": [
+        {
+          "word": "桜",
+          "reading": "さくら",
+          "zh": "櫻花",
+          "en": "cherry blossom",
+          "pos": "名詞",
+          "jlpt": "N5",
+          "example": {
+            "ja": "桜が綺麗です。",
+            "zh": "櫻花很漂亮。"
+          }
+        },
+        {
+          "word": "開花",
+          "reading": "かいか",
+          "zh": "開花",
+          "en": "blooming",
+          "pos": "名詞",
+          "jlpt": "N5",
+          "example": {
+            "ja": "桜の開花はいつですか。",
+            "zh": "櫻花什麼時候開？"
+          }
+        },
+        {
+          "word": "早い",
+          "reading": "はやい",
+          "zh": "早的",
+          "en": "early, fast",
+          "pos": "い形容詞",
+          "jlpt": "N5",
+          "example": {
+            "ja": "朝早く起きます。",
+            "zh": "我早上起得很早。"
+          }
+        },
+        {
+          "word": "去年",
+          "reading": "きょねん",
+          "zh": "去年",
+          "en": "last year",
+          "pos": "名詞",
+          "jlpt": "N5",
+          "example": {
+            "ja": "去年、日本へ行きました。",
+            "zh": "我去年去了日本。"
+          }
+        },
+        {
+          "word": "暖かい",
+          "reading": "あたたかい",
+          "zh": "溫暖的",
+          "en": "warm",
+          "pos": "い形容詞",
+          "jlpt": "N5",
+          "example": {
+            "ja": "今日は暖かいですね。",
+            "zh": "今天很溫暖呢。"
+          }
+        }
+      ],
+      "grammar": [
+        {
+          "point": "〜より",
+          "zh": "比〜",
+          "en": "than ~",
+          "example": {
+            "ja": "これは、去年より５日早いです。",
+            "zh": "這比去年早了五天。"
+          },
+          "note": "用於比較兩者，表示「A比B...」。"
+        },
+        {
+          "point": "〜と思います",
+          "zh": "我想〜",
+          "en": "I think ~",
+          "example": {
+            "ja": "花が早く咲いたと思います。",
+            "zh": "我認為花開得比較早。"
+          },
+          "note": "表示說話者的想法或推測。"
+        },
+        {
+          "point": "〜が多くあります",
+          "zh": "有很多〜",
+          "en": "there are many ~",
+          "example": {
+            "ja": "暖かい日が多くありました。",
+            "zh": "有很多溫暖的日子。"
+          },
+          "note": "表示某事物數量很多，通常用於不可數名詞或抽象概念。"
+        }
+      ],
+      "quiz": [
+        {
+          "type": "reading",
+          "prompt": {
+            "ja": "「桜」の読み方はどれですか？",
+            "zh": "「桜」的讀音是哪個？"
+          },
+          "audioText": "",
+          "options": [
+            "さくら",
+            "はな",
+            "き",
+            "さく"
+          ],
+          "answer": 0,
+          "explain": {
+            "zh": "「桜」的日語讀音是「さくら」。"
+          }
+        },
+        {
+          "type": "vocab",
+          "prompt": {
+            "ja": "「去年」の反対の意味の言葉は何ですか？",
+            "zh": "「去年」的反義詞是什麼？"
+          },
+          "audioText": "",
+          "options": [
+            "今日",
+            "明日",
+            "今年",
+            "先月"
+          ],
+          "answer": 2,
+          "explain": {
+            "zh": "「去年」(きょねん) 是去年，反義詞是「今年」(ことし)，今年。"
+          }
+        },
+        {
+          "type": "grammar",
+          "prompt": {
+            "ja": "「これは、去年＿＿５日早いです。」に当てはまる言葉を選びなさい。",
+            "zh": "請選擇填入「これは、去年＿＿５日早いです。」的詞語。"
+          },
+          "audioText": "",
+          "options": [
+            "が",
+            "より",
+            "で",
+            "と"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "「〜より」用於比較，表示「比〜」。"
+          }
+        },
+        {
+          "type": "listening",
+          "prompt": {
+            "ja": "「東京で、桜の花が咲きました。」の正しい意味は何ですか？",
+            "zh": "「東京で、桜の花が咲きました。」的正確意思是什麼？"
+          },
+          "audioText": "東京で、桜の花が咲きました。",
+          "options": [
+            "Cherry blossoms bloomed in Tokyo.",
+            "Tokyo is a city of cherry blossoms.",
+            "I saw cherry blossoms in Tokyo.",
+            "Cherry blossoms are beautiful in Tokyo."
+          ],
+          "answer": 0,
+          "explain": {
+            "zh": "「咲きました」是「開花」的意思，所以整句是「在東京，櫻花開了」。"
+          }
+        },
+        {
+          "type": "cloze",
+          "prompt": {
+            "ja": "３月は、＿＿＿＿日が多くありました。",
+            "zh": "三月有很多＿＿＿＿的日子。"
+          },
+          "audioText": "",
+          "options": [
+            "寒い",
+            "涼しい",
+            "暑い",
+            "暖かい"
+          ],
+          "answer": 3,
+          "explain": {
+            "zh": "文章中提到「それで、花が早く咲いたと思います。」，花會提早開通常是因為天氣溫暖，所以應填入「暖かい」。"
+          }
+        }
+      ],
+      "dictation": [
+        {
+          "ja": "東京で桜が咲きました。",
+          "furigana": "とうきょうでさくらがさきました。",
+          "accept": [
+            "とうきょうでさくらがさきました",
+            "東京で桜が咲きました"
+          ],
+          "hint": "櫻花在東京開了。"
+        },
+        {
+          "ja": "去年より早いです。",
+          "furigana": "きょねんよりはやいです。",
+          "accept": [
+            "きょねんよりはやいです",
+            "去年より早いです"
+          ],
+          "hint": "比去年早。"
+        }
+      ],
+      "speaking": [
+        {
+          "ja": "今年の桜は早いですね。",
+          "furigana": "ことしのさくらははやいですね。",
+          "zh": "今年的櫻花開得真早呢。",
+          "focus": "intonation",
+          "linking": "ことしのさくらはやいですね (「は」弱化)"
+        },
+        {
+          "ja": "暖かい日が多いです。",
+          "furigana": "あたたかいひがおおいです。",
+          "zh": "溫暖的日子很多。",
+          "focus": "pacing",
+          "linking": ""
+        }
+      ],
+      "id": "daily-2026-09-29-N5",
+      "date": "2026-09-29",
+      "level": "N5"
+    },
+    {
+      "title": {
         "ja": "猫が人気！犬も好き！",
         "furigana": "ねこがにんき！いぬもすき！",
         "zh": "貓咪很受歡迎！狗狗也喜歡！",
@@ -14192,259 +14469,6 @@ window.KANA_NEWS = {
       ],
       "id": "daily-2026-07-27-N5",
       "date": "2026-07-27",
-      "level": "N5"
-    },
-    {
-      "title": {
-        "ja": "かわいい猫が電車のお手伝い！",
-        "furigana": "かわいいねこがでんしゃのおてつだい！",
-        "zh": "可愛的貓咪幫忙電車！",
-        "en": "Cute Cat Helps the Train!"
-      },
-      "source": {
-        "title": "JR九州の駅に「ねこ駅長」誕生",
-        "publisher": "Yahoo! ニュース",
-        "url": "https://news.yahoo.co.jp/articles/YOUR_ARTICLE_ID",
-        "note": "原創、分級改寫之摘要，非重製原文。"
-      },
-      "summary": [
-        {
-          "ja": "JR九州の駅に、新しい駅長さんが来ました。その駅長さんは、とてもかわいい猫です。",
-          "furigana": "じぇいあーるきゅうしゅうのえきに、あたらしいえきちょうさんがきました。そのえきちょうさんは、とてもかわいいねこです。",
-          "zh": "JR九州的車站來了一位新的站長。這位站長是一隻非常可愛的貓。",
-          "en": "A new stationmaster came to a JR Kyushu station. That stationmaster is a very cute cat."
-        },
-        {
-          "ja": "猫の名前は「にゃん太郎」です。にゃん太郎は駅でみんなを笑顔にします。",
-          "furigana": "ねこのなまえは「にゃんたろう」です。にゃんたろうはえきでみんなをえがおにします。",
-          "zh": "這隻貓的名字是「喵太郎」。喵太郎在車站讓大家露出笑容。",
-          "en": "The cat's name is \"Nyantaro\". Nyantaro makes everyone smile at the station."
-        },
-        {
-          "ja": "お客さんは、にゃん太郎に会いに駅に来ます。電車に乗るのがもっと楽しくなりますね。",
-          "furigana": "おきゃくさんは、にゃんたろうにあいにえきにきます。でんしゃにのるのがもっとたのしくなりますね。",
-          "zh": "乘客們會來車站見喵太郎。搭乘電車會變得更有趣呢。",
-          "en": "Customers come to the station to meet Nyantaro. Riding the train will be even more fun, won't it?"
-        }
-      ],
-      "vocab": [
-        {
-          "word": "駅",
-          "reading": "えき",
-          "zh": "車站",
-          "en": "station",
-          "pos": "noun",
-          "jlpt": "N5",
-          "example": {
-            "ja": "これは駅です。",
-            "zh": "這是車站。"
-          }
-        },
-        {
-          "word": "駅長",
-          "reading": "えきちょう",
-          "zh": "站長",
-          "en": "stationmaster",
-          "pos": "noun",
-          "jlpt": "N5",
-          "example": {
-            "ja": "駅長さんはとても親切です。",
-            "zh": "站長先生非常親切。"
-          }
-        },
-        {
-          "word": "猫",
-          "reading": "ねこ",
-          "zh": "貓",
-          "en": "cat",
-          "pos": "noun",
-          "jlpt": "N5",
-          "example": {
-            "ja": "猫が好きです。",
-            "zh": "我喜歡貓。"
-          }
-        },
-        {
-          "word": "来る",
-          "reading": "くる",
-          "zh": "來",
-          "en": "to come",
-          "pos": "verb",
-          "jlpt": "N5",
-          "example": {
-            "ja": "明日、来ます。",
-            "zh": "我明天來。"
-          }
-        },
-        {
-          "word": "笑顔",
-          "reading": "えがお",
-          "zh": "笑容",
-          "en": "smile",
-          "pos": "noun",
-          "jlpt": "N5",
-          "example": {
-            "ja": "彼女はいつも笑顔です。",
-            "zh": "她總是面帶笑容。"
-          }
-        }
-      ],
-      "grammar": [
-        {
-          "point": "〜が来ました",
-          "zh": "〜來了",
-          "en": "〜 came",
-          "example": {
-            "ja": "友達が来ました。",
-            "zh": "朋友來了。"
-          },
-          "note": "表示某人或某物到達。"
-        },
-        {
-          "point": "〜は〜です",
-          "zh": "〜是〜",
-          "en": "〜 is 〜",
-          "example": {
-            "ja": "これは猫です。",
-            "zh": "這是貓。"
-          },
-          "note": "最基本的肯定句型，用於描述或定義。"
-        },
-        {
-          "point": "〜を〜ます",
-          "zh": "做〜（動詞）",
-          "en": "do 〜 (verb)",
-          "example": {
-            "ja": "ご飯を食べます。",
-            "zh": "吃飯。"
-          },
-          "note": "「を」是受詞助詞，表示動詞的作用對象。"
-        },
-        {
-          "point": "〜がもっと〜",
-          "zh": "〜更〜",
-          "en": "〜 more 〜",
-          "example": {
-            "ja": "もっと大きいです。",
-            "zh": "更大。"
-          },
-          "note": "「もっと」表示程度的增加，後面接形容詞或副詞。"
-        }
-      ],
-      "quiz": [
-        {
-          "type": "reading",
-          "prompt": {
-            "ja": "「駅長」の正しい読み方はどれですか？",
-            "zh": "「駅長」的正確讀音是哪個？"
-          },
-          "audioText": "",
-          "options": [
-            "えきちょう",
-            "えきちよう",
-            "えきなが",
-            "えきおさ"
-          ],
-          "answer": 0,
-          "explain": {
-            "zh": "「駅長」的正確讀音是「えきちょう」。"
-          }
-        },
-        {
-          "type": "vocab",
-          "prompt": {
-            "ja": "「猫」の英語は何ですか？",
-            "zh": "「猫」的英文是什麼？"
-          },
-          "audioText": "",
-          "options": [
-            "dog",
-            "cat",
-            "bird",
-            "fish"
-          ],
-          "answer": 1,
-          "explain": {
-            "zh": "「猫」的英文是「cat」。"
-          }
-        },
-        {
-          "type": "grammar",
-          "prompt": {
-            "ja": "「新しい___が来ました。」（車站）",
-            "zh": "「新的___來了。」（車站）"
-          },
-          "audioText": "",
-          "options": [
-            "えき",
-            "えきちょう",
-            "ねこ",
-            "でんしゃ"
-          ],
-          "answer": 0,
-          "explain": {
-            "zh": "句子缺少表示地點的名詞，「駅」是車站的意思，符合語境。"
-          }
-        },
-        {
-          "type": "cloze",
-          "prompt": {
-            "ja": "にゃん太郎は駅でみんなを____にします。",
-            "zh": "喵太郎在車站讓大家____。"
-          },
-          "audioText": "",
-          "options": [
-            "しんぱい",
-            "かなしい",
-            "えがお",
-            "こわい"
-          ],
-          "answer": 2,
-          "explain": {
-            "zh": "根據文章，喵太郎讓大家開心，所以是「笑顔」（笑容）。"
-          }
-        },
-        {
-          "type": "listening",
-          "prompt": {
-            "ja": "「かわいい猫」を聞いて、正しい日本語を選んでください。",
-            "zh": "請聽「かわいい猫」，然後選擇正確的日語。"
-          },
-          "audioText": "かわいいねこ",
-          "options": [
-            "かわいい犬",
-            "かわいい猫",
-            "かわいい鳥",
-            "かわいい魚"
-          ],
-          "answer": 1,
-          "explain": {
-            "zh": "音頻讀出的是「かわいいねこ」，即「可愛的貓」。"
-          }
-        }
-      ],
-      "dictation": [
-        {
-          "ja": "猫の名前はにゃん太郎です。",
-          "furigana": "ねこのなまえはにゃんたろうです。",
-          "accept": [
-            "ねこのなまえはにゃんたろうです",
-            "猫の名前はにゃん太郎です"
-          ],
-          "hint": "貓的名字是喵太郎。"
-        }
-      ],
-      "speaking": [
-        {
-          "ja": "JR九州の駅に、新しい駅長さんが来ました。",
-          "furigana": "じぇいあーるきゅうしゅうのえきに、あたらしいえきちょうさんがきました。",
-          "zh": "JR九州的車站來了一位新的站長。",
-          "focus": "intonation",
-          "linking": "JR（じぇいあーる）九州（きゅうしゅう）の駅（えき）に、新（あたら）しい駅長（えきちょう）さんが来（き）ました。"
-        }
-      ],
-      "id": "daily-2026-07-26-N5",
-      "date": "2026-07-26",
       "level": "N5"
     }
   ]
