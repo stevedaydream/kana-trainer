@@ -7,6 +7,249 @@ window.KANA_NEWS = {
   "packs": [
     {
       "title": {
+        "ja": "猫が好きな場所",
+        "furigana": "ねこがすきなばしょ",
+        "zh": "貓咪喜歡的地方",
+        "en": "Cats' Favorite Places"
+      },
+      "source": {
+        "title": "猫の行動に関する研究",
+        "publisher": "ペット関連ウェブサイト",
+        "url": "https://example.com/cat-behavior-study",
+        "note": "原創、分級改寫之摘要，非重製原文。"
+      },
+      "summary": [
+        {
+          "ja": "猫は狭い場所が好きです。箱の中や、家具の下によくいます。高い場所も好きです。例えば、棚の上です。そこから周りを見ます。暖かい場所も好きです。日当たりの良い窓のそばや、暖房器具の近くで寝ます。猫は安心できる場所を探しています。",
+          "furigana": "ねこはせまいばしょがすきです。はこのなかや、かぐのしたによくいます。たかいばしょもすきです。たとえば、たなのうえです。そこからまわりをみます。あたたかいばしょもすきです。ひあたりのよいまどのそばや、だんぼうきぐのちかくでねます。ねこはあんしんできるばしょをさがしています。",
+          "zh": "貓咪喜歡狹窄的地方。牠們經常在箱子裡或家具下面。牠們也喜歡高處。例如，在架子上。從那裡牠們會觀察周圍。貓咪也喜歡溫暖的地方。牠們會在陽光充足的窗邊或暖氣設備附近睡覺。貓咪正在尋找讓牠們感到安心的地方。",
+          "en": "Cats like narrow places. They are often inside boxes or under furniture. They also like high places. For example, on shelves. From there, they look around. Cats also like warm places. They sleep near sunny windows or heating devices. Cats are looking for places where they feel safe."
+        }
+      ],
+      "vocab": [
+        {
+          "word": "狭い",
+          "reading": "せまい",
+          "zh": "狹窄的",
+          "en": "narrow, small",
+          "pos": "い形容詞",
+          "jlpt": "N5",
+          "example": {
+            "ja": "この部屋は狭いです。",
+            "zh": "這間房間很狹窄。"
+          }
+        },
+        {
+          "word": "場所",
+          "reading": "ばしょ",
+          "zh": "地方",
+          "en": "place, location",
+          "pos": "名詞",
+          "jlpt": "N5",
+          "example": {
+            "ja": "好きな場所はどこですか。",
+            "zh": "你喜歡的地方在哪裡？"
+          }
+        },
+        {
+          "word": "箱",
+          "reading": "はこ",
+          "zh": "箱子",
+          "en": "box",
+          "pos": "名詞",
+          "jlpt": "N5",
+          "example": {
+            "ja": "この箱は小さいです。",
+            "zh": "這個箱子很小。"
+          }
+        },
+        {
+          "word": "家具",
+          "reading": "かぐ",
+          "zh": "家具",
+          "en": "furniture",
+          "pos": "名詞",
+          "jlpt": "N5",
+          "example": {
+            "ja": "新しい家具を買いました。",
+            "zh": "我買了新家具。"
+          }
+        },
+        {
+          "word": "暖かい",
+          "reading": "あたたかい",
+          "zh": "溫暖的",
+          "en": "warm",
+          "pos": "い形容詞",
+          "jlpt": "N5",
+          "example": {
+            "ja": "今日は暖かいです。",
+            "zh": "今天很溫暖。"
+          }
+        }
+      ],
+      "grammar": [
+        {
+          "point": "〜が好きです",
+          "zh": "喜歡〜",
+          "en": "like ~",
+          "example": {
+            "ja": "私は猫が好きです。",
+            "zh": "我喜歡貓。"
+          },
+          "note": "用助詞「が」表示喜歡的對象。"
+        },
+        {
+          "point": "〜によくいます",
+          "zh": "經常在〜",
+          "en": "often in/at ~",
+          "example": {
+            "ja": "猫は箱の中によくいます。",
+            "zh": "貓咪經常在箱子裡。"
+          },
+          "note": "「よく」表示頻繁，助詞「に」表示地點。"
+        },
+        {
+          "point": "〜や、〜",
+          "zh": "〜和〜等等",
+          "en": "~ and ~, among others",
+          "example": {
+            "ja": "りんごや、みかんが好きです。",
+            "zh": "我喜歡蘋果、橘子等等。"
+          },
+          "note": "用於列舉多個事物中的一部分。"
+        }
+      ],
+      "quiz": [
+        {
+          "type": "reading",
+          "prompt": {
+            "ja": "猫はどんな場所が好きですか。",
+            "zh": "貓咪喜歡什麼樣的地方？"
+          },
+          "options": [
+            "広くて寒い場所",
+            "狭くて高い場所",
+            "暗くて静かな場所",
+            "水がたくさんある場所"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "根據文章，貓咪喜歡狹窄和高的地方。"
+          }
+        },
+        {
+          "type": "vocab",
+          "prompt": {
+            "ja": "「箱」の読み方はどれですか。",
+            "zh": "「箱」的讀音是哪個？"
+          },
+          "options": [
+            "はこ",
+            "ばこ",
+            "かご",
+            "わこ"
+          ],
+          "answer": 0,
+          "explain": {
+            "zh": "「箱」的讀音是「はこ」。"
+          }
+        },
+        {
+          "type": "grammar",
+          "prompt": {
+            "ja": "猫は（　　）場所が好きです。",
+            "zh": "貓咪喜歡（　　）的地方。"
+          },
+          "options": [
+            "広い",
+            "大きい",
+            "狭い",
+            "長い"
+          ],
+          "answer": 2,
+          "explain": {
+            "zh": "文章提到貓咪喜歡「狭い場所」（狹窄的地方）。"
+          }
+        },
+        {
+          "type": "listening",
+          "prompt": {
+            "ja": "猫は箱の中によくいます。",
+            "zh": "貓咪經常在箱子裡。"
+          },
+          "audioText": "猫は箱の中によくいます。",
+          "options": [
+            "Cats are often in boxes.",
+            "Cats sometimes go into boxes.",
+            "Cats dislike boxes.",
+            "Cats play with boxes."
+          ],
+          "answer": 0,
+          "explain": {
+            "zh": "「よくいます」表示「經常在」。"
+          }
+        },
+        {
+          "type": "cloze",
+          "prompt": {
+            "ja": "猫は、日当たりの良い窓の（　　）で寝ます。",
+            "zh": "貓咪會在陽光充足的窗戶（　　）睡覺。"
+          },
+          "options": [
+            "中",
+            "上",
+            "そば",
+            "下"
+          ],
+          "answer": 2,
+          "explain": {
+            "zh": "文章提到「窓のそば」（窗邊）。"
+          }
+        }
+      ],
+      "dictation": [
+        {
+          "ja": "猫は狭い場所が好きです。",
+          "furigana": "ねこはせまいばしょがすきです。",
+          "accept": [
+            "ねこはせまいばしょがすきです",
+            "猫は狭い場所が好きです"
+          ],
+          "hint": "貓咪喜歡狹窄的地方。"
+        },
+        {
+          "ja": "高い場所も好きです。",
+          "furigana": "たかいばしょもすきです。",
+          "accept": [
+            "たかいばしょもすきです",
+            "高い場所も好きです"
+          ],
+          "hint": "也喜歡高處。"
+        }
+      ],
+      "speaking": [
+        {
+          "ja": "猫は箱の中によくいます。",
+          "furigana": "ねこははこのなかによくいます。",
+          "zh": "貓咪經常在箱子裡。",
+          "focus": "intonation",
+          "linking": "「箱の中」は「はこんのなか」のように聞こえることがあります。"
+        },
+        {
+          "ja": "暖かい場所も好きです。",
+          "furigana": "あたたかいばしょもすきです。",
+          "zh": "也喜歡溫暖的地方。",
+          "focus": "pacing",
+          "linking": "「暖かい」と「場所」を自然につなげて発音しましょう。"
+        }
+      ],
+      "id": "daily-2026-10-06-N5",
+      "date": "2026-10-06",
+      "level": "N5"
+    },
+    {
+      "title": {
         "ja": "かわいいパンダの赤ちゃん、名前は「シャンシャン」！",
         "furigana": "かわいいパンダのあかちゃん、なまえは「シャンシャン」！",
         "zh": "可爱的熊猫宝宝，名字是“香香”！",
@@ -14307,239 +14550,6 @@ window.KANA_NEWS = {
       ],
       "id": "daily-2026-08-01-N5",
       "date": "2026-08-01",
-      "level": "N5"
-    },
-    {
-      "title": {
-        "ja": "かわいい猫の駅長さんがお仕事",
-        "furigana": "かわいいねこのえきちょうさんがおしごと",
-        "zh": "可愛貓站長值勤中",
-        "en": "Cute Cat Stationmaster at Work"
-      },
-      "source": {
-        "title": "和歌山電鐵貴志川線 貴志駅",
-        "publisher": "和歌山電鐵",
-        "url": "https://www.wwwakayama-dentetsu.co.jp/station/kishi/",
-        "note": "原創、分級改寫之摘要，非重製原文。"
-      },
-      "summary": [
-        {
-          "ja": "和歌山県に「たま」という名前の猫がいました。たまは貴志駅の駅長さんでした。駅にはたくさんの人がたまに会いに来ました。たまはとても有名になりました。今、たまの二代目「ニタマ」が駅長さんです。ニタマも毎日駅でお客さんを待っています。ぜひ、ニタマに会いに来てくださいね。",
-          "furigana": "わかやまけんに「たま」というなまえのねこがいました。たまはきしえきのえきちょうさんでした。えきにはたくさんのひとがたまにあいにきました。たまはとてもゆうめいになりました。いま、たまのにだいめ「ニタマ」がえきちょうさんです。ニタマもまいにちえきでおきゃくさんをまっています。ぜひ、ニタマにあいにきてくださいね。",
-          "zh": "在和歌山縣有一隻名叫「小玉」的貓。小玉是貴志站的站長。許多人來車站看小玉。小玉變得非常有名。現在，小玉的第二代「二玉」是站長。二玉也每天在車站等候客人。請務必來見二玉喔。",
-          "en": "There was a cat named 'Tama' in Wakayama Prefecture. Tama was the stationmaster at Kishi Station. Many people came to the station to see Tama. Tama became very famous. Now, Tama's second generation, 'Nitama,' is the stationmaster. Nitama also waits for customers at the station every day. Please come and meet Nitama!"
-        }
-      ],
-      "vocab": [
-        {
-          "word": "猫",
-          "reading": "ねこ",
-          "zh": "貓",
-          "en": "cat",
-          "pos": "noun",
-          "jlpt": "N5",
-          "example": {
-            "ja": "かわいい猫がいます。",
-            "zh": "有可愛的貓。"
-          }
-        },
-        {
-          "word": "駅長",
-          "reading": "えきちょう",
-          "zh": "站長",
-          "en": "stationmaster",
-          "pos": "noun",
-          "jlpt": "N5",
-          "example": {
-            "ja": "駅長さんが挨拶をしました。",
-            "zh": "站長致詞了。"
-          }
-        },
-        {
-          "word": "有名",
-          "reading": "ゆうめい",
-          "zh": "有名",
-          "en": "famous",
-          "pos": "na-adjective",
-          "jlpt": "N5",
-          "example": {
-            "ja": "この歌手はとても有名です。",
-            "zh": "這位歌手很有名。"
-          }
-        },
-        {
-          "word": "毎日",
-          "reading": "まいにち",
-          "zh": "每天",
-          "en": "every day",
-          "pos": "adverb",
-          "jlpt": "N5",
-          "example": {
-            "ja": "私は毎日日本語を勉強します。",
-            "zh": "我每天學日語。"
-          }
-        },
-        {
-          "word": "お客さん",
-          "reading": "おきゃくさん",
-          "zh": "客人",
-          "en": "customer, guest",
-          "pos": "noun",
-          "jlpt": "N5",
-          "example": {
-            "ja": "お店にお客さんが来ました。",
-            "zh": "客人來到店裡了。"
-          }
-        }
-      ],
-      "grammar": [
-        {
-          "point": "～という",
-          "zh": "～這個（名字）",
-          "en": "named ~",
-          "example": {
-            "ja": "「たま」という名前の猫がいました。",
-            "zh": "有一隻叫做「小玉」的貓。"
-          },
-          "note": "用於介紹人或物的名稱，表示「名為～的」。"
-        },
-        {
-          "point": "～に会いに来る",
-          "zh": "來見～",
-          "en": "come to meet ~",
-          "example": {
-            "ja": "たくさんの人がたまに会いに来ました。",
-            "zh": "許多人來見小玉。"
-          },
-          "note": "動詞ます形 + に + 来る/行く，表示「目的」。"
-        }
-      ],
-      "quiz": [
-        {
-          "type": "reading",
-          "prompt": {
-            "ja": "「駅長」の正しい読み方はどれですか？",
-            "zh": "「駅長」的正確讀音是哪一個？"
-          },
-          "options": [
-            "えきちょう",
-            "えきなが",
-            "えきおさ",
-            "えきちよう"
-          ],
-          "answer": 0,
-          "explain": {
-            "zh": "「駅長」的正確讀音是「えきちょう」。"
-          }
-        },
-        {
-          "type": "vocab",
-          "prompt": {
-            "ja": "「customer」の日本語は何ですか？",
-            "zh": "「customer」的日文是什麼？"
-          },
-          "options": [
-            "店員",
-            "お客さん",
-            "従業員",
-            "先生"
-          ],
-          "answer": 1,
-          "explain": {
-            "zh": "「customer」的日文是「お客さん（おきゃくさん）」。"
-          }
-        },
-        {
-          "type": "grammar",
-          "prompt": {
-            "ja": "私は友達＿＿＿＿＿遊びに行きます。",
-            "zh": "我要去朋友家玩。"
-          },
-          "options": [
-            "と",
-            "が",
-            "に",
-            "を"
-          ],
-          "answer": 2,
-          "explain": {
-            "zh": "動詞ます形+に+行く/来る表示目的，這裡選擇「に」表示去玩的目的。"
-          }
-        },
-        {
-          "type": "listening",
-          "prompt": {
-            "ja": "「この猫はとても有名です。」の正しい意味はどれですか？",
-            "zh": "「この猫はとても有名です。」的正確意思是哪一個？"
-          },
-          "audioText": "この猫はとても有名です。",
-          "options": [
-            "這隻貓很可愛。",
-            "這隻貓很有名。",
-            "這隻貓很喜歡玩。",
-            "這隻貓很安靜。"
-          ],
-          "answer": 1,
-          "explain": {
-            "zh": "「有名（ゆうめい）」的意思是「有名」。"
-          }
-        },
-        {
-          "type": "cloze",
-          "prompt": {
-            "ja": "ニタマは＿＿＿＿＿駅でお客さんを待っています。",
-            "zh": "二玉＿＿＿＿＿在車站等候客人。"
-          },
-          "options": [
-            "週末",
-            "毎日",
-            "時々",
-            "来月"
-          ],
-          "answer": 1,
-          "explain": {
-            "zh": "根據文章，二玉是「每天」在車站等候客人，所以選擇「毎日（まいにち）」。"
-          }
-        }
-      ],
-      "dictation": [
-        {
-          "ja": "猫はとても有名になりました。",
-          "furigana": "ねこはとてもゆうめいになりました。",
-          "accept": [
-            "ねこはとてもゆうめいになりました。",
-            "猫はとても有名になりました。"
-          ],
-          "hint": "貓變得很有名了。"
-        },
-        {
-          "ja": "毎日駅でお客さんを待っています。",
-          "furigana": "まいにちえきでおきゃくさんをまっています。",
-          "accept": [
-            "まいにちえきでおきゃくさんをまっています。",
-            "毎日駅でお客さんを待っています。"
-          ],
-          "hint": "每天在車站等候客人。"
-        }
-      ],
-      "speaking": [
-        {
-          "ja": "かわいい猫の駅長さんがお仕事。",
-          "furigana": "かわいいねこのえきちょうさんがおしごと。",
-          "zh": "可愛貓站長值勤中。",
-          "focus": "intonation",
-          "linking": "「猫の」の「の」は軽く発音します。"
-        },
-        {
-          "ja": "ニタマに会いに来てくださいね。",
-          "furigana": "ニタマにあいにきてくださいね。",
-          "zh": "請務必來見二玉喔。",
-          "focus": "pacing",
-          "linking": "「会いに」は流れるように発音し、「くださいね」は少しゆっくりと丁寧に。"
-        }
-      ],
-      "id": "daily-2026-07-31-N5",
-      "date": "2026-07-31",
       "level": "N5"
     }
   ]
