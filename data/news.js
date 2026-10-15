@@ -7,6 +7,255 @@ window.KANA_NEWS = {
   "packs": [
     {
       "title": {
+        "ja": "桜が咲きました！",
+        "furigana": "さくらがさきました！",
+        "zh": "櫻花開了！",
+        "en": "Cherry Blossoms Have Bloomed!"
+      },
+      "source": {
+        "title": "日本各地の桜開花情報",
+        "publisher": "ウェザーニュース",
+        "url": "https://weathernews.jp/s/topics/202403/290075/",
+        "note": "原創、分級改寫之摘要，非重製原文。"
+      },
+      "summary": [
+        {
+          "ja": "日本で桜が咲き始めました。",
+          "furigana": "にほんでさくらがさきはじめました。",
+          "zh": "日本的櫻花開始開了。",
+          "en": "Cherry blossoms have started to bloom in Japan."
+        },
+        {
+          "ja": "東京では、多くの人が桜を見に行きました。",
+          "furigana": "とうきょうでは、おおくのひとがさくらをみにいきました。",
+          "zh": "在東京，很多人去賞櫻了。",
+          "en": "In Tokyo, many people went to see the cherry blossoms."
+        },
+        {
+          "ja": "桜はとてもきれいです。",
+          "furigana": "さくらはとてもきれいです。",
+          "zh": "櫻花非常漂亮。",
+          "en": "The cherry blossoms are very beautiful."
+        },
+        {
+          "ja": "みんなで桜を見て、春を感じましょう。",
+          "furigana": "みんなでさくらをみて、はるをかんじましょう。",
+          "zh": "大家一起賞櫻，感受春天吧。",
+          "en": "Let's all see the cherry blossoms together and feel spring."
+        }
+      ],
+      "vocab": [
+        {
+          "word": "桜",
+          "reading": "さくら",
+          "zh": "櫻花",
+          "en": "cherry blossom",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "桜は春に咲きます。",
+            "zh": "櫻花在春天開。"
+          }
+        },
+        {
+          "word": "咲きます",
+          "reading": "さきます",
+          "zh": "開花",
+          "en": "to bloom",
+          "pos": "verb",
+          "jlpt": "N5",
+          "example": {
+            "ja": "花が咲きました。",
+            "zh": "花開了。"
+          }
+        },
+        {
+          "word": "見ます",
+          "reading": "みます",
+          "zh": "看",
+          "en": "to see, to look",
+          "pos": "verb",
+          "jlpt": "N5",
+          "example": {
+            "ja": "テレビを見ます。",
+            "zh": "看電視。"
+          }
+        },
+        {
+          "word": "きれい",
+          "reading": "きれい",
+          "zh": "漂亮、乾淨",
+          "en": "beautiful, clean",
+          "pos": "な-adjective",
+          "jlpt": "N5",
+          "example": {
+            "ja": "あの花はきれいです。",
+            "zh": "那朵花很漂亮。"
+          }
+        },
+        {
+          "word": "春",
+          "reading": "はる",
+          "zh": "春天",
+          "en": "spring",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "春は暖かいです。",
+            "zh": "春天很溫暖。"
+          }
+        }
+      ],
+      "grammar": [
+        {
+          "point": "～始めます (～はじめます)",
+          "zh": "表示動作的開始",
+          "en": "Indicates the start of an action (verb stem + 始めます)",
+          "example": {
+            "ja": "桜が咲き始めました。",
+            "zh": "櫻花開始開了。"
+          },
+          "note": "動詞ます形去ます接「始めます」。"
+        },
+        {
+          "point": "～に行きます (～にいきます)",
+          "zh": "表示目的地的動作",
+          "en": "Indicates going somewhere for a purpose (noun + に + 行きます)",
+          "example": {
+            "ja": "桜を見に行きます。",
+            "zh": "去賞櫻。"
+          },
+          "note": "動詞ます形去ます接「に行きます」表示去某地做某事。"
+        },
+        {
+          "point": "～ましょう",
+          "zh": "表示提議或勸誘",
+          "en": "Suggests or invites an action",
+          "example": {
+            "ja": "みんなで桜を見ましょう。",
+            "zh": "大家一起賞櫻吧。"
+          },
+          "note": "動詞ます形去ます接「ましょう」。"
+        }
+      ],
+      "quiz": [
+        {
+          "type": "vocab",
+          "prompt": {
+            "ja": "「桜」の読み方はどれですか。",
+            "zh": "「桜」的讀音是哪個？"
+          },
+          "audioText": "桜",
+          "options": [
+            "はな",
+            "さくら",
+            "ふゆ",
+            "はる"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "「桜」的讀音是「さくら」。"
+          }
+        },
+        {
+          "type": "grammar",
+          "prompt": {
+            "ja": "「映画を＿＿＿＿に行きます。」正しい選択肢はどれですか。",
+            "zh": "「去看電影。」正確的選項是哪個？"
+          },
+          "audioText": "映画を＿＿＿＿に行きます。",
+          "options": [
+            "見ます",
+            "見て",
+            "見に",
+            "見ました"
+          ],
+          "answer": 2,
+          "explain": {
+            "zh": "動詞ます形去ます接「に行きます」表示去某地做某事。因此，正確的是「見に」。"
+          }
+        },
+        {
+          "type": "reading",
+          "prompt": {
+            "ja": "次の文を読んでください：「桜はとてもきれいです。」",
+            "zh": "請閱讀以下句子：「櫻花非常漂亮。」"
+          },
+          "audioText": "桜はとてもきれいです。",
+          "options": [
+            "さくらはとてもきれいです。",
+            "はなはとてもきれいでした。",
+            "さくらはあまりきれいじゃないです。",
+            "はるはとてもきれいです。"
+          ],
+          "answer": 0,
+          "explain": {
+            "zh": "這句話的日語讀音是「さくらはとてもきれいです。」，意思是「櫻花非常漂亮。」"
+          }
+        },
+        {
+          "type": "cloze",
+          "prompt": {
+            "ja": "みんなで桜を見て、春を＿＿＿＿。",
+            "zh": "大家一起賞櫻，感受春天吧。"
+          },
+          "audioText": "みんなで桜を見て、春を＿＿＿＿。",
+          "options": [
+            "感じます",
+            "感じた",
+            "感じましょう",
+            "感じません"
+          ],
+          "answer": 2,
+          "explain": {
+            "zh": "「～ましょう」表示提議或勸誘。因此，正確的是「感じましょう」。"
+          }
+        },
+        {
+          "type": "listening",
+          "prompt": {
+            "ja": "「日本で桜が咲き始めました。」この文の意味は何ですか。",
+            "zh": "「日本で桜が咲き始めました。」這句話是什麼意思？"
+          },
+          "audioText": "日本で桜が咲き始めました。",
+          "options": [
+            "Cherry blossoms have started to bloom in Japan.",
+            "Cherry blossoms have finished blooming in Japan.",
+            "Cherry blossoms are not blooming in Japan.",
+            "Cherry blossoms bloomed a long time ago in Japan."
+          ],
+          "answer": 0,
+          "explain": {
+            "zh": "「日本で桜が咲き始めました」的意思是「日本的櫻花開始開了」。"
+          }
+        }
+      ],
+      "dictation": [
+        {
+          "ja": "桜はきれいです。",
+          "furigana": "さくらはきれいです。",
+          "accept": [
+            "さくらはきれいです",
+            "桜はきれいです"
+          ],
+          "hint": "櫻花很漂亮"
+        }
+      ],
+      "speaking": [
+        {
+          "ja": "春は桜の季節です。",
+          "furigana": "はるはさくらのきせつです。",
+          "zh": "春天是櫻花的季節。",
+          "focus": "intonation",
+          "linking": "無"
+        }
+      ],
+      "id": "daily-2026-10-15-N5",
+      "date": "2026-10-15",
+      "level": "N5"
+    },
+    {
+      "title": {
         "ja": "かわいいパンダの赤ちゃん、名前は？",
         "furigana": "かわいいパンダのあかちゃん、なまえは？",
         "zh": "可爱熊猫宝宝，名字是什么？",
@@ -14236,278 +14485,6 @@ window.KANA_NEWS = {
       ],
       "id": "daily-2026-08-10-N5",
       "date": "2026-08-10",
-      "level": "N5"
-    },
-    {
-      "title": {
-        "ja": "動物園の赤ちゃんパンダ",
-        "furigana": "どうぶつえんのあかちゃんパンダ",
-        "zh": "動物園的熊貓寶寶",
-        "en": "Zoo's Baby Panda"
-      },
-      "source": {
-        "title": "上野動物園のジャイアントパンダ「シャンシャン」",
-        "publisher": "東京ズーネット",
-        "url": "https://www.tokyo-zoo.net/topic/topics_detail?topic_id=313",
-        "note": "原創、分級改寫之摘要，非重製原文。"
-      },
-      "summary": [
-        {
-          "ja": "東京の動物園に、かわいい赤ちゃんパンダがいます。",
-          "furigana": "とうきょうのどうぶつえんに、かわいいあかちゃんパンダがいます。",
-          "zh": "東京的動物園裡，有一隻可愛的熊貓寶寶。",
-          "en": "There is a cute baby panda at a zoo in Tokyo."
-        },
-        {
-          "ja": "名前はシャオシャオとレイレイです。双子のパンダです。",
-          "furigana": "なまえはシャオシャオとレイレイです。ふたごのパンダです。",
-          "zh": "牠們的名字是曉曉和蕾蕾。是雙胞胎熊貓。",
-          "en": "Their names are Xiao Xiao and Lei Lei. They are twin pandas."
-        },
-        {
-          "ja": "彼らはとても元気です。たくさん遊びます。",
-          "furigana": "かれらはとてもげんきです。たくさんあそびます。",
-          "zh": "牠們非常有活力。玩很多遊戲。",
-          "en": "They are very energetic. They play a lot."
-        },
-        {
-          "ja": "毎日、たくさんの人がパンダを見に来ます。",
-          "furigana": "まいにち、たくさんのひとがパンダをみにきます。",
-          "zh": "每天都有很多人來看熊貓。",
-          "en": "Many people come to see the pandas every day."
-        },
-        {
-          "ja": "パンダはみんなを笑顔にします。",
-          "furigana": "パンダはみんなをえがおにします。",
-          "zh": "熊貓讓大家露出笑容。",
-          "en": "Pandas make everyone smile."
-        }
-      ],
-      "vocab": [
-        {
-          "word": "動物園",
-          "reading": "どうぶつえん",
-          "zh": "動物園",
-          "en": "zoo",
-          "pos": "noun",
-          "jlpt": "N5",
-          "example": {
-            "ja": "私は動物園が好きです。",
-            "zh": "我喜歡動物園。"
-          }
-        },
-        {
-          "word": "赤ちゃん",
-          "reading": "あかちゃん",
-          "zh": "嬰兒、寶寶",
-          "en": "baby",
-          "pos": "noun",
-          "jlpt": "N5",
-          "example": {
-            "ja": "赤ちゃんが寝ています。",
-            "zh": "寶寶正在睡覺。"
-          }
-        },
-        {
-          "word": "双子",
-          "reading": "ふたご",
-          "zh": "雙胞胎",
-          "en": "twins",
-          "pos": "noun",
-          "jlpt": "N5",
-          "example": {
-            "ja": "彼らは双子です。",
-            "zh": "他們是雙胞胎。"
-          }
-        },
-        {
-          "word": "元気",
-          "reading": "げんき",
-          "zh": "有活力、健康",
-          "en": "energetic, healthy",
-          "pos": "adj-na",
-          "jlpt": "N5",
-          "example": {
-            "ja": "彼はとても元気です。",
-            "zh": "他非常有活力。"
-          }
-        },
-        {
-          "word": "笑顔",
-          "reading": "えがお",
-          "zh": "笑容",
-          "en": "smile",
-          "pos": "noun",
-          "jlpt": "N5",
-          "example": {
-            "ja": "彼女はいつも笑顔です。",
-            "zh": "她總是面帶笑容。"
-          }
-        }
-      ],
-      "grammar": [
-        {
-          "point": "〜がいます / 〜があります",
-          "zh": "表示「有」生命或無生命物體的存在。",
-          "en": "Indicates the existence of animate or inanimate objects.",
-          "example": {
-            "ja": "動物園にパンダがいます。",
-            "zh": "動物園裡有熊貓。"
-          },
-          "note": "「います」用於人或動物，「あります」用於無生命物體。"
-        },
-        {
-          "point": "〜と〜です",
-          "zh": "用於連接兩個名詞，表示「和」。",
-          "en": "Used to connect two nouns, meaning 'and'.",
-          "example": {
-            "ja": "シャオシャオとレイレイです。",
-            "zh": "是曉曉和蕾蕾。"
-          },
-          "note": "常用於列舉或介紹多個項目。"
-        },
-        {
-          "point": "たくさん",
-          "zh": "表示「很多」的數量或程度。",
-          "en": "Indicates 'a lot' of quantity or degree.",
-          "example": {
-            "ja": "たくさん遊びます。",
-            "zh": "玩很多遊戲。"
-          },
-          "note": "可修飾動詞或名詞。"
-        },
-        {
-          "point": "〜を見に来ます",
-          "zh": "表示「來做某事」的目的，這裡指「來看」。",
-          "en": "Expresses the purpose of coming to do something, here 'come to see'.",
-          "example": {
-            "ja": "パンダを見に来ます。",
-            "zh": "來看熊貓。"
-          },
-          "note": "動詞ます形 + に来ます/行きます。"
-        },
-        {
-          "point": "〜を笑顔にします",
-          "zh": "表示「使某人/某物變成某種狀態」，這裡指「使人笑容」。",
-          "en": "Indicates 'making someone/something into a certain state', here 'make people smile'.",
-          "example": {
-            "ja": "パンダはみんなを笑顔にします。",
-            "zh": "熊貓讓大家露出笑容。"
-          },
-          "note": "名詞 + を + 形容詞/名詞 + にします。"
-        }
-      ],
-      "quiz": [
-        {
-          "type": "reading",
-          "prompt": {
-            "ja": "「動物園」の正しい読み方はどれですか？",
-            "zh": "「動物園」的正確讀法是哪個？"
-          },
-          "options": [
-            "どうぶつえん",
-            "どうぶつえん",
-            "どうぶつえん",
-            "どうぶつえん"
-          ],
-          "answer": 0,
-          "explain": {
-            "zh": "「動物園」的讀音是「どうぶつえん」。"
-          }
-        },
-        {
-          "type": "vocab",
-          "prompt": {
-            "ja": "「元気」の日本語の意味は何ですか？",
-            "zh": "「元気」的日文意思是什麼？"
-          },
-          "audioText": "",
-          "options": [
-            "Sad",
-            "Energetic",
-            "Sleepy",
-            "Hungry"
-          ],
-          "answer": 1,
-          "explain": {
-            "zh": "「元気」的意思是有活力、健康。"
-          }
-        },
-        {
-          "type": "grammar",
-          "prompt": {
-            "ja": "次の文の空欄に適切な助詞を入れてください：「東京＿＿動物園に、パンダがいます。」",
-            "zh": "請在以下句子的空格中填入適當的助詞：「東京＿＿動物園に、パンダがいます。」"
-          },
-          "options": [
-            "を",
-            "で",
-            "に",
-            "の"
-          ],
-          "answer": 3,
-          "explain": {
-            "zh": "「東京の動物園」表示「東京的動物園」，用助詞「の」來修飾名詞。"
-          }
-        },
-        {
-          "type": "cloze",
-          "prompt": {
-            "ja": "パンダはみんなを＿＿にします。",
-            "zh": "熊貓讓大家＿＿。"
-          },
-          "options": [
-            "悲しい",
-            "怒り",
-            "笑顔",
-            "疲れ"
-          ],
-          "answer": 2,
-          "explain": {
-            "zh": "根據原文，熊貓讓大家露出笑容，所以是「笑顔」。"
-          }
-        },
-        {
-          "type": "listening",
-          "prompt": {
-            "ja": "「双子のパンダです。」と聞こえます。これは何と言っていますか？",
-            "zh": "你聽到「双子のパンダです。」。這是什麼意思？"
-          },
-          "audioText": "双子のパンダです。",
-          "options": [
-            "They are big pandas.",
-            "They are twin pandas.",
-            "They are baby pandas.",
-            "They are sleeping pandas."
-          ],
-          "answer": 1,
-          "explain": {
-            "zh": "「双子（ふたご）」的意思是雙胞胎。"
-          }
-        }
-      ],
-      "dictation": [
-        {
-          "ja": "東京の動物園に、かわいい赤ちゃんパンダがいます。",
-          "furigana": "とうきょうのどうぶつえんに、かわいいあかちゃんパンダがいます。",
-          "accept": [
-            "とうきょうのどうぶつえんに、かわいいあかちゃんパンダがいます。",
-            "東京の動物園に、かわいい赤ちゃんパンダがいます。"
-          ],
-          "hint": "東京/動物園/かわいい/赤ちゃん/パンダ/います"
-        }
-      ],
-      "speaking": [
-        {
-          "ja": "パンダはみんなを笑顔にします。",
-          "furigana": "パンダはみんなをえがおにします。",
-          "zh": "熊貓讓大家露出笑容。",
-          "focus": "intonation",
-          "linking": ""
-        }
-      ],
-      "id": "daily-2026-08-09-N5",
-      "date": "2026-08-09",
       "level": "N5"
     }
   ]
