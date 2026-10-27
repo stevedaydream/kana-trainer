@@ -7,6 +7,232 @@ window.KANA_NEWS = {
   "packs": [
     {
       "title": {
+        "ja": "桜の開花、今年は早い？",
+        "furigana": "さくらのかいか、ことしははやい？",
+        "zh": "櫻花開花，今年會比較早嗎？",
+        "en": "Cherry Blossom Blooming: Will It Be Early This Year?"
+      },
+      "source": {
+        "title": "桜の開花予想",
+        "publisher": "日本気象協会 tenki.jp",
+        "url": "https://tenki.jp/sakura/expectation/",
+        "note": "原創、分級改寫之摘要，非重製原文。"
+      },
+      "summary": [
+        {
+          "ja": "日本で、桜の開花予想が発表されました。今年は、暖かい日が多いです。だから、桜は例年より早く咲くでしょう。東京では3月20日ごろ、福岡では3月17日ごろに咲き始める予想です。皆で桜を見に行くのが楽しみですね。",
+          "furigana": "にほんで、さくらのかいかよそうがはっぴょうされました。ことしは、あたたかいひがおおいです。だから、さくらはれいねんよりはやくさくでしょう。とうきょうではさんがつはつかごろ、ふくおかではさんがつじゅうななにちごろにさきはじめるよそうです。みんなでさくらをみにいくのがたのしみですね。",
+          "zh": "日本發布了櫻花開花預測。今年，溫暖的日子很多。所以，櫻花會比往年更早開花吧。東京預計在3月20日左右，福岡預計在3月17日左右開始開花。大家一起去賞櫻真令人期待呢。",
+          "en": "In Japan, cherry blossom blooming forecasts have been announced. This year, there are many warm days. Therefore, the cherry blossoms will likely bloom earlier than usual. In Tokyo, they are expected to start blooming around March 20th, and in Fukuoka, around March 17th. Everyone is looking forward to going to see the cherry blossoms!"
+        }
+      ],
+      "vocab": [
+        {
+          "word": "開花",
+          "reading": "かいか",
+          "zh": "開花",
+          "en": "blooming, flowering",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "桜の開花はいつですか。",
+            "zh": "櫻花什麼時候開花？"
+          }
+        },
+        {
+          "word": "予想",
+          "reading": "よそう",
+          "zh": "預測",
+          "en": "prediction, forecast",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "明日の天気予想は晴れです。",
+            "zh": "明天的天氣預報是晴天。"
+          }
+        },
+        {
+          "word": "発表",
+          "reading": "はっぴょう",
+          "zh": "發表、公布",
+          "en": "announcement, presentation",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "先生が新しい宿題を発表しました。",
+            "zh": "老師公布了新的作業。"
+          }
+        },
+        {
+          "word": "例年",
+          "reading": "れいねん",
+          "zh": "往年、每年",
+          "en": "average year, usual year",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "例年、この時期は寒いです。",
+            "zh": "往年這個時候都很冷。"
+          }
+        },
+        {
+          "word": "楽しみ",
+          "reading": "たのしみ",
+          "zh": "期待、樂趣",
+          "en": "joy, pleasure, anticipation",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "旅行がとても楽しみです。",
+            "zh": "我非常期待旅行。"
+          }
+        }
+      ],
+      "grammar": [
+        {
+          "point": "～でしょう",
+          "zh": "表示推測，相當於「大概會～吧」。",
+          "en": "Expresses conjecture or probability, similar to 'probably will ~'.",
+          "example": {
+            "ja": "明日は雨が降るでしょう。",
+            "zh": "明天大概會下雨吧。"
+          },
+          "note": "比「～と思います」語氣更不確定，但比「～かもしれません」更肯定一點。"
+        },
+        {
+          "point": "～ごろ",
+          "zh": "表示大約的時間或日期。",
+          "en": "Indicates an approximate time or date.",
+          "example": {
+            "ja": "3時ごろに駅に着きます。",
+            "zh": "我大概三點左右到車站。"
+          },
+          "note": "用於時間、日期或數量後面。"
+        }
+      ],
+      "quiz": [
+        {
+          "type": "reading",
+          "prompt": {
+            "ja": "「開花」の正しい読み方はどれですか？",
+            "zh": "「開花」的正確讀法是哪一個？"
+          },
+          "options": [
+            "かいか",
+            "かいはな",
+            "あきはな",
+            "あきか"
+          ],
+          "answer": 0,
+          "explain": {
+            "zh": "「開花」的正確讀法是「かいか」。"
+          }
+        },
+        {
+          "type": "vocab",
+          "prompt": {
+            "ja": "「prediction」という意味の日本語の単語はどれですか？",
+            "zh": "表示「prediction」意思的日語單詞是哪一個？"
+          },
+          "options": [
+            "発表",
+            "予想",
+            "例年",
+            "楽しみ"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "「予想」的意思是「預測、預報」，符合「prediction」。"
+          }
+        },
+        {
+          "type": "grammar",
+          "prompt": {
+            "ja": "「桜は例年より早く咲く____。」この文の空欄に最も適切な言葉を選びなさい。",
+            "zh": "「櫻花會比往年更早開花____。」請選擇填入此句空格中最適合的詞語。"
+          },
+          "options": [
+            "です",
+            "でしょう",
+            "ます",
+            "います"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "「でしょう」表示推測，符合語境「大概會～吧」。"
+          }
+        },
+        {
+          "type": "cloze",
+          "prompt": {
+            "ja": "東京では3月20日____に咲き始める予想です。",
+            "zh": "東京預計在3月20日____開始開花。"
+          },
+          "options": [
+            "から",
+            "まで",
+            "ごろ",
+            "より"
+          ],
+          "answer": 2,
+          "explain": {
+            "zh": "「ごろ」表示大約的時間，符合句意「3月20日左右」。"
+          }
+        },
+        {
+          "type": "listening",
+          "prompt": {
+            "ja": "「皆で桜を見に行くのが楽しみですね。」これはどういう意味ですか？",
+            "zh": "「皆で桜を見に行くのが楽しみですね。」這句話是什麼意思？"
+          },
+          "audioText": "皆で桜を見に行くのが楽しみですね。",
+          "options": [
+            "We are going to see cherry blossoms soon.",
+            "It's fun to go see cherry blossoms with everyone.",
+            "We are looking forward to going to see cherry blossoms with everyone.",
+            "Everyone likes to see cherry blossoms."
+          ],
+          "answer": 2,
+          "explain": {
+            "zh": "「楽しみです」表示期待的心情，所以最符合的選項是「We are looking forward to going to see cherry blossoms with everyone.」。"
+          }
+        }
+      ],
+      "dictation": [
+        {
+          "ja": "桜の開花予想が発表されました。",
+          "furigana": "さくらのかいかよそうがはっぴょうされました。",
+          "accept": [
+            "さくらのかいかよそうがはっぴょうされました",
+            "桜の開花予想が発表されました"
+          ],
+          "hint": "關於櫻花開花的預測被公布了。"
+        },
+        {
+          "ja": "今年は、暖かい日が多いです。",
+          "furigana": "ことしは、あたたかいひがおおいです。",
+          "accept": [
+            "ことしは、あたたかいひがおおいです",
+            "今年は、暖かい日が多いです"
+          ],
+          "hint": "今年溫暖的日子很多。"
+        }
+      ],
+      "speaking": [
+        {
+          "ja": "皆で桜を見に行くのが楽しみですね。",
+          "furigana": "みんなでさくらをみにいくのがたのしみですね。",
+          "zh": "大家一起去賞櫻真令人期待呢。",
+          "focus": "intonation",
+          "linking": "「見に行くのが」的「の」發音輕柔，結尾「ですね」語調上揚，表達期待和確認。"
+        }
+      ],
+      "id": "daily-2026-10-27-N5",
+      "date": "2026-10-27",
+      "level": "N5"
+    },
+    {
+      "title": {
         "ja": "猫は魚が好きですか？",
         "furigana": "ねこはさかながすきですか？",
         "zh": "猫喜欢鱼吗？",
@@ -14469,274 +14695,6 @@ window.KANA_NEWS = {
       ],
       "id": "daily-2026-08-20-N5",
       "date": "2026-08-20",
-      "level": "N5"
-    },
-    {
-      "title": {
-        "ja": "かわいいパンダの赤ちゃん、名前は？",
-        "furigana": "かわいいパンダのあかちゃん、なまえは？",
-        "zh": "可爱熊猫宝宝，名字是什么？",
-        "en": "Cute Panda Cub, What's Its Name?"
-      },
-      "source": {
-        "title": "アドベンチャーワールドのパンダの赤ちゃん、名前を投票で決定！",
-        "publisher": "Yahoo!ニュース (共同通信)",
-        "url": "https://news.yahoo.co.jp/articles/example_link_for_panda_news",
-        "note": "原創、分級改寫之摘要，非重製原文。"
-      },
-      "summary": [
-        {
-          "ja": "和歌山県にある「アドベンチャーワールド」で、パンダの赤ちゃんが生まれました。",
-          "furigana": "わかやまけんにある「アドベンチャーワールド」で、パンダのあかちゃんがうまれました。",
-          "zh": "在和歌山縣的「冒險世界」，一隻熊貓寶寶出生了。",
-          "en": "A baby panda was born at \"Adventure World\" in Wakayama Prefecture."
-        },
-        {
-          "ja": "赤ちゃんは女の子です。とても元気です。",
-          "furigana": "あかちゃんは おんなのこです。とても げんきです。",
-          "zh": "宝宝是女孩子。她非常健康。",
-          "en": "The baby is a girl. She is very energetic."
-        },
-        {
-          "ja": "今、このパンダの赤ちゃんの名前を決めるために、みんなで投票しています。",
-          "furigana": "いま、このパンダのあかちゃんのなまえをきめるために、みんなでとうひょうしています。",
-          "zh": "現在，為了決定這隻熊貓寶寶的名字，大家正在投票。",
-          "en": "Now, everyone is voting to decide the name of this baby panda."
-        },
-        {
-          "ja": "三つの名前の候補があります。一番多い票の名前になります。",
-          "furigana": "みっつのなまえのこうほがあります。いちばんおおいひょうのなまえになります。",
-          "zh": "有三個名字的候選。得票最多的名字將會被選中。",
-          "en": "There are three name candidates. The name with the most votes will be chosen."
-        },
-        {
-          "ja": "ぜひ、あなたも投票に参加してくださいね！",
-          "furigana": "ぜひ、あなたもとうひょうにさんかしてくださいね！",
-          "zh": "請你也務必參加投票喔！",
-          "en": "Please participate in the voting too!"
-        }
-      ],
-      "vocab": [
-        {
-          "word": "赤ちゃん",
-          "reading": "あかちゃん",
-          "zh": "婴儿，宝宝",
-          "en": "baby",
-          "pos": "名詞",
-          "jlpt": "N5",
-          "example": {
-            "ja": "かわいい赤ちゃんですね。",
-            "zh": "好可爱的宝宝啊。"
-          }
-        },
-        {
-          "word": "生まれる",
-          "reading": "うまれる",
-          "zh": "出生",
-          "en": "to be born",
-          "pos": "動詞",
-          "jlpt": "N5",
-          "example": {
-            "ja": "昨日、猫の赤ちゃんが生まれました。",
-            "zh": "昨天，小猫出生了。"
-          }
-        },
-        {
-          "word": "元気",
-          "reading": "げんき",
-          "zh": "精神，健康",
-          "en": "healthy, energetic",
-          "pos": "形容動詞",
-          "jlpt": "N5",
-          "example": {
-            "ja": "彼はいつも元気です。",
-            "zh": "他总是很有精神。"
-          }
-        },
-        {
-          "word": "名前",
-          "reading": "なまえ",
-          "zh": "名字",
-          "en": "name",
-          "pos": "名詞",
-          "jlpt": "N5",
-          "example": {
-            "ja": "あなたの名前は何ですか。",
-            "zh": "你叫什么名字？"
-          }
-        },
-        {
-          "word": "投票",
-          "reading": "とうひょう",
-          "zh": "投票",
-          "en": "vote, voting",
-          "pos": "名詞",
-          "jlpt": "N5",
-          "example": {
-            "ja": "名前の投票に参加します。",
-            "zh": "我参加名字的投票。"
-          }
-        }
-      ],
-      "grammar": [
-        {
-          "point": "〜にあります",
-          "zh": "在…地方（表示无生命物体的存在）",
-          "en": "located at (for inanimate objects)",
-          "example": {
-            "ja": "和歌山県にあります。",
-            "zh": "在和歌山县。"
-          },
-          "note": "用于表示无生命物体或场所的位置。有生命物体用「います」。"
-        },
-        {
-          "point": "〜ために",
-          "zh": "为了…",
-          "en": "in order to, for the purpose of",
-          "example": {
-            "ja": "名前を決めるために、投票します。",
-            "zh": "为了决定名字，进行投票。"
-          },
-          "note": "表示目的。动词接原形，名词接「の」。"
-        },
-        {
-          "point": "〜なります",
-          "zh": "变成…",
-          "en": "to become",
-          "example": {
-            "ja": "一番多い票の名前になります。",
-            "zh": "会变成得票最多的名字。"
-          },
-          "note": "表示状态或性质的变化。形容词「い」变「く」、形容动词「な」变「に」、名词接「に」。"
-        }
-      ],
-      "quiz": [
-        {
-          "type": "reading",
-          "prompt": {
-            "ja": "「アドベンチャーワールド」はどこにありますか。",
-            "zh": "「冒险世界」在哪里？"
-          },
-          "options": [
-            "東京",
-            "大阪",
-            "和歌山",
-            "京都"
-          ],
-          "answer": 2,
-          "explain": {
-            "zh": "根据摘要第一句「和歌山県にある『アドベンチャーワールド』で、パンダの赤ちゃんが生まれました。」可知，它在和歌山县。"
-          }
-        },
-        {
-          "type": "vocab",
-          "prompt": {
-            "ja": "「元気」の反対の意味の言葉は何ですか。",
-            "zh": "「元気」的反义词是什么？"
-          },
-          "options": [
-            "楽しい (たのしい)",
-            "忙しい (いそがしい)",
-            "病気 (びょうき)",
-            "嬉しい (うれしい)"
-          ],
-          "answer": 2,
-          "explain": {
-            "zh": "「元気」是健康、有精神的意思。「病気」是生病，所以是反义词。"
-          }
-        },
-        {
-          "type": "grammar",
-          "prompt": {
-            "ja": "次の文の（　）に入れるのに一番いい言葉を選んでください。 「パンダの赤ちゃんは（　）女の子です。」",
-            "zh": "请选择最适合填入括号的词语。 「熊猫宝宝是（　）女孩子。」"
-          },
-          "options": [
-            "が",
-            "で",
-            "は",
-            "も"
-          ],
-          "answer": 2,
-          "explain": {
-            "zh": "「は」作为主题助词，强调「パンダの赤ちゃん」是女孩子，符合句意。"
-          }
-        },
-        {
-          "type": "cloze",
-          "prompt": {
-            "ja": "「パンダの赤ちゃんの名前を（　）ために、みんなで投票しています。」",
-            "zh": "「为了（　）熊猫宝宝的名字，大家正在投票。」"
-          },
-          "audioText": "パンダの赤ちゃんの名前を（　）ために、みんなで投票しています。",
-          "options": [
-            "買う",
-            "書く",
-            "決める",
-            "食べる"
-          ],
-          "answer": 2,
-          "explain": {
-            "zh": "根据上下文，是为了“决定”名字，所以选择「決める（きめる）」。"
-          }
-        },
-        {
-          "type": "listening",
-          "prompt": {
-            "ja": "音声を聞いて、正しい文を選んでください。",
-            "zh": "请听音频，选择正确的句子。"
-          },
-          "audioText": "アドベンチャーワールドにパンダがいます。",
-          "options": [
-            "アドベンチャーワールドにパンダがいます。",
-            "アドベンチャーワールドにパンダがあります。",
-            "アドベンチャーワールドでパンダがいます。",
-            "アドベンチャーワールドでパンダがあります。"
-          ],
-          "answer": 0,
-          "explain": {
-            "zh": "「パンダ」是有生命物体，所以要用「います」。表示存在地点用助词「に」。"
-          }
-        }
-      ],
-      "dictation": [
-        {
-          "ja": "パンダの赤ちゃんは元気です。",
-          "furigana": "パンダのあかちゃんはげんきです。",
-          "accept": [
-            "パンダの赤ちゃんは元気です",
-            "パンダのあかちゃんはげんきです"
-          ],
-          "hint": "元気（げんき）"
-        },
-        {
-          "ja": "名前を決めます。",
-          "furigana": "なまえをきめます。",
-          "accept": [
-            "名前を決めます",
-            "なまえをきめます"
-          ],
-          "hint": "決めます（きめます）"
-        }
-      ],
-      "speaking": [
-        {
-          "ja": "アドベンチャーワールドにパンダがいます。",
-          "furigana": "アドベンチャーワールドにパンダがいます。",
-          "zh": "冒险世界里有熊猫。",
-          "focus": "intonation",
-          "linking": "「アドベンチャーワールド」和「に」之间略有停顿，强调地点。"
-        },
-        {
-          "ja": "名前は投票で決まります。",
-          "furigana": "なまえはとうひょうできまります。",
-          "zh": "名字通过投票决定。",
-          "focus": "pacing",
-          "linking": "「投票で」和「決まります」之间自然连接，语速平稳。"
-        }
-      ],
-      "id": "daily-2026-08-19-N5",
-      "date": "2026-08-19",
       "level": "N5"
     }
   ]
