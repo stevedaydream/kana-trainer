@@ -24,7 +24,7 @@
 4. 備援也必須通過相同的嚴格驗證。皆失敗就停止發布，保留舊索引與文章。
 5. 成功教材記錄 `generation.provider`、`generation.isFallback` 與產生時間；日誌明示備援，不記錄憑證。
 
-預設 `NEWS_AI_PROVIDER=auto`、`NEWS_AI_FALLBACK=gemini`。本地每次逾時預設 180 秒，最多 2 次呼叫；Gemini 最多 2 次呼叫，各 180 秒，整份工作流程另有 25 分鐘上限。若調整模型需求，可修改本地逾時；只測本地時設 `NEWS_AI_PROVIDER=openai`。
+預設 `NEWS_AI_PROVIDER=auto`、`NEWS_AI_FALLBACK=gemini`。本地每次逾時預設 180 秒，HTTP 等錯誤最多 2 次呼叫；客戶端逾時立即轉備援，避免重送仍在管理器排隊的推理。Gemini 每次生成最多 2 次 API 呼叫，各 180 秒；教材欄位驗證失敗時依同一來源重新生成一次（整體最多 4 次 API 呼叫），整份工作流程另有 25 分鐘上限。若調整模型需求，可修改本地逾時；只測本地時設 `NEWS_AI_PROVIDER=openai`。
 
 專案背景 key、Tailscale Serve 與 GitHub OIDC 身分已完成設定，HTTPS 閘道認證已通過。實際載入模型目前被管理器以 VRAM 不足拒絕，預設改用較小的 qwen36；工作流程會記錄實際 provider，不能將備援成功誤報為本地生成成功。
 

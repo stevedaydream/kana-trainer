@@ -25,4 +25,4 @@ RSS → 時效與重複篩選 → Port Monitor Chat Completions → 失敗時 Ge
 
 `npm run validate`、`npm test`、`npm run test:e2e`。回歸案例覆蓋退出考試、截止時間、匯入原子性、存檔寫入次序、新聞進度隔離、舊鍵遷移、本地 API 合約、RSS 時效、完整模擬產生管線、離線啟動及麥克風權限競態。瀏覽器為 Windows Chrome 的手機與桌面 viewport；非實體手機，也未宣稱已驗證 Safari／實體錄音。
 
-本地閘道現況與啟用步驟見 [接入研究](local-ai-news-integration.md)。尚需 Port Monitor 桌面建立專案背景 key、Tailscale 可達入口與 CI 身分，才能實測真模型生成。Schema、來源與時效檢查不等同語言／事實真確性審稿；模型改寫仍可能有語意或讀音錯誤。
+本地閘道現況與啟用步驟見 [接入研究](local-ai-news-integration.md)。Port Monitor 專案背景 key、Tailscale 入口與 CI 身分已完成設定並驗證；實際本地推理目前受 VRAM 不足限制，會轉雲端備援。Schema、來源與時效檢查不等同語言／事實真確性審稿；模型改寫仍可能有語意或讀音錯誤。

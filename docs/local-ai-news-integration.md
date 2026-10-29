@@ -1,6 +1,6 @@
 # 每日新聞接入本地 AI 與 Tailscale
 
-查核日期：2026-10-29。以下區分本機已確認狀態與建議配置；未變更其他專案、啟停模型或執行推理。
+查核及設定日期：2026-10-29。初始調查與接入設定分開記錄；最新驗收結果見文末。既有 LiveCatch 工作沒有被強制停止。
 
 ## 接入結論
 
@@ -16,9 +16,9 @@ GitHub Actions 排程（台灣時間）
   → 獨立文章寫入 → 原子替換 data/news/index.js → commit／既有靜態部署
 ```
 
-這是根據既有程式介面與資源協調規則提出的整合設計，不代表 CI 已取得 tailnet 權限或正式推理已驗證。
+此流程已實作，CI 私網連線及認證已通過；真實本地推理仍待 VRAM 資源可用時驗收。
 
-## 本機確認結果
+## 設定前的初始調查（歷史紀錄）
 
 | 項目 | 結果 |
 |---|---|
@@ -66,7 +66,7 @@ tailscale serve --bg --https=9444 http://127.0.0.1:43922
 tailscale serve status
 ```
 
-這是待執行的設定範例；本次研究沒有執行。保留既有 LiveCatch／OSCE 入口。Serve 支援指定 HTTPS 埠、反向代理與自動 TLS，私網使用 Serve 即可。[Tailscale Serve CLI](https://tailscale.com/docs/reference/tailscale-cli/serve)
+此入口已於 2026-10-29 完成設定；既有 LiveCatch／OSCE 入口保留。Serve 支援指定 HTTPS 埠、反向代理與自動 TLS，私網使用 Serve 即可。[Tailscale Serve CLI](https://tailscale.com/docs/reference/tailscale-cli/serve)
 
 為 CI 設專用 tag，例如 `tag:kana-news-ci`，只允許其連入 AI 主機的 9444。專案 key 提供應用層認證；tag／ACL 控制網路範圍。
 
@@ -96,22 +96,9 @@ Ollama 可作替代 Provider：原生 `/api/chat` 的 `format` 可指定 JSON �
 - 少量有界重試；失敗保留既有新聞。先驗證，再寫含雜湊的獨立文章，最後原子替換索引；模型故障不可清空歷史。
 - 日誌不輸出 Authorization、API key、私密配對連結或完整憑證設定。
 
-## 尚需完成的環境設定與驗收
+## 驗收範圍
 
-1. 由 Port Monitor 桌面建立 `kana-trainer` 背景專案 key。
-2. 新增專用 Serve 入口及 CI tag／ACL，確認沒有覆寫既有入口。
-3. 在 GitHub 設定本地 AI endpoint／model 與所需 Secrets、Tailscale federation 或 OAuth。
-4. 本機以新 key 查模型列表，再以真實來源生成一包教材；檢查來源、日語分級、讀音、題目與 JSON。
-5. 手動觸發 GitHub workflow，確認 tailnet 連線、模型等待、完整驗證、成功提交，以及失敗不改壞原資料。
-6. 最後確認每日排程確實在預期台灣日期產生；電腦／Port Monitor 必須在排程時運行。
-
-前四項未全部驗收前，只能宣稱接入程式與流程已準備，不能宣稱每日本地 AI 自動化已啟用。
-
-## 實作狀態更新
-
-已完成小型索引＋每篇獨立檔案、前端按需載入、最近三篇離線預快取，以及本地優先／Gemini 備援的程式與模擬測試。工作流程預設 auto；Tailscale 或認證失敗不會提前中止備援。真實新聞來源抓取已驗證；真模型與正式 GitHub 執行仍需本專案 key、Serve 與 CI 身分完成配置。
-
-最新唯讀設定查核：`local-qwen` 已設定本地 `qwen3.8-flash-next-iq3_xxs`；另有 `gateway-qwen36` 本地 Provider。只讀取 Provider id／model／是否 loopback 與專案名稱，未輸出金鑰；目前專案列表仍只有 Hermes。
+小型索引、獨立文章、按需載入及離線行為已通過模擬與瀏覽器測試。專案 key、Serve、CI OIDC 與 GitHub Secrets 已完成設定。真實本地推理仍受目前 VRAM 資源不足限制，不能宣稱已驗收本地生成；每日排程的新流程要合併至預設分支後才會生效。
 
 ## 實機接入設定（2026-10-29）
 
@@ -122,3 +109,11 @@ GitHub 已建立 LOCAL_AI_API_KEY、LOCAL_AI_BASE_URL、TAILSCALE_OAUTH_CLIENT_I
 兩個本地模型的載入測試目前都被管理器以 VRAM 不足回 HTTP 503，未強制停止服務或修改模型的顯卡配置。已改用較小的直接管理模型 qwen36 作專案預設；日後有足夠資源時由管理器自動載入，資源不足時轉用 Gemini 備援。不能將 HTTPS 認證成功或雲端備援成功報成已成功完成本地推理。
 
 Serve 與 tailnet policy 的原始備份、CI public identity 設定保存在使用者 LocalAppData 的 kana-trainer-integration 目錄，不進版本庫；本機專案 key 放在忽略的 .env。實際私密主機網址及 API key 不寫入文件。
+
+## GitHub OIDC 實測注意事項
+
+此 repository 的實際 GitHub subject 使用帶 immutable owner/repository ID 的格式：`repo:owner@owner-id/repository@repository-id:ref:refs/heads/*`。傳統不含 ID 的 subject 無法交換 token。已依實際 JWT 公開 claims 修正信任條件，並保留 `workflow_ref` 限制；不要把整份 JWT 寫入日誌。
+
+[私網驗證 run 40816896639](https://github.com/stevedaydream/kana-trainer/actions/runs/40816896639) 已成功加入 tailnet 並通過專案金鑰的閘道認證。[雲端備援 run 40816342254](https://github.com/stevedaydream/kana-trainer/actions/runs/40816342254) 已成功完成真實 RSS 教材生成、驗證與提交。完整雙 Provider 失敗時保留原新聞的行為也已在實際 run 中確認。
+
+[完整接入 run 40818030885](https://github.com/stevedaydream/kana-trainer/actions/runs/40818030885) 已成功驗收：tailnet 加入及閘道認證成功，本地推理 HTTP 503 後轉 Gemini，同一真實 RSS 來源產出 N4 教材、通過驗證，並提交獨立文章及索引（406928c）。教材 metadata 明確記錄 Gemini／isFallback=true。此結果證明雲端備援發布成功，並不代表本地模型已完成推理。
