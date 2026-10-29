@@ -1,0 +1,2 @@
+# Hashes and browser SRI are calculated from these exact bytes on every OS.
+data/news/** text eol=lf

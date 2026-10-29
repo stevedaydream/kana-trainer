@@ -162,7 +162,7 @@ if (data) {
   // 缺圖檔清單（僅警告，缺圖會自動退回 SVG/emoji）
   let existing = new Set();
   try { existing = new Set(fs.readdirSync(IMG_DIR)); } catch { /* img/ 可以不存在 */ }
-  const missing = [...imgKeys.keys()].filter(k => !existing.has(k + ".png"));
+  const missing = [...imgKeys.keys()].filter(k => !existing.has(k + ".png") && !existing.has(k + ".svg"));
   if (missing.length)
     warns.push(`缺圖檔 ${missing.length}/${imgKeys.size} 張（會自動退回 SVG/emoji）：${missing.join(", ")}`);
 

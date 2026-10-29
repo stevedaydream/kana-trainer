@@ -1,6 +1,6 @@
 # 五十音練習器（PWA）
 
-翻牌提取練習 × 錯題加權 × 十級解鎖的五十音練習器。純 HTML/CSS/Vanilla JS，零框架、零建置、零外部 CDN；可安裝為 PWA 離線使用，也可直接雙擊 `index.html`（file://）運作。
+翻牌提取練習 × 錯題加權 × 十四級解鎖的五十音練習器。純 HTML/CSS/Vanilla JS，零框架、零建置、零外部 CDN；可安裝為 PWA 離線使用，也可直接雙擊 `index.html`（file://）運作。
 
 ## 使用方式
 
@@ -9,9 +9,9 @@
 
 ### 更新機制
 
-`sw.js` 對**主程式與資料檔**（`index.html`、`data/*.js`）採 network-first：連線時一律取最新，所以每日新聞包、題庫、辭庫的更新會直接送達，**不依賴你記得調 `VERSION`**；離線時才退回快取。圖示與配圖維持 cache-first。
+`sw.js` 對版本化 app shell（HTML、CSS、JS）採 cache-first，確保同一版本的畫面與程式一起使用；題庫、辭庫與新聞索引採 network-first；每篇新聞使用含內容雜湊的獨立檔名，採 cache-first。資料請求有 5 秒逾時，失敗時僅回同類快取，不會把 HTML 當 JavaScript。
 
-新版 Service Worker 安裝後不會自動接管（不呼叫 `skipWaiting`），改在畫面下方跳出「🆕 有新版本 — 立即更新／稍後」橫幅，按下才接管並重新載入——避免有人正在做 60 秒考試時被硬重整。改動 app shell 後仍建議調高 `sw.js` 的 `VERSION`：它負責重建預快取、清掉舊快取。
+改動 app shell 時需調高 `sw.js` 的 `VERSION`。新版安裝完成後顯示「立即更新／稍後」，使用者選擇後才接管並重新整理。最近 3 篇新聞與新的 116 張 SVG 預先快取；其餘新聞與既有 PNG 瀏覽時快取，避免初次安裝下載約 27 MB。
 
 ## 玩法
 
@@ -45,22 +45,34 @@
   - **語音**：自選系統日語語音 ＋ 四種人格（可愛女／性感女／陽光男／低沉男）＋ 自訂音高/語速 ＋ 試聽。
     > 限制：採瀏覽器內建 Web Speech API，只能用**裝置已安裝**的日語語音、僅能調音高/語速，無法合成新音色；「性感」等為近似，可用語音因系統而異。
   - **讀音辭庫**：管理每個假名的單詞（新增／編輯／刪除／試聽／還原），詳見上方「每音讀音辭庫」。
-  - **備份還原**：把全部進度（解鎖、SRS、錯題/忘記次數、星號、每日計畫、語音設定、辭庫自訂…）**匯出成 JSON 檔**或複製，並可從檔案/貼上**還原**——這是跨瀏覽器與未來 APK 之間搬遷進度的方式（純離線、無雲端帳號）。
+  - **備份還原**：進度使用版本化格式；匯入前完整驗證並建立可還原的原進度備份，錯誤輸入不改動現有狀態；寫入失敗會提示。把全部進度（解鎖、SRS、錯題/忘記次數、星號、每日計畫、語音設定、辭庫自訂…）**匯出成 JSON 檔**或複製，並可從檔案/貼上**還原**——這是跨瀏覽器與未來 APK 之間搬遷進度的方式（純離線、無雲端帳號）。
 
-- **📰 每日新聞（AI 新聞模組）**：以「新聞式分級短文」練聽/讀/說五技能，內容與程式分離（`data/news.js` 是唯一內容來源，程式只渲染；朗讀用本機 TTS 合成，離線可用）。**新聞包會累積成歷史**，首頁 📰 進去是列表，可回頭重讀任一天（可重複學習）。
+- **📰 每日新聞（AI 新聞模組）**：以「新聞式分級短文」練聽/讀/說五技能，內容與程式分離（`data/news/index.js` 是小型索引，`data/news/packs/` 每篇一檔，點選才載入，程式只渲染；朗讀用本機 TTS 合成，離線可用）。**新聞包會累積成歷史**，首頁 📰 進去是列表，可回頭重讀任一天（可重複學習）。
   - **📻 聽力**（逐句先聽後揭曉）→ **✍️ 聽寫**（聽打字、容錯比對）→ **📖 閱讀**（中/英/振假名切換、點單字看解釋、文法重點）→ **📝 小考 5 題**（≥3 及格）→ **🗣️ 口說（七步跟讀）**。
-  - **輸入先於輸出**：口說採影子跟讀七步（音韻浸潤→語音標記→視讀哼唱→盲聽節奏→語意融合→**錄音診斷**→脫稿演繹）；第 6 步用 `MediaRecorder` 錄音回放（留本機、無麥克風時優雅降級）；**第 7 步「脫稿」需先完成聽力＋聽寫＋小考(≥3) 才解鎖**（或程度 N3 以上），避免初階硬輸出導致石化。
+  - **輸入先於輸出**：口說採影子跟讀七步（音韻浸潤→語音標記→視讀哼唱→盲聽節奏→語意融合→**錄音診斷**→脫稿演繹）；第 6 步用 `MediaRecorder` 錄音回放（留本機、無麥克風時優雅降級）；**第 7 步「脫稿」需先完成聽力＋聽寫＋小考(≥3) 才解鎖**（或使用者在新聞列表自選程度為 N3 以上），避免初階硬輸出導致石化。
 - **🔤 每音讀音辭庫（×5，翻牌隨機抽詞）**：`data/wordbank.js` 為每個假名提供多個單詞，練習揭曉時**隨機抽一個**（解決「每次讀音都同一個單字」）；某假名若辭庫沒有就退回題庫單一詞。**已覆蓋全 14 級 208 音、共 1031 詞**（手造）；其中 `みゅ`／`ぴゃ`／`ピャ` 在日語中幾乎不作詞首，只收實際存在的擬聲詞（各 2 詞）。
   - **⚙️ 設定 → 辭庫管理**：選級別／假名後可**新增、編輯、刪除**該音的單詞並試聽。改動只寫進你的進度檔（`P.wb` 覆寫層），`data/wordbank.js` 內容檔維持唯讀——所以換辭庫不會沖掉自訂，自訂也會跟著備份 JSON 一起搬遷。內建詞只會被「隱藏」不會真的消失，可用「還原此音／全部還原」隨時復原；某音全部隱藏時自動退回 `data/levels.js` 的預設單詞。新增時驗證比照題庫：只收假名（可含長音符）、須以該假名開頭（`を/ん/ヲ/ン/ぢ/づ/ヂ/ヅ` 改為「詞中含該假名」）、同音不得重複。
 
-### 每日自動化（Gemini，需自備金鑰）
+### 每日自動化（真實來源 → 本地 AI 改寫）
 
-AI 只在**離線管線**跑、不進瀏覽器（同題庫分離精神）。設定：repo Settings → Secrets → 新增 `GEMINI_API_KEY`（可另設 variable `GEMINI_MODEL`，預設 `gemini-2.5-flash`）。
+AI 僅在離線內容管線執行，瀏覽器不接觸 API 金鑰。新聞先取得 NHK 官方 RSS 的標題、摘要與發布時間，排除超過 7 天及已使用來源，再交給模型分級改寫；出處由程式寫入，驗證通過後先寫獨立文章檔，再原子替換索引。格式檢查不能替代人工查核事實與日語品質。
 
-- **每日新聞**：`.github/workflows/daily-news.yml`（cron 每日；也可手動觸發選難度/主題）→ `scripts/generate-news.mjs` 讀真新聞→**重製摘要**分級包→驗證→累積進 `data/news.js`（保留最近 60 則）。
-- **讀音辭庫 ×5**：`.github/workflows/wordbank.yml`（手動觸發一次）→ `scripts/generate-wordbank.mjs` 為每音補 5 詞→`data/wordbank.js`。
-- 本機亦可跑：`GEMINI_API_KEY=xxx node scripts/generate-news.mjs`；離線驗證水路用 `--mock`。
-- 內容驗證：`node scripts/validate-news.mjs`、`node scripts/validate-wordbank.mjs`、`node scripts/check-image-list.mjs`。授權界線（只重述事實、原創改寫、不逐字複製、標出處）見 `docs/ai-news-module-design.md`。
+本機入口依 Port Monitor 規範使用 `http://127.0.0.1:43922/v1`。預設 `NEWS_AI_PROVIDER=auto`：先呼叫本地 AI，連線／逾時／認證／JSON 或教材驗證失敗時，改用 `NEWS_AI_FALLBACK=gemini` 雲端備援。兩邊使用同一份已擷取的來源；皆失敗時保持原索引與文章不變。產出 `generation` 欄位記錄實際 provider 與是否使用備援。
+
+預設 `LOCAL_AI_MODEL=qwen36`，對應目前 Port Monitor 的本地 Qwen3.6 直接管理模型；可改成其他已登記的本地模型 ID。`managed-model` 會跟隨管理器選定 Provider，因此不作預設，避免把管理器中的雲端 Provider 誤認為本地執行。LiveCatch 的 OSCE 專用橋接不作新聞入口。
+
+1. 複製 `.env.example` 為未追蹤的 `.env`，填入 Port Monitor 的 `kana-trainer` 背景專案金鑰與 `GEMINI_API_KEY` 備援金鑰。
+2. `node --env-file=.env scripts/check-local-ai.mjs` 檢查本地連線、認證與模型登記（不推理）。
+3. `node --env-file=.env scripts/generate-news.mjs` 抓取來源並產生獨立文章與索引。
+4. GitHub Actions 保留台灣 05:00 排程，經 Tailscale 連回閘道。連不上 tailnet、閘道或模型時會繼續嘗試 Gemini 備援；備援仍不合格才讓工作失敗。配置見 [本地 AI 接入研究](docs/local-ai-news-integration.md)。
+
+新聞包日期以 `Asia/Taipei` 計算，索引保留最近 60 包。手動觸發可選 N5..N1 與 RSS 關鍵字（沒有符合來源即停止，不捏造主題）。本機 AI 需保持開機並可達；若本地環境尚未配置，日誌會明確顯示使用雲端備援。
+
+離線 smoke test：`node scripts/generate-news.mjs --mock --output=<暫存目錄>`；必須明確指定目錄，以免樣本污染正式資料。只測本地時設 `NEWS_AI_PROVIDER=openai`；停用備援時設 `NEWS_AI_FALLBACK=none`。
+
+新聞索引約 28 KB，取代原先首頁整包載入約 570 KB。獨立文章使用 classic script 保留直接 `file://` 開啟；HTTP(S) 另以 SRI 檢查內容完整性。閱讀後可離線重讀，未下載文章會提供重試提示。更多發布與快取細節見 [新聞儲存與備援](docs/news-storage-and-fallback.md)。
+
+辭庫產生仍可用 `GEMINI_API_KEY`／選配 `GEMINI_MODEL`，支援 `scripts/generate-wordbank.mjs`。驗證在寫入前完成，題庫缺項、非假名、重複與包含規則不合格時保留原檔；罕見音不為湊滿 5 詞硬造單詞。
 
 所有進度（含 SRS 排程、連續天數、各範圍最佳成績、星號、學習強度計畫、新聞輸入完成度）一起持久化，舊存檔自動相容。
 
@@ -68,23 +80,43 @@ AI 只在**離線管線**跑、不進瀏覽器（同題庫分離精神）。設�
 
 以下需離開純網頁的範疇（原生工具鏈 / 後端 / 影像生成），已列為後續：原生 Android 套殼 + 桌面 widget + OS 級排程通知；雲端帳號自動同步/推播；書寫「筆順辨識」評分。目前「提醒」為 App 內今日計畫，「跨裝置」靠 JSON 匯出/匯入。
 
-**配圖尚未補齊**：`img/` 目前有 92/208 張，缺 116 張（主要是第 11～14 級的濁音/拗音）。缺圖不影響上線——會自動退回內建 SVG，再退回 emoji。待補清單見 `docs/image-download-list.md`，或跑 `node scripts/validate.mjs` 取得最新缺檔列表。
+**配圖已補齊**：208 音皆有本機配圖（92 PNG＋116 原創 SVG）；向量圖可由 `node scripts/build-illustrations.mjs` 重建。清單見 [配圖清單](docs/image-download-list.md)。
 
 ## 檔案結構
 
 ```
 kana-trainer/
-├─ index.html            # 主程式（UI + 邏輯，不含任何題庫資料）
-├─ data/levels.js        # 題庫外掛檔（唯一資料來源；換題庫只換這個檔）
-├─ img/                  # 配圖（檔名 = 題庫 img 鍵 + .png；缺檔自動退回 SVG/emoji）
-├─ data/wordbank.js      # 每音讀音辭庫（208 音 ×5 詞；翻牌隨機抽詞）
-├─ data/news.js          # 每日新聞包歷史（AI 離線管線產出）
-├─ scripts/validate.mjs  # 題庫驗證：node scripts/validate.mjs
-├─ manifest.webmanifest  # PWA manifest
-├─ sw.js                 # Service Worker（主程式/資料檔 network-first、圖片 cache-first）
-├─ icon.svg              # 應用圖示（img/icon-192.png、img/icon-512.png 為 PNG 版）
-└─ project.md            # 專案規格
+├─ index.html             # 無建置 HTML 入口；可直接以 file:// 開啟
+├─ css/app.css            # 保留紙色／藍色的樣式與無障礙狀態
+├─ js/app.js              # 畫面與功能組裝
+├─ js/storage.js          # 版本化存檔、驗證、遷移、備份還原
+├─ js/session.js          # 畫面計時器、事件、錄音資源生命週期
+├─ js/scheduler.js        # 間隔重複排程
+├─ js/audio.js            # 裝置語音與降級
+├─ js/exam.js             # 考試、截止時間與單次結算
+├─ js/news.js             # 新聞進度與口說解鎖規則
+├─ js/news-loader.js      # 按需載入、重試、記憶體快取與完整性檢查
+├─ data/news/index.js     # 小型新聞索引（最近 60 包）
+├─ data/news/packs/       # 每篇獨立、含內容雜湊的新聞檔
+├─ data/                  # 題庫、辭庫與配圖索引
+├─ img/                   # 92 PNG＋116 SVG、PWA 圖示
+├─ scripts/lib/           # RSS、本地 AI、驗證及原子寫入
+├─ tests/                 # Node 回歸測試與 Playwright 瀏覽器測試
+└─ sw.js                  # PWA 版本化 shell 與獨立內容更新
 ```
+
+新增 npm 僅用於開發驗證，使用者安裝／開啟網頁不需 npm 或框架。
+
+```
+npm ci
+npm run validate
+npm test
+npx playwright install chromium
+npm run test:e2e
+npm run serve
+```
+
+Windows 若使用已安裝 Chrome，可設定 `PLAYWRIGHT_EXECUTABLE_PATH` 指向 Chrome 執行檔。CI 在每次 push／PR 執行資料驗證、回歸測試、mock 管線與手機／桌面瀏覽器測試。
 
 ## 測試用 URL 參數
 
