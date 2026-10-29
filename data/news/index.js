@@ -3,6 +3,18 @@ window.KANA_NEWS_INDEX = {
   "schemaVersion": 1,
   "packs": [
     {
+      "id": "daily-2026-10-29-N4",
+      "date": "2026-10-29",
+      "level": "N4",
+      "title": {
+        "ja": "アメリカの選挙サイトにサイバー攻撃",
+        "zh": "美國選舉網站遭受網路攻擊"
+      },
+      "file": "packs/daily-2026-10-29-N4-473aecfd2c343cce.js",
+      "sha256": "473aecfd2c343cce196fe811e18bef1d3fddba122161f605fcffd154c6d42c3b",
+      "sourceURL": "https://news.web.nhk/newsweb/na/nd-20261029de67547"
+    },
+    {
       "id": "daily-2026-10-29-N5-rss-39979f2e",
       "date": "2026-10-29",
       "level": "N5",
@@ -709,18 +721,6 @@ window.KANA_NEWS_INDEX = {
       "file": "packs/daily-2026-08-24-N5-b41fec66685b6530.js",
       "sha256": "b41fec66685b65303e3b802626850c6c4e59b2d6c9bd856e92458f2e3198375e",
       "sourceURL": "https://nekochan.jp/column/article/26079"
-    },
-    {
-      "id": "daily-2026-08-23-N5",
-      "date": "2026-08-23",
-      "level": "N5",
-      "title": {
-        "ja": "かわいいパンダの赤ちゃん、名前は？",
-        "zh": "可爱熊猫宝宝，名字是什么？"
-      },
-      "file": "packs/daily-2026-08-23-N5-1e9702162e19f103.js",
-      "sha256": "1e9702162e19f10329de413242e912ab5cf4e51fdc413bc81421aa98ceed71ec",
-      "sourceURL": "https://wakayama.keizai.biz/headline/1993/"
     }
   ]
 };
