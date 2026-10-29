@@ -44,6 +44,11 @@ test('gateway rejects truncated responses and never includes credentials in erro
   await assert.rejects(localJSON('facts', options), error => !error.message.includes('test-secret'));
   await assert.rejects(localJSON('facts', { ...options, fetchImpl: async () => new Response('private body test-secret', { status: 401 }) }), /HTTP 401/);
 });
+test('local timeout falls back without retrying an inference that may still be queued', async () => {
+  let calls = 0;
+  await assert.rejects(localJSON('facts', { retries: 3, env: { LOCAL_AI_API_KEY: 'test-only' }, fetchImpl: async () => { calls++; const error = Error('timeout'); error.name = 'TimeoutError'; throw error; } }), error => error.code === 'LOCAL_AI_TIMEOUT');
+  assert.equal(calls, 1);
+});
 test('offline generation is isolated; invalid content does not overwrite an existing file', t => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'kana-news-')); t.after(() => fs.rmSync(dir, { recursive: true }));
   const output = path.join(dir, 'news');

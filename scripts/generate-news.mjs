@@ -89,7 +89,11 @@ async function main() {
     candidate.id = id; candidate.date = DATE; candidate.level = LEVEL;
     candidate.source = { title: source.title, publisher: source.publisher, url: source.url, publishedAt: new Date(source.publishedAt).toISOString(), fetchedAt: source.fetchedAt, note: "依來源 RSS 摘要原創分級改寫；非原文重製。" };
     const errors = validateNews({ packs: [candidate] }, { strict: true });
-    if (errors.length) { const error = Error("產出驗證失敗：" + errors.slice(0, 8).join("；")); error.code = 'NEWS_VALIDATION_FAILED'; throw error; }
+    if (errors.length) {
+      // Validator messages contain fixed field paths, never model content or credentials.
+      console.warn('教材欄位檢查：' + errors.slice(0, 8).join('；'));
+      const error = Error('產出驗證失敗'); error.code = 'NEWS_VALIDATION_FAILED'; throw error;
+    }
     return candidate;
   }
   if (argv.mock) {

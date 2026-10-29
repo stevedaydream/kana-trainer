@@ -25,6 +25,8 @@ export async function localJSON(prompt, { temperature = 0.4, maxOutputTokens = 8
       return value;
     } catch (error) {
       // Never log a fetch error cause, response body or authenticated URL.
+      // A timed-out request may still be queued by the model owner. Avoid duplicating it.
+      if (['TimeoutError', 'AbortError'].includes(error.name)) { const timeoutError = Error('本地 AI 等待逾時'); timeoutError.code = 'LOCAL_AI_TIMEOUT'; throw timeoutError; }
       last = error.status ? error : Error('本地 AI 連線、逾時或 JSON 解析失敗');
       if (error.status && error.status !== 429 && error.status < 500) throw last;
       if (attempt + 1 < retries) await new Promise(resolve => setTimeout(resolve, 1000 * 2 ** attempt));
