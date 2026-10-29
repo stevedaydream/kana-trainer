@@ -3,6 +3,18 @@ window.KANA_NEWS_INDEX = {
   "schemaVersion": 1,
   "packs": [
     {
+      "id": "daily-2026-10-29-N5",
+      "date": "2026-10-29",
+      "level": "N5",
+      "title": {
+        "ja": "GMOの社長が情報提供を呼びかけ",
+        "zh": "GMO社長呼籲提供資訊"
+      },
+      "file": "packs/daily-2026-10-29-N5-f8af550671397247.js",
+      "sha256": "f8af550671397247646a434f4e03944d3857708a710031291ece44c7e5f35ca6",
+      "sourceURL": "https://news.web.nhk/newsweb/na/nd-20261029de67553"
+    },
+    {
       "id": "daily-2026-10-28-N5",
       "date": "2026-10-28",
       "level": "N5",
@@ -709,18 +721,6 @@ window.KANA_NEWS_INDEX = {
       "file": "packs/daily-2026-08-22-N5-1cbe99695ada62d0.js",
       "sha256": "1cbe99695ada62d0cea5a643badc9b05f8bb875a57cb90e514d172d6912c5756",
       "sourceURL": "https://weathernews.jp/s/topics/202402/190015/"
-    },
-    {
-      "id": "daily-2026-08-21-N5",
-      "date": "2026-08-21",
-      "level": "N5",
-      "title": {
-        "ja": "かわいいパンダの赤ちゃん、名前は？",
-        "zh": "可爱熊猫宝宝，名字是什么？"
-      },
-      "file": "packs/daily-2026-08-21-N5-9c258dd33ea9fcd6.js",
-      "sha256": "9c258dd33ea9fcd63957d8ade905bc0974c1af6ea2ac33bfb8b17a8788203962",
-      "sourceURL": "https://www.tokyo-zoo.net/topic/topics_detail?tab=1&id=929"
     }
   ]
 };
