@@ -3,16 +3,28 @@ window.KANA_NEWS_INDEX = {
   "schemaVersion": 1,
   "packs": [
     {
-      "id": "daily-2026-10-29-N5",
+      "id": "daily-2026-10-29-N5-rss-39979f2e",
       "date": "2026-10-29",
       "level": "N5",
       "title": {
         "ja": "GMOの社長が情報提供を呼びかけ",
         "zh": "GMO社長呼籲提供資訊"
       },
-      "file": "packs/daily-2026-10-29-N5-f8af550671397247.js",
-      "sha256": "f8af550671397247646a434f4e03944d3857708a710031291ece44c7e5f35ca6",
+      "file": "packs/daily-2026-10-29-N5-rss-39979f2e-8033c48d964002ec.js",
+      "sha256": "8033c48d964002ecbbaa18cec7932d4ed83b26190385a7d2b9eec90b9a687bd0",
       "sourceURL": "https://news.web.nhk/newsweb/na/nd-20261029de67553"
+    },
+    {
+      "id": "daily-2026-10-29-N5",
+      "date": "2026-10-29",
+      "level": "N5",
+      "title": {
+        "ja": "かわいい「赤ちゃんパンダ」の名前が決まりました！",
+        "zh": "可愛的「熊貓寶寶」名字決定了！"
+      },
+      "file": "packs/daily-2026-10-29-N5-7dcee81a8245c1a4.js",
+      "sha256": "7dcee81a8245c1a43b7b3354ba627354dd708f646ab9f4c625ce26d88703fef2",
+      "sourceURL": "https://news.yahoo.co.jp/articles/example-link-for-panda-name"
     },
     {
       "id": "daily-2026-10-28-N5",
@@ -709,18 +721,6 @@ window.KANA_NEWS_INDEX = {
       "file": "packs/daily-2026-08-23-N5-1e9702162e19f103.js",
       "sha256": "1e9702162e19f10329de413242e912ab5cf4e51fdc413bc81421aa98ceed71ec",
       "sourceURL": "https://wakayama.keizai.biz/headline/1993/"
-    },
-    {
-      "id": "daily-2026-08-22-N5",
-      "date": "2026-08-22",
-      "level": "N5",
-      "title": {
-        "ja": "猫は魚が好き？本当は…",
-        "zh": "貓喜歡魚嗎？其實是…"
-      },
-      "file": "packs/daily-2026-08-22-N5-1cbe99695ada62d0.js",
-      "sha256": "1cbe99695ada62d0cea5a643badc9b05f8bb875a57cb90e514d172d6912c5756",
-      "sourceURL": "https://weathernews.jp/s/topics/202402/190015/"
     }
   ]
 };
