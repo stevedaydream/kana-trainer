@@ -1,89 +1,90 @@
-/* =========================================================
- * sw.js — PWA Service Worker
- *
- * 快取策略分兩類：
- *   1. 會變動的內容（導覽請求、index.html、data/*.js）＝ network-first。
- *      連線時一律拿最新（每日新聞包、題庫、辭庫都會即時更新），離線才退回快取。
- *      這樣「忘了調 VERSION」不再會把使用者鎖在舊版。
- *   2. 不常變動的資源（圖示、img/*.png、manifest）＝ cache-first ＋ 執行期回寫。
- *      配圖缺檔不影響，主程式會退回內建 SVG / emoji。
- *
- * 更新流程：新版 SW 安裝完成後「不」自動接管（不呼叫 skipWaiting），
- * 改由主程式跳出「有新版本」橫幅，使用者按下才接管並重新載入——
- * 避免有人正在做 60 秒考試時被硬生生重整掉。
- *
- * VERSION 仍建議在改動 app shell 後調高：它會重建預快取、清掉舊快取。
- * ========================================================= */
-const VERSION = "kana-trainer-v10";
-const SHELL = [
-  ".",
-  "index.html",
-  "data/levels.js",
-  "data/wordbank.js",
-  "data/news.js",
-  "manifest.webmanifest",
-  "icon.svg",
-  "img/icon-192.png",
-  "img/icon-512.png"
-];
+/* Versioned shell, network-first data, no forced reload during practice. */
+"use strict";
+importScripts("data/illustrations.js");
+const PREFIX = "kana-trainer-";
+const VERSION = PREFIX + "v12";
+const SHELL = [".", "index.html", "css/app.css", "js/session.js", "js/storage.js", "js/scheduler.js", "js/audio.js", "js/exam.js", "js/news.js", "js/news-loader.js", "js/app.js", "data/levels.js", "data/wordbank.js", "data/news/index.js", "data/illustrations.js", "manifest.webmanifest", "icon.svg", "img/icon-192.png", "img/icon-512.png", ...Object.values(self.KANA_ILLUSTRATIONS).filter(p => p.endsWith('.svg'))];
+const NEWS_CACHE = PREFIX + "news-v1";
 const SHELL_URL = new URL("index.html", self.location).href;
-
-// 內容會變動的資源：主程式本身與 data/ 下的資料檔
-function isFresh(url) {
-  return url.pathname.endsWith("/index.html") || /\/data\/[^/]+\.js$/.test(url.pathname);
+const scope = new URL(".", self.location).href;
+const shellKeys = new Set(SHELL.map(p => new URL(p, self.location).href));
+self.addEventListener("install", event => event.waitUntil((async () => {
+  const cache = await caches.open(VERSION);
+  await cache.addAll(SHELL);
+  const response = await cache.match(new URL("data/news/index.js", self.location).href);
+  const text = await response.text();
+  const marker = "window.KANA_NEWS_INDEX = ";
+  if (!text.includes(marker)) throw Error("Invalid news index");
+  const index = JSON.parse(text.slice(text.indexOf(marker) + marker.length).trim().replace(/;$/, ""));
+  if (index.schemaVersion !== 1 || !Array.isArray(index.packs)) throw Error("Invalid news catalogue");
+  const articles = index.packs.slice(0, 3).map(entry => {
+    if (!/^[A-Za-z0-9-]+$/.test(entry.id) || !/^[a-f0-9]{64}$/.test(entry.sha256) || entry.file !== `packs/${entry.id}-${entry.sha256.slice(0, 16)}.js`) throw Error("Invalid news path");
+    return new Request(new URL("data/news/" + entry.file, self.location).href, { integrity: "sha256-" + btoa(String.fromCharCode(...entry.sha256.match(/../g).map(h => parseInt(h, 16)))) });
+  });
+  const contentCache = await caches.open(NEWS_CACHE);
+  await contentCache.addAll(articles);
+  await trimArticles(contentCache);
+})()));
+self.addEventListener("activate", event => event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k.startsWith(PREFIX) && k !== VERSION && k !== NEWS_CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())));
+self.addEventListener("message", event => { if (event.data?.type === "SKIP_WAITING") self.skipWaiting(); });
+function keep(event, key, response, content = false) {
+  const copy = response.clone();
+  event.waitUntil((async () => {
+    const cache = await caches.open(content ? NEWS_CACHE : VERSION);
+    await cache.put(key, copy);
+    if (content) await trimArticles(cache);
+  })().catch(() => {}));
 }
-
-self.addEventListener("install", (e) => {
-  // 不 skipWaiting：等使用者在主程式按下「立即更新」才接管
-  e.waitUntil(caches.open(VERSION).then((c) => c.addAll(SHELL)));
-});
-
-self.addEventListener("activate", (e) => {
-  e.waitUntil(
-    caches.keys()
-      .then((keys) => Promise.all(keys.filter((k) => k !== VERSION).map((k) => caches.delete(k))))
-      .then(() => self.clients.claim())
-  );
-});
-
-self.addEventListener("message", (e) => {
-  if (e.data && e.data.type === "SKIP_WAITING") self.skipWaiting();
-});
-
-function keep(key, res) {
-  const copy = res.clone();
-  caches.open(VERSION).then((c) => c.put(key, copy)).catch(() => {});
+async function trimArticles(cache) {
+  const keys = await cache.keys();
+  await Promise.all(keys.slice(0, Math.max(0, keys.length - 60)).map(request => cache.delete(request)));
 }
-
-self.addEventListener("fetch", (e) => {
-  const req = e.request;
-  if (req.method !== "GET") return;
-
-  let url;
-  try { url = new URL(req.url); } catch (err) { return; }
-  if (url.origin !== self.location.origin) return;   // 外部資源不介入
-
-  const navigating = req.mode === "navigate";
-  if (navigating || isFresh(url)) {
-    // network-first：拿得到就用最新的，順手更新快取；離線才退回
-    e.respondWith(
-      fetch(req)
-        .then((res) => {
-          // 導覽請求統一存在 index.html 這個鍵，才不會被 ?notts=1 之類的參數灌爆
-          if (res.ok) keep(navigating ? SHELL_URL : req, res);
-          return res;
-        })
-        .catch(() => caches.match(req, { ignoreSearch: true })
-          .then((hit) => hit || caches.match(SHELL_URL)))
-    );
-    return;
+async function cached(key, content = false) { return (await caches.open(content ? NEWS_CACHE : VERSION)).match(key, { ignoreSearch: true }); }
+async function network(request) {
+  const controller = new AbortController(), timer = setTimeout(() => controller.abort(), 5000);
+  try { const response = await fetch(request, { signal: controller.signal }); if (!response.ok) throw Error("HTTP " + response.status); return response; }
+  finally { clearTimeout(timer); }
+}
+self.addEventListener("fetch", event => {
+  const request = event.request;
+  if (request.method !== "GET") return;
+  const url = new URL(request.url);
+  if (!url.href.startsWith(scope) || url.origin !== self.location.origin) return;
+  const key = url.origin + url.pathname, navigation = request.mode === "navigate", data = /\/data\/(?:news\/index|[^/]+)\.js$/.test(url.pathname);
+  const article = /\/data\/news\/packs\/[A-Za-z0-9-]+-[a-f0-9]{16}\.js$/.test(url.pathname);
+  if (navigation) {
+    event.respondWith((async () => {
+      const hit = await cached(SHELL_URL);
+      if (hit) return hit;
+      try { const response = await network(request); keep(event, SHELL_URL, response); return response; }
+      catch (_) { return new Response("離線資源尚未準備完成，請連線後重新整理。", { status: 503 }); }
+    })()); return;
   }
-
-  // cache-first：圖示、配圖等
-  e.respondWith(
-    caches.match(req, { ignoreSearch: true }).then((hit) => hit || fetch(req).then((res) => {
-      if (res.ok) keep(req, res);
-      return res;
-    }))
-  );
+  if (article) {
+    event.respondWith((async () => {
+      const hit = await cached(key, true); if (hit) return hit;
+      try {
+        const response = await network(request);
+        if (!/(javascript|ecmascript)/i.test(response.headers.get("content-type") || "")) throw Error("Invalid article type");
+        keep(event, key, response, true); return response;
+      } catch (_) { return new Response("/* Article not downloaded. Reconnect and retry. */", { status: 503, headers: { "Content-Type": "application/javascript; charset=utf-8" } }); }
+    })()); return;
+  }
+  if (navigation || data) {
+    event.respondWith((async () => {
+      try {
+        const response = await network(request), type = response.headers.get("content-type") || "";
+        if (data && !/(javascript|ecmascript)/i.test(type)) throw Error("Invalid data content type");
+        keep(event, navigation ? SHELL_URL : key, response); return response;
+      } catch (_) {
+        const hit = await cached(navigation ? SHELL_URL : key);
+        return hit || new Response(navigation ? "離線資源尚未準備完成，請連線後重新整理。" : "/* Offline data unavailable */", { status: 503, headers: { "Content-Type": navigation ? "text/plain; charset=utf-8" : "application/javascript; charset=utf-8" } });
+      }
+    })()); return;
+  }
+  // CSS and JS stay coherent with the installed shell; update all via a new worker.
+  if (shellKeys.has(key) || /\/img\//.test(url.pathname)) event.respondWith((async () => {
+    const hit = await cached(key); if (hit) return hit;
+    const response = await fetch(request); if (response.ok) keep(event, key, response); return response;
+  })());
 });

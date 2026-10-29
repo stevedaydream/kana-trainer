@@ -1,55 +1,111 @@
-name: Daily news pack (Gemini)
-
-# 每日產生一則分級新聞包並累積進 data/news.js。
-# 需在 repo Settings → Secrets and variables → Actions 新增 GEMINI_API_KEY。
-# 也可到 Actions 分頁手動觸發（workflow_dispatch），可帶 level / topic。
-
+name: Daily news (local first, cloud backup)
 on:
   schedule:
-    - cron: "0 21 * * *"   # 每日 21:00 UTC（≈台灣 05:00）
+    - cron: "0 21 * * *" # Asia/Taipei 05:00; pack date uses Asia/Taipei
   workflow_dispatch:
     inputs:
       level:
-        description: "JLPT 難度 (N5..N1)"
-        default: "N5"
+        description: JLPT level
+        type: choice
+        options: [N5, N4, N3, N2, N1]
+        default: N5
       topic:
-        description: "主題傾向（可留空）"
+        description: Optional keyword present in the RSS source
+        type: string
         required: false
-
+      verify_only:
+        description: Check private connectivity without generating content
+        type: boolean
+        default: false
 permissions:
   contents: write
-
+  id-token: write
 concurrency:
-  group: daily-news
+  group: kana-content-${{ github.ref }}
   cancel-in-progress: false
-
 jobs:
   generate:
     runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      NEWS_AI_PROVIDER: auto
+      NEWS_AI_FALLBACK: gemini
+      LOCAL_AI_BASE_URL: ${{ secrets.LOCAL_AI_BASE_URL }}
+      LOCAL_AI_API_KEY: ${{ secrets.LOCAL_AI_API_KEY }}
+      LOCAL_AI_MODEL: ${{ vars.LOCAL_AI_MODEL || 'qwen36' }}
+      LOCAL_AI_TIMEOUT_MS: '180000'
+      NEWS_RSS_URL: ${{ vars.NEWS_RSS_URL || 'https://news.web.nhk/n-data/conf/na/rss/cat3.xml' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "22"
-      - name: Generate news pack
+          node-version: '22'
+      - name: Check local and backup configuration
+        id: config
+        env:
+          TS_ID: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
+          TS_SECRET: ${{ secrets.TAILSCALE_OAUTH_SECRET }}
+          TS_AUDIENCE: ${{ secrets.TAILSCALE_AUDIENCE || vars.TAILSCALE_AUDIENCE }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          if [ -n "$LOCAL_AI_BASE_URL" ] && [ -n "$LOCAL_AI_API_KEY" ] && [ -n "$TS_ID" ] && { [ -n "$TS_SECRET" ] || [ -n "$TS_AUDIENCE" ]; }; then
+            echo "join_tailnet=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "join_tailnet=false" >> "$GITHUB_OUTPUT"
+            echo '::warning::Local AI / Tailscale configuration incomplete; cloud backup will be used'
+            test -n "$GEMINI_API_KEY" || { echo '::error::Neither local AI nor cloud backup is configured'; exit 1; }
+          fi
+      - name: Verify OIDC claim context
+        if: inputs.verify_only && steps.config.outputs.join_tailnet == 'true'
+        env:
+          TS_AUDIENCE: ${{ secrets.TAILSCALE_AUDIENCE || vars.TAILSCALE_AUDIENCE }}
+        run: |
+          node --input-type=module <<'NODE'
+          const url = new URL(process.env.ACTIONS_ID_TOKEN_REQUEST_URL);
+          url.searchParams.set('audience', process.env.TS_AUDIENCE);
+          const response = await fetch(url, {headers:{Authorization:'Bearer '+process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN}});
+          if (!response.ok) throw Error('OIDC context HTTP '+response.status);
+          const {value} = await response.json();
+          const claims = JSON.parse(Buffer.from(value.split('.')[1], 'base64url').toString());
+          console.log(JSON.stringify({issuer:claims.iss,subject:claims.sub,workflow:claims.workflow_ref,audienceMatches:claims.aud===process.env.TS_AUDIENCE}));
+          NODE
+      - name: Join private tailnet
+        id: tailnet
+        if: steps.config.outputs.join_tailnet == 'true'
+        continue-on-error: true
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TAILSCALE_OAUTH_SECRET }}
+          audience: ${{ secrets.TAILSCALE_AUDIENCE || vars.TAILSCALE_AUDIENCE }}
+          tags: ${{ vars.TAILSCALE_TAGS || 'tag:kana-news-ci' }}
+      - name: Verify managed gateway authentication
+        id: gateway
+        if: steps.tailnet.outcome == 'success'
+        continue-on-error: true
+        run: node scripts/check-local-ai.mjs
+      - name: Generate and validate before replacing data
+        if: ${{ !inputs.verify_only }}
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
-        run: |
-          if [ -z "$GEMINI_API_KEY" ]; then
-            echo "::error::缺少 GEMINI_API_KEY secret，略過。到 Settings → Secrets 新增後即可自動產生。"
-            exit 0
-          fi
-          node scripts/generate-news.mjs \
-            --level="${{ github.event.inputs.level || 'N5' }}" \
-            ${{ github.event.inputs.topic && format('--topic="{0}"', github.event.inputs.topic) || '' }}
+          LOCAL_AI_SKIP: ${{ steps.gateway.outcome == 'success' && '0' || '1' }}
+          NEWS_LEVEL: ${{ inputs.level || 'N5' }}
+          NEWS_TOPIC: ${{ inputs.topic }}
+        run: node scripts/generate-news.mjs --level="$NEWS_LEVEL" --topic="$NEWS_TOPIC"
+      - name: Validate published content
+        run: node scripts/validate-news.mjs
+      - name: Require successful private connectivity in verification mode
+        if: inputs.verify_only
+        env:
+          GATEWAY_OUTCOME: ${{ steps.gateway.outcome }}
+        run: test "$GATEWAY_OUTCOME" = success
       - name: Commit if changed
+        if: ${{ !inputs.verify_only }}
         run: |
-          if git diff --quiet -- data/news.js; then
-            echo "無變更。"; exit 0
-          fi
-          git config user.name "kana-news-bot"
-          git config user.email "actions@users.noreply.github.com"
-          git add data/news.js
-          git commit -m "chore(news): daily pack $(date -u +%F)"
+          if git diff --quiet -- data/news/index.js; then exit 0; fi
+          git config user.name kana-news-bot
+          git config user.email actions@users.noreply.github.com
+          git add data/news/index.js data/news/packs
+          git commit -m "chore(news): publish validated article and index"
           git push

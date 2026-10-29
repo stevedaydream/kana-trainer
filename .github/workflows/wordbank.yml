@@ -13,8 +13,13 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: kana-content-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   build:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -25,11 +30,12 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
+          REBUILD_ALL: ${{ inputs.all }}
         run: |
           if [ -z "$GEMINI_API_KEY" ]; then
             echo "::error::缺少 GEMINI_API_KEY secret。"; exit 1
           fi
-          node scripts/generate-wordbank.mjs ${{ github.event.inputs.all == 'true' && '--all' || '' }}
+          if [ "$REBUILD_ALL" = true ]; then node scripts/generate-wordbank.mjs --all; else node scripts/generate-wordbank.mjs; fi
       - name: Commit if changed
         run: |
           if git diff --quiet -- data/wordbank.js; then echo "無變更。"; exit 0; fi

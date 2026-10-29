@@ -21,7 +21,7 @@ new Function("window", fs.readFileSync(path.join(ROOT, "data/levels.js"), "utf8"
 const all = [];
 win.KANA_DATA.levels.forEach(lv => lv.hira.concat(lv.kata).forEach(x => all.push(x)));
 const have = new Set(fs.readdirSync(path.join(ROOT, "img")));
-const missing = all.filter(x => !have.has(x.img + ".png")).map(x => x.img);
+const missing = all.filter(x => !have.has(x.img + ".png") && !have.has(x.img + ".svg")).map(x => x.img);
 
 const md = fs.readFileSync(path.join(ROOT, DOC), "utf8");
 const listed = [...md.matchAll(/`([a-z0-9_]+)\.png`/g)].map(m => m[1]);
