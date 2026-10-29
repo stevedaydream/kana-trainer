@@ -72,9 +72,10 @@ test('full local pipeline pins fetched provenance and preserves published data o
   const before = fs.readFileSync(path.join(output, 'index.js'), 'utf8'), pack = loadCatalogue(output).packs[0];
   pack.source.url = 'https://invented.invalid/model-source'; fs.writeFileSync(fixture, JSON.stringify(pack));
   fs.writeFileSync(preload, `import fs from 'node:fs';
+    let cloudCalls = 0;
     globalThis.fetch = async (url, options) => {
       if (String(url).endsWith('/chat/completions')) {
-        if (['backup', 'both-fail'].includes(process.env.NEWS_TEST_MODE)) return new Response('private body', {status:401});
+        if (['backup', 'repair', 'both-fail'].includes(process.env.NEWS_TEST_MODE)) return new Response('private body', {status:401});
         const pack = JSON.parse(fs.readFileSync(process.env.NEWS_TEST_FIXTURE, 'utf8'));
         if (process.env.NEWS_TEST_MODE === 'invalid') pack.quiz[0].options = ['same','same'];
         return Response.json({choices:[{finish_reason:'stop',message:{content:JSON.stringify(pack)}}]});
@@ -82,6 +83,7 @@ test('full local pipeline pins fetched provenance and preserves published data o
       if (String(url).includes(':generateContent')) {
         if (options.headers['x-goog-api-key'] !== 'test-cloud') throw Error('missing cloud key');
         const pack = JSON.parse(fs.readFileSync(process.env.NEWS_TEST_FIXTURE, 'utf8'));
+        if (process.env.NEWS_TEST_MODE === 'repair' && cloudCalls++ === 0) pack.title.furigana = 'AI';
         if (process.env.NEWS_TEST_MODE === 'both-fail') pack.quiz[0].options = ['same','same'];
         return Response.json({candidates:[{finishReason:'STOP',content:{parts:[{text:JSON.stringify(pack)}]}}]});
       }
@@ -101,6 +103,10 @@ test('full local pipeline pins fetched provenance and preserves published data o
   const cloudPack = loadCatalogue(output).packs.find(p => p.id.startsWith('daily-'));
   assert.equal(cloudPack.generation.provider, 'gemini'); assert.equal(cloudPack.generation.isFallback, true);
   assert.equal(cloudPack.source.url, 'https://example.com/real-source');
+  const repaired = spawnSync(process.execPath, args, { env: { ...backupEnv, NEWS_TEST_MODE: 'repair' }, encoding: 'utf8' });
+  assert.equal(repaired.status, 0, repaired.stderr);
+  assert.match(repaired.stderr, /重新生成一次/);
+  assert.deepEqual(validateNews(loadCatalogue(output), { strict: true }), []);
   fs.writeFileSync(path.join(output, 'index.js'), before);
   const both = spawnSync(process.execPath, args, { env: { ...backupEnv, NEWS_TEST_MODE: 'both-fail' }, encoding: 'utf8' });
   assert.notEqual(both.status, 0); assert.match(both.stderr, /皆未產出有效教材/);

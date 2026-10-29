@@ -44,6 +44,7 @@ function prompt(source) {
     `2) 目標難度 ${LEVEL}（JLPT）；日文句子須符合該程度（用字、漢字量、句長）。`,
     "3) 標註出處（媒體/連結，若用聚合主題可寫主題來源）。",
     "4) 主題與出處以提供的來源資料為準，不可自選或編造。",
+    "5) 所有 furigana 與 vocab.reading 必須完全以平假名／片假名寫出讀音。漢字、英文、字母縮寫一律轉為假名，例如 AI→エーアイ、GMO→ジーエムオー、CEO→シーイーオー。不可保留拉丁字母、漢字、斜線或連字號。",
     "",
     "只輸出 JSON，欄位如下（全部必填，ja/zh/en 皆非空；furigana 為整句假名讀音；quiz 恰 5 題）：",
     JSON.stringify({
@@ -104,7 +105,16 @@ async function main() {
     console.log(`來源取得成功；優先本地 AI 改寫 ${DATE} / ${LEVEL}。`);
     const result = await generateWithFallback({
       local: () => localJSON(prompt(source), { retries: 2 }),
-      cloud: () => geminiJSON(prompt(source), { temperature: 0.4, maxOutputTokens: 8192, retries: 2 }),
+      cloud: async () => {
+        const request = extra => geminiJSON(prompt(source) + extra, { temperature: 0.4, maxOutputTokens: 8192, retries: 2 });
+        const candidate = await request('');
+        try { return prepare(candidate); }
+        catch (error) {
+          if (error.code !== 'NEWS_VALIDATION_FAILED') throw error;
+          console.warn('Gemini 教材欄位未通過，依相同來源重新生成一次。');
+          return request('\n重新生成整份教材。前次欄位檢查不合格，尤其必須確保所有讀音是完整假名、五題選項互異、所有必填翻譯齊全；不可省略欄位。');
+        }
+      },
       validate: prepare
     });
     ({ pack, provider, isFallback } = result);
