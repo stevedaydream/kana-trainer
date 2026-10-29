@@ -13,6 +13,10 @@ on:
         description: Optional keyword present in the RSS source
         type: string
         required: false
+      verify_only:
+        description: Check private connectivity without generating content
+        type: boolean
+        default: false
 permissions:
   contents: write
   id-token: write
@@ -51,6 +55,20 @@ jobs:
             echo '::warning::Local AI / Tailscale configuration incomplete; cloud backup will be used'
             test -n "$GEMINI_API_KEY" || { echo '::error::Neither local AI nor cloud backup is configured'; exit 1; }
           fi
+      - name: Verify OIDC claim context
+        if: inputs.verify_only && steps.config.outputs.join_tailnet == 'true'
+        env:
+          TS_AUDIENCE: ${{ secrets.TAILSCALE_AUDIENCE || vars.TAILSCALE_AUDIENCE }}
+        run: |
+          node --input-type=module <<'NODE'
+          const url = new URL(process.env.ACTIONS_ID_TOKEN_REQUEST_URL);
+          url.searchParams.set('audience', process.env.TS_AUDIENCE);
+          const response = await fetch(url, {headers:{Authorization:'Bearer '+process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN}});
+          if (!response.ok) throw Error('OIDC context HTTP '+response.status);
+          const {value} = await response.json();
+          const claims = JSON.parse(Buffer.from(value.split('.')[1], 'base64url').toString());
+          console.log(JSON.stringify({issuer:claims.iss,subject:claims.sub,workflow:claims.workflow_ref,audienceMatches:claims.aud===process.env.TS_AUDIENCE}));
+          NODE
       - name: Join private tailnet
         id: tailnet
         if: steps.config.outputs.join_tailnet == 'true'
@@ -67,6 +85,7 @@ jobs:
         continue-on-error: true
         run: node scripts/check-local-ai.mjs
       - name: Generate and validate before replacing data
+        if: ${{ !inputs.verify_only }}
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
@@ -76,7 +95,13 @@ jobs:
         run: node scripts/generate-news.mjs --level="$NEWS_LEVEL" --topic="$NEWS_TOPIC"
       - name: Validate published content
         run: node scripts/validate-news.mjs
+      - name: Require successful private connectivity in verification mode
+        if: inputs.verify_only
+        env:
+          GATEWAY_OUTCOME: ${{ steps.gateway.outcome }}
+        run: test "$GATEWAY_OUTCOME" = success
       - name: Commit if changed
+        if: ${{ !inputs.verify_only }}
         run: |
           if git diff --quiet -- data/news/index.js; then exit 0; fi
           git config user.name kana-news-bot
