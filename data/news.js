@@ -7,6 +7,250 @@ window.KANA_NEWS = {
   "packs": [
     {
       "title": {
+        "ja": "かわいいロボットがコーヒーを運びます",
+        "furigana": "かわいいロボットがコーヒーをはこびます",
+        "zh": "可愛的機器人送咖啡",
+        "en": "Cute Robot Delivers Coffee"
+      },
+      "source": {
+        "title": "ロボットがコーヒーを運ぶ",
+        "publisher": "NHKニュース",
+        "url": "https://www3.nhk.or.jp/news/html/20240520/k10014455851000.html",
+        "note": "原創、分級改寫之摘要，非重製原文。"
+      },
+      "summary": [
+        {
+          "ja": "ある病院で、新しいロボットが働いています。このロボットは、患者さんにコーヒーを運びます。ロボットはとてもかわいいです。患者さんはロボットを見て、笑顔になります。ロボットは病気の人を元気にします。",
+          "furigana": "あるびょういんで、あたらしいロボットがはたらいています。このロボットは、かんじゃさんにコーヒーをはこびます。ロボットはとてもかわいいです。かんじゃさんはロボットをみて、えがおになります。ロボットはびょうきのひとをげんきにします。",
+          "zh": "在某家醫院裡，有一台新的機器人正在工作。這台機器人幫病人送咖啡。機器人很可愛。病人看到機器人，都會露出笑容。機器人讓生病的人更有活力。",
+          "en": "In a certain hospital, a new robot is working. This robot delivers coffee to patients. The robot is very cute. Patients see the robot and smile. The robot makes sick people feel better."
+        }
+      ],
+      "vocab": [
+        {
+          "word": "病院",
+          "reading": "びょういん",
+          "zh": "醫院",
+          "en": "hospital",
+          "pos": "名詞",
+          "jlpt": "N5",
+          "example": {
+            "ja": "わたしは病院に行きます。",
+            "zh": "我去醫院。"
+          }
+        },
+        {
+          "word": "働く",
+          "reading": "はたらく",
+          "zh": "工作",
+          "en": "to work",
+          "pos": "動詞",
+          "jlpt": "N5",
+          "example": {
+            "ja": "父は会社で働きます。",
+            "zh": "爸爸在公司工作。"
+          }
+        },
+        {
+          "word": "患者",
+          "reading": "かんじゃ",
+          "zh": "病人",
+          "en": "patient",
+          "pos": "名詞",
+          "jlpt": "N5",
+          "example": {
+            "ja": "患者さんは薬を飲みます。",
+            "zh": "病人吃藥。"
+          }
+        },
+        {
+          "word": "運ぶ",
+          "reading": "はこぶ",
+          "zh": "運送",
+          "en": "to carry, to transport",
+          "pos": "動詞",
+          "jlpt": "N5",
+          "example": {
+            "ja": "荷物を運びます。",
+            "zh": "搬運行李。"
+          }
+        },
+        {
+          "word": "笑顔",
+          "reading": "えがお",
+          "zh": "笑容",
+          "en": "smile",
+          "pos": "名詞",
+          "jlpt": "N5",
+          "example": {
+            "ja": "彼女はいつも笑顔です。",
+            "zh": "她總是面帶笑容。"
+          }
+        }
+      ],
+      "grammar": [
+        {
+          "point": "～がいます/あります",
+          "zh": "有～（表示存在）",
+          "en": "There is/are ~ (indicating existence)",
+          "example": {
+            "ja": "病院にロボットがいます。",
+            "zh": "醫院裡有機器人。"
+          },
+          "note": "「います」用於人或動物等有生命的事物，「あります」用於無生命的事物。"
+        },
+        {
+          "point": "名詞に動詞",
+          "zh": "對名詞做動詞（動作的對象）",
+          "en": "Verb to Noun (object of action)",
+          "example": {
+            "ja": "患者さんにコーヒーを運びます。",
+            "zh": "給病人送咖啡。"
+          },
+          "note": "「に」助詞表示動作的對象或方向。"
+        },
+        {
+          "point": "～て、～ます",
+          "zh": "～，然後～（表示動作的順序或原因）",
+          "en": "~, then ~ (indicating sequence or reason of actions)",
+          "example": {
+            "ja": "ロボットを見て、笑顔になります。",
+            "zh": "看到機器人，然後露出笑容。"
+          },
+          "note": "「て形」連接兩個動詞，表示動作的順序或前句是後句的原因。"
+        }
+      ],
+      "quiz": [
+        {
+          "type": "reading",
+          "prompt": {
+            "ja": "このロボットは、何を運びますか？",
+            "zh": "這台機器人運送什麼？"
+          },
+          "options": [
+            "本",
+            "食べ物",
+            "コーヒー",
+            "おもちゃ"
+          ],
+          "answer": 2,
+          "explain": {
+            "zh": "文章中提到「このロボットは、患者さんにコーヒーを運びます」。"
+          }
+        },
+        {
+          "type": "vocab",
+          "prompt": {
+            "ja": "「病院」の正しい読み方はどれですか？",
+            "zh": "「病院」的正確讀音是什麼？"
+          },
+          "options": [
+            "びょういん",
+            "びょういん",
+            "びょういん",
+            "びょういん"
+          ],
+          "audioText": "びょういん",
+          "answer": 0,
+          "explain": {
+            "zh": "「病院」的讀音是「びょういん」。"
+          }
+        },
+        {
+          "type": "grammar",
+          "prompt": {
+            "ja": "「患者さんにコーヒーを運びます。」この文の「に」は何を示していますか？",
+            "zh": "「患者さんにコーヒーを運びます。」這句話的「に」表示什麼？"
+          },
+          "options": [
+            "場所",
+            "時間",
+            "動作の対象",
+            "手段"
+          ],
+          "answer": 2,
+          "explain": {
+            "zh": "助詞「に」在這裡表示動作的對象，即「向病人」運送咖啡。"
+          }
+        },
+        {
+          "type": "cloze",
+          "prompt": {
+            "ja": "患者さんはロボットを見て、＿＿＿＿になります。",
+            "zh": "病人看到機器人，會＿＿＿＿。"
+          },
+          "options": [
+            "悲しく",
+            "怒って",
+            "笑顔に",
+            "疲れて"
+          ],
+          "answer": 2,
+          "explain": {
+            "zh": "文章提到「患者さんはロボットを見て、笑顔になります。」，表示病人會露出笑容。"
+          }
+        },
+        {
+          "type": "listening",
+          "prompt": {
+            "ja": "この文を聞いて、正しい意味を選んでください：ロボットは病気の人を元気にします。",
+            "zh": "請聽這句話，並選擇正確的意義：ロボットは病気の人を元気にします。"
+          },
+          "audioText": "ロボットは病気の人を元気にします。",
+          "options": [
+            "機器人讓人生病。",
+            "機器人讓生病的人更有活力。",
+            "機器人讓人生氣。",
+            "機器人讓人生氣。"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "「元気にします」表示使人有活力、精神好。"
+          }
+        }
+      ],
+      "dictation": [
+        {
+          "ja": "ある病院で新しいロボットが働いています。",
+          "furigana": "あるびょういんであたらしいロボットがはたらいています。",
+          "accept": [
+            "あるびょういんであたらしいロボットがはたらいています",
+            "ある病院で新しいロボットが働いています"
+          ],
+          "hint": "在某家醫院，有新的機器人正在工作。"
+        },
+        {
+          "ja": "ロボットはとてもかわいいです。",
+          "furigana": "ロボットはとてもかわいいです。",
+          "accept": [
+            "ロボットはとてもかわいいです",
+            "ロボットはとてもかわいいです"
+          ],
+          "hint": "機器人非常可愛。"
+        }
+      ],
+      "speaking": [
+        {
+          "ja": "かわいいロボット",
+          "furigana": "かわいいロボット",
+          "zh": "可愛的機器人",
+          "focus": "intonation",
+          "linking": ""
+        },
+        {
+          "ja": "コーヒーを運びます",
+          "furigana": "コーヒーをはこびます",
+          "zh": "送咖啡",
+          "focus": "pacing",
+          "linking": ""
+        }
+      ],
+      "id": "daily-2026-11-15-N5",
+      "date": "2026-11-15",
+      "level": "N5"
+    },
+    {
+      "title": {
         "ja": "かわいいロボットが、おうちで手伝います",
         "furigana": "かわいいロボットが、おうちでてつだいます",
         "zh": "可愛的機器人，在家幫忙",
@@ -14667,237 +14911,6 @@ window.KANA_NEWS = {
       ],
       "id": "daily-2026-09-09-N5",
       "date": "2026-09-09",
-      "level": "N5"
-    },
-    {
-      "title": {
-        "ja": "大阪の地下鉄が便利になります",
-        "furigana": "おおさかのちかてつがべんりになります",
-        "zh": "大阪地鐵將變得更方便",
-        "en": "Osaka Subway will become more convenient"
-      },
-      "source": {
-        "title": "大阪メトロが全駅で「VISAのタッチ決済」を導入、全国初",
-        "publisher": "ITmedia Mobile",
-        "url": "https://www.itmedia.co.jp/mobile/articles/2404/23/news174.html",
-        "note": "原創、分級改寫之摘要，非重製原文。"
-      },
-      "summary": [
-        {
-          "ja": "大阪の地下鉄で、新しいサービスが始まります。VISAのカードで、電車に乗ることができます。これは、日本の地下鉄で初めてのことです。切符を買う必要がなくなります。とても便利になりますね。",
-          "furigana": "おおさかのちかてつで、あたらしいサービスがはじまります。VISAのカードで、でんしゃにのることができます。これは、にほんのちかてつではじめてのことです。きっぷをかうひつようがなくなります。とてもべんりになりますね。",
-          "zh": "大阪地鐵將推出一項新服務。您可以使用VISA卡搭乘電車。這在日本的地鐵中是首次。您將不再需要購買車票。這將變得非常方便。",
-          "en": "A new service will start on the Osaka subway. You can ride the train with a VISA card. This is the first time for a subway in Japan. You will no longer need to buy a ticket. It will become very convenient."
-        }
-      ],
-      "vocab": [
-        {
-          "word": "地下鉄",
-          "reading": "ちかてつ",
-          "zh": "地鐵",
-          "en": "subway",
-          "pos": "noun",
-          "jlpt": "N5",
-          "example": {
-            "ja": "私は毎日、地下鉄で会社に行きます。",
-            "zh": "我每天搭地鐵去公司。"
-          }
-        },
-        {
-          "word": "便利",
-          "reading": "べんり",
-          "zh": "方便的",
-          "en": "convenient",
-          "pos": "な-adjective",
-          "jlpt": "N5",
-          "example": {
-            "ja": "このお店は駅の近くでとても便利です。",
-            "zh": "這家店在車站附近，非常方便。"
-          }
-        },
-        {
-          "word": "始まる",
-          "reading": "はじまる",
-          "zh": "開始",
-          "en": "to start",
-          "pos": "verb",
-          "jlpt": "N5",
-          "example": {
-            "ja": "映画は午後7時に始まります。",
-            "zh": "電影在晚上7點開始。"
-          }
-        },
-        {
-          "word": "乗る",
-          "reading": "のる",
-          "zh": "搭乘",
-          "en": "to ride",
-          "pos": "verb",
-          "jlpt": "N5",
-          "example": {
-            "ja": "バスに乗って学校に行きます。",
-            "zh": "我搭巴士去學校。"
-          }
-        },
-        {
-          "word": "必要",
-          "reading": "ひつよう",
-          "zh": "需要",
-          "en": "necessity",
-          "pos": "noun",
-          "jlpt": "N5",
-          "example": {
-            "ja": "これは私にとってとても必要なものです。",
-            "zh": "這對我來說是非常需要的東西。"
-          }
-        }
-      ],
-      "grammar": [
-        {
-          "point": "～が始まります",
-          "zh": "～開始了",
-          "en": "Something starts/begins",
-          "example": {
-            "ja": "新しいサービスが始まります。",
-            "zh": "新的服務將開始。"
-          },
-          "note": "動詞「始まる」的禮貌體，表示某事物的開始。主語用助詞「が」。"
-        },
-        {
-          "point": "～で～することができます",
-          "zh": "可以用～做～",
-          "en": "Can do something using something",
-          "example": {
-            "ja": "カードで電車に乗ることができます。",
-            "zh": "可以用卡片搭乘電車。"
-          },
-          "note": "表示使用某種工具或方法來做某事。「で」表示工具或手段，「～ことができます」表示能力或可能性。"
-        },
-        {
-          "point": "～がなくなります",
-          "zh": "～會消失/不再有",
-          "en": "Something will be gone/no longer exist",
-          "example": {
-            "ja": "切符を買う必要がなくなります。",
-            "zh": "將不再需要買車票。"
-          },
-          "note": "動詞「なくなる」的禮貌體，表示某事物消失或不再存在。主語用助詞「が」。"
-        }
-      ],
-      "quiz": [
-        {
-          "type": "reading",
-          "prompt": {
-            "ja": "「地下鉄」の読み方はどれですか？",
-            "zh": "「地下鉄」的讀法是哪一個？"
-          },
-          "audioText": "",
-          "options": [
-            "ちかてつ",
-            "じかてつ",
-            "ちかてつう",
-            "じかてつう"
-          ],
-          "answer": 0,
-          "explain": {
-            "zh": "「地下鉄」的日語讀音是「ちかてつ」。"
-          }
-        },
-        {
-          "type": "vocab",
-          "prompt": {
-            "ja": "電車に乗る時に使うものは何ですか？",
-            "zh": "搭乘電車時會用到什麼？"
-          },
-          "audioText": "",
-          "options": [
-            "本 (ほん)",
-            "切符 (きっぷ)",
-            "鉛筆 (えんぴつ)",
-            "傘 (かさ)"
-          ],
-          "answer": 1,
-          "explain": {
-            "zh": "搭乘電車時，通常會用到「切符」（車票）。"
-          }
-        },
-        {
-          "type": "grammar",
-          "prompt": {
-            "ja": "「新しいサービスが＿＿＿」に続く正しい言葉を選びなさい。",
-            "zh": "選擇「新しいサービスが＿＿＿」後面接的正確詞語。"
-          },
-          "audioText": "",
-          "options": [
-            "始めます",
-            "始まります",
-            "始めました",
-            "始まりました"
-          ],
-          "answer": 1,
-          "explain": {
-            "zh": "「サービス」是主語，所以應該用自動詞「始まります」表示服務開始。選項1是及物動詞的禮貌體，選項3和4是過去式。"
-          }
-        },
-        {
-          "type": "cloze",
-          "prompt": {
-            "ja": "大阪の地下鉄で、＿＿＿のカードで電車に乗ることができます。",
-            "zh": "在大阪地鐵，可以用＿＿＿的卡片搭乘電車。"
-          },
-          "audioText": "",
-          "options": [
-            "JR",
-            "VISA",
-            "SUICA",
-            "ICOCA"
-          ],
-          "answer": 1,
-          "explain": {
-            "zh": "根據新聞摘要，是可以使用VISA卡搭乘電車。"
-          }
-        },
-        {
-          "type": "listening",
-          "prompt": {
-            "ja": "私は毎日、地下鉄で会社に行きます。",
-            "zh": "我每天搭地鐵去公司。"
-          },
-          "audioText": "わたしはまいにち、ちかてつでかいしゃにいきます。",
-          "options": [
-            "I go to the company by bus every day.",
-            "I go to the company by subway every day.",
-            "I go to the company by bicycle every day.",
-            "I go to the company by car every day."
-          ],
-          "answer": 1,
-          "explain": {
-            "zh": "音頻中的句子是「私は毎日、地下鉄で会社に行きます。」，意思是「我每天搭地鐵去公司。」"
-          }
-        }
-      ],
-      "dictation": [
-        {
-          "ja": "切符を買う必要がなくなります。",
-          "furigana": "きっぷをかうひつようがなくなります。",
-          "accept": [
-            "きっぷをかうひつようがなくなります。",
-            "切符を買う必要がなくなります。"
-          ],
-          "hint": "不再需要買票了。"
-        }
-      ],
-      "speaking": [
-        {
-          "ja": "大阪の地下鉄が便利になります。",
-          "furigana": "おおさかのちかてつがべんりになります。",
-          "zh": "大阪地鐵將變得更方便。",
-          "focus": "intonation",
-          "linking": "「大阪の」的「の」發音輕巧，不拖長。「便利になります」的「に」和「なります」連讀自然，語氣上揚表示未來變化。"
-        }
-      ],
-      "id": "daily-2026-09-08-N5",
-      "date": "2026-09-08",
       "level": "N5"
     }
   ]
