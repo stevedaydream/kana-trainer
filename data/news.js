@@ -7,6 +7,273 @@ window.KANA_NEWS = {
   "packs": [
     {
       "title": {
+        "ja": "桜の開花、今年は早い？",
+        "furigana": "さくらのかいか、ことしははやい？",
+        "zh": "櫻花開花，今年會很早嗎？",
+        "en": "Cherry Blossom Bloom, Early This Year?"
+      },
+      "source": {
+        "title": "今年の桜開花は？ウェザーニュースが予測発表",
+        "publisher": "ウェザーニュース",
+        "url": "https://weathernews.jp/s/topics/202401/250105w/",
+        "note": "原創、分級改寫之摘要，非重製原文。"
+      },
+      "summary": [
+        {
+          "ja": "ウェザーニュースは、今年の桜がいつ咲くか発表しました。",
+          "furigana": "うぇざーにゅーすは、ことしのさくらがいつさくか はっぴょうしました。",
+          "zh": "Weather News發表了今年櫻花何時開花。",
+          "en": "Weather News announced when cherry blossoms will bloom this year."
+        },
+        {
+          "ja": "東京では、3月20日ごろに桜が咲き始めるでしょう。",
+          "furigana": "とうきょうでは、さんがつはつかごろにさくらがさきはじめるでしょう。",
+          "zh": "在東京，櫻花大約會在3月20日左右開始綻放。",
+          "en": "In Tokyo, cherry blossoms will likely start blooming around March 20th."
+        },
+        {
+          "ja": "これは、いつもより少し早い開花です。",
+          "furigana": "これは、いつもよりすこしはやいかいかです。",
+          "zh": "這比往常稍微早一點開花。",
+          "en": "This is a slightly earlier bloom than usual."
+        },
+        {
+          "ja": "福岡では、3月19日ごろに咲く予定です。",
+          "furigana": "ふくおかでは、さんがつじゅうくにちごろにさくよていです。",
+          "zh": "在福岡，預計會在3月19日左右開花。",
+          "en": "In Fukuoka, it is expected to bloom around March 19th."
+        },
+        {
+          "ja": "今年は暖かい日が多いので、桜が早く咲くかもしれません。",
+          "furigana": "ことしはあたたかいひがおおいので、さくらがはやくさくかもしれません。",
+          "zh": "因為今年暖和的日子很多，櫻花可能會提早開。",
+          "en": "Because there are many warm days this year, cherry blossoms might bloom early."
+        }
+      ],
+      "vocab": [
+        {
+          "word": "桜",
+          "reading": "さくら",
+          "zh": "櫻花",
+          "en": "cherry blossom",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "公園に桜がたくさんあります。",
+            "zh": "公園裡有很多櫻花。"
+          }
+        },
+        {
+          "word": "開花",
+          "reading": "かいか",
+          "zh": "開花",
+          "en": "blooming, flowering",
+          "pos": "noun",
+          "jlpt": "N5",
+          "example": {
+            "ja": "桜の開花はいつですか。",
+            "zh": "櫻花什麼時候開花？"
+          }
+        },
+        {
+          "word": "発表します",
+          "reading": "はっぴょうします",
+          "zh": "發表",
+          "en": "to announce, to present",
+          "pos": "verb",
+          "jlpt": "N5",
+          "example": {
+            "ja": "先生がテストの結果を発表しました。",
+            "zh": "老師發表了考試結果。"
+          }
+        },
+        {
+          "word": "早い",
+          "reading": "はやい",
+          "zh": "早的、快的",
+          "en": "early, fast",
+          "pos": "adjective",
+          "jlpt": "N5",
+          "example": {
+            "ja": "朝早く起きます。",
+            "zh": "早上很早起床。"
+          }
+        },
+        {
+          "word": "ごろ",
+          "reading": "ごろ",
+          "zh": "左右、大約",
+          "en": "around (time), approximately",
+          "pos": "suffix",
+          "jlpt": "N5",
+          "example": {
+            "ja": "3時ごろに家に帰ります。",
+            "zh": "大約3點回家。"
+          }
+        }
+      ],
+      "grammar": [
+        {
+          "point": "～でしょう",
+          "zh": "表示推測、預測",
+          "en": "expresses conjecture or prediction",
+          "example": {
+            "ja": "明日、雨が降るでしょう。",
+            "zh": "明天可能會下雨吧。"
+          },
+          "note": "用於對未來或不確定的事情進行推測，語氣比「～と思います」更客觀。"
+        },
+        {
+          "point": "～ので",
+          "zh": "表示原因、理由",
+          "en": "expresses cause or reason",
+          "example": {
+            "ja": "寒いので、窓を閉めます。",
+            "zh": "因為很冷，所以關窗。"
+          },
+          "note": "連接句子的前後，表示前句是後句的原因或理由。"
+        },
+        {
+          "point": "～かもしれません",
+          "zh": "表示可能性",
+          "en": "expresses possibility",
+          "example": {
+            "ja": "彼は来ないかもしれません。",
+            "zh": "他可能不會來。"
+          },
+          "note": "表示某事有發生的可能性，但不確定，語氣比「～でしょう」更弱。"
+        }
+      ],
+      "quiz": [
+        {
+          "type": "reading",
+          "prompt": {
+            "ja": "今年の桜の開花は、いつもよりどうですか？",
+            "zh": "今年的櫻花開花，比往常如何？"
+          },
+          "options": [
+            "とても早い",
+            "少し早い",
+            "いつもと同じ",
+            "少し遅い"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "根據文章，櫻花開花比往常稍微早一點（少し早い）。"
+          }
+        },
+        {
+          "type": "vocab",
+          "prompt": {
+            "ja": "「発表します」の正しい意味は何ですか？",
+            "zh": "「発表します」的正確意思是甚麼？"
+          },
+          "options": [
+            "學習",
+            "發表",
+            "吃飯",
+            "睡覺"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "「発表します」的意思是「發表、公布」。"
+          }
+        },
+        {
+          "type": "grammar",
+          "prompt": {
+            "ja": "「暖かい日が多い____、桜が早く咲くかもしれません。」空欄に何が入りますか？",
+            "zh": "「暖和的日子很多____，櫻花可能會提早開。」空格裡應該填什麼？"
+          },
+          "options": [
+            "から",
+            "ので",
+            "けれど",
+            "ですが"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "「ので」表示原因，與「から」類似，但語氣更為客觀。"
+          }
+        },
+        {
+          "type": "listening",
+          "prompt": {
+            "ja": "東京では、桜はいつごろ咲き始めますか？",
+            "zh": "在東京，櫻花大約什麼時候開始綻放？"
+          },
+          "audioText": "東京では、3月20日ごろに桜が咲き始めるでしょう。",
+          "options": [
+            "3月10日ごろ",
+            "3月15日ごろ",
+            "3月20日ごろ",
+            "3月25日ごろ"
+          ],
+          "answer": 2,
+          "explain": {
+            "zh": "根據音頻，東京的櫻花大約在3月20日左右開始綻放。"
+          }
+        },
+        {
+          "type": "cloze",
+          "prompt": {
+            "ja": "今年は暖かい日が多いので、桜が早く咲く____。",
+            "zh": "因為今年暖和的日子很多，櫻花可能會提早開____。"
+          },
+          "options": [
+            "でしょう",
+            "かもしれません",
+            "はずです",
+            "に違いない"
+          ],
+          "answer": 1,
+          "explain": {
+            "zh": "「かもしれません」表示可能性，語氣較為不確定，符合「可能會提早開」的意思。"
+          }
+        }
+      ],
+      "dictation": [
+        {
+          "ja": "桜の開花は少し早いです。",
+          "furigana": "さくらのかいかはすこしはやいです。",
+          "accept": [
+            "さくらのかいかはすこしはやいです",
+            "桜の開花は少し早いです"
+          ],
+          "hint": "櫻花開花有點早。"
+        },
+        {
+          "ja": "東京では3月20日ごろに咲きます。",
+          "furigana": "とうきょうではさんがつはつかごろにさきます。",
+          "accept": [
+            "とうきょうではさんがつはつかごろにさきます",
+            "東京では3月20日ごろに咲きます"
+          ],
+          "hint": "在東京大約3月20日開花。"
+        }
+      ],
+      "speaking": [
+        {
+          "ja": "今年の桜はいつ咲きますか？",
+          "furigana": "ことしのさくらはいつさきますか？",
+          "zh": "今年的櫻花什麼時候開？",
+          "focus": "intonation",
+          "linking": "「いつ咲きますか」的「い」和「つ」之間，以及「咲きます」和「か」之間，語氣上揚。"
+        },
+        {
+          "ja": "暖かい日が多いので、早いです。",
+          "furigana": "あたたかいひがおおいので、はやいです。",
+          "zh": "因為暖和的日子很多，所以很早。",
+          "focus": "pacing",
+          "linking": "「あたたかいひがおおいので」可以連貫地說，然後稍作停頓，再說「はやいです」。"
+        }
+      ],
+      "id": "daily-2026-11-25-N5",
+      "date": "2026-11-25",
+      "level": "N5"
+    },
+    {
+      "title": {
         "ja": "動物園の赤ちゃんパンダ、もうすぐ会える！",
         "furigana": "どうぶつえんのあかちゃんパンダ、もうすぐあえる！",
         "zh": "動物園的熊貓寶寶，很快就能見面了！",
@@ -14761,266 +15028,6 @@ window.KANA_NEWS = {
       ],
       "id": "daily-2026-09-20-N5",
       "date": "2026-09-20",
-      "level": "N5"
-    },
-    {
-      "title": {
-        "ja": "桜の開花、今年は早い？",
-        "furigana": "さくらのかいか、ことしははやい？",
-        "zh": "櫻花開放，今年會比較早嗎？",
-        "en": "Cherry Blossoms Opening Early This Year?"
-      },
-      "source": {
-        "title": "今年の桜、開花は早め？気象情報会社の発表",
-        "publisher": "ウェザーニュース",
-        "url": "https://weathernews.jp/s/topics/202401/250105w/",
-        "note": "原創、分級改寫之摘要，非重製原文。"
-      },
-      "summary": [
-        {
-          "ja": "ウェザーニュースは、今年の桜の開花予想を発表しました。",
-          "furigana": "うぇざーにゅーすは、ことしのさくらのかいかよそうをはっぴょうしました。",
-          "zh": "Weather News發布了今年的櫻花開花預測。",
-          "en": "Weather News announced this year's cherry blossom blooming forecast."
-        },
-        {
-          "ja": "東京では、3月20日ごろに桜が咲き始めるでしょう。",
-          "furigana": "とうきょうでは、さんがつはつかごろにさくらがさきはじめるでしょう。",
-          "zh": "在東京，櫻花大約會在3月20日左右開始綻放。",
-          "en": "In Tokyo, cherry blossoms will likely start blooming around March 20th."
-        },
-        {
-          "ja": "これは、いつもの年より少し早いです。",
-          "furigana": "これは、いつものとしよりすこしはやいです。",
-          "zh": "這比往年稍微早一些。",
-          "en": "This is a little earlier than usual years."
-        },
-        {
-          "ja": "暖かくなる日が多いからです。",
-          "furigana": "あたたかくなるひがおおいからです。",
-          "zh": "因為溫暖的日子比較多。",
-          "en": "This is because there are many warm days."
-        },
-        {
-          "ja": "桜を見るのが楽しみですね。",
-          "furigana": "さくらをみるのがたのしみですね。",
-          "zh": "期待賞櫻呢。",
-          "en": "We are looking forward to seeing the cherry blossoms."
-        }
-      ],
-      "vocab": [
-        {
-          "word": "桜",
-          "reading": "さくら",
-          "zh": "櫻花",
-          "en": "cherry blossom",
-          "pos": "名詞",
-          "jlpt": "N5",
-          "example": {
-            "ja": "桜がとてもきれいです。",
-            "zh": "櫻花非常漂亮。"
-          }
-        },
-        {
-          "word": "開花",
-          "reading": "かいか",
-          "zh": "開花",
-          "en": "blooming, flowering",
-          "pos": "名詞",
-          "jlpt": "N5",
-          "example": {
-            "ja": "桜の開花はいつですか。",
-            "zh": "櫻花什麼時候開花？"
-          }
-        },
-        {
-          "word": "予想",
-          "reading": "よそう",
-          "zh": "預測",
-          "en": "forecast, prediction",
-          "pos": "名詞",
-          "jlpt": "N5",
-          "example": {
-            "ja": "天気予想を見ます。",
-            "zh": "我看天氣預報。"
-          }
-        },
-        {
-          "word": "早い",
-          "reading": "はやい",
-          "zh": "早的",
-          "en": "early, fast",
-          "pos": "形容詞",
-          "jlpt": "N5",
-          "example": {
-            "ja": "朝早く起きます。",
-            "zh": "我早上很早起床。"
-          }
-        },
-        {
-          "word": "楽しみ",
-          "reading": "たのしみ",
-          "zh": "期待、樂趣",
-          "en": "enjoyment, pleasure, anticipation",
-          "pos": "名詞",
-          "jlpt": "N5",
-          "example": {
-            "ja": "旅行が楽しみです。",
-            "zh": "我很期待旅行。"
-          }
-        }
-      ],
-      "grammar": [
-        {
-          "point": "〜でしょう",
-          "zh": "表示推測、可能性（〜吧、大概會）",
-          "en": "Expresses conjecture or probability (will probably, likely)",
-          "example": {
-            "ja": "明日は雨が降るでしょう。",
-            "zh": "明天大概會下雨吧。"
-          },
-          "note": "動詞普通形、い形容詞普通形、な形容詞語幹+でしょう、名詞+でしょう"
-        },
-        {
-          "point": "〜より",
-          "zh": "表示比較（比〜）",
-          "en": "Expresses comparison (than ~)",
-          "example": {
-            "ja": "日本は韓国より広いです。",
-            "zh": "日本比韓國大。"
-          },
-          "note": "名詞1は 名詞2より 形容詞/動詞 です。"
-        },
-        {
-          "point": "〜からです",
-          "zh": "表示理由、原因（因為〜）",
-          "en": "Expresses reason or cause (because ~)",
-          "example": {
-            "ja": "宿題が多いから、忙しいです。",
-            "zh": "因為作業很多，所以很忙。"
-          },
-          "note": "句子的普通形 + からです。"
-        }
-      ],
-      "quiz": [
-        {
-          "type": "reading",
-          "prompt": {
-            "ja": "今年の桜の開花は、いつもの年と比べてどうですか？",
-            "zh": "今年的櫻花開花，和往年相比如何？"
-          },
-          "options": [
-            "とても遅いです。",
-            "少し遅いです。",
-            "いつもの年と同じです。",
-            "少し早いです。"
-          ],
-          "answer": 3,
-          "explain": {
-            "zh": "根據摘要，今年の桜の開花は、いつもの年より少し早いです。(今年的櫻花開花比往年稍微早一些。)"
-          }
-        },
-        {
-          "type": "vocab",
-          "prompt": {
-            "ja": "「予想」の正しい読み方はどれですか？",
-            "zh": "「予想」的正確讀法是哪一個？"
-          },
-          "options": [
-            "よそう",
-            "よそうう",
-            "よそうお",
-            "よそうー"
-          ],
-          "answer": 0,
-          "explain": {
-            "zh": "「予想」的正確讀法是「よそう」。"
-          }
-        },
-        {
-          "type": "grammar",
-          "prompt": {
-            "ja": "「暖かくなる日が多い______。」に続く正しい助詞は何ですか？",
-            "zh": "「暖かくなる日が多い______。」後面接的正確助詞是什麼？"
-          },
-          "options": [
-            "が",
-            "で",
-            "から",
-            "と"
-          ],
-          "answer": 2,
-          "explain": {
-            "zh": "表示原因時使用「〜からです」。"
-          }
-        },
-        {
-          "type": "listening",
-          "prompt": {
-            "ja": "東京では、桜はいつ頃咲き始めるでしょう？",
-            "zh": "在東京，櫻花大約什麼時候開始綻放？"
-          },
-          "audioText": "東京では、3月20日ごろに桜が咲き始めるでしょう。",
-          "options": [
-            "3月10日ごろ",
-            "3月15日ごろ",
-            "3月20日ごろ",
-            "3月25日ごろ"
-          ],
-          "answer": 2,
-          "explain": {
-            "zh": "音頻中提到「東京では、3月20日ごろに桜が咲き始めるでしょう。」"
-          }
-        },
-        {
-          "type": "cloze",
-          "prompt": {
-            "ja": "桜を見るのが_______ですね。",
-            "zh": "期待賞櫻呢。"
-          },
-          "options": [
-            "楽しい",
-            "楽しみ",
-            "面白",
-            "嬉しい"
-          ],
-          "answer": 1,
-          "explain": {
-            "zh": "「楽しみ」在這裡表示期待、樂趣。完整的句子是「桜を見るのが楽しみですね。」"
-          }
-        }
-      ],
-      "dictation": [
-        {
-          "ja": "桜が咲き始めます。",
-          "furigana": "さくらがさきはじめます。",
-          "accept": [
-            "さくらがさきはじめます",
-            "桜が咲き始めます"
-          ],
-          "hint": "櫻花開始綻放。"
-        },
-        {
-          "ja": "暖かくなる日が多いです。",
-          "furigana": "あたたかくなるひがおおいです。",
-          "accept": [
-            "あたたかくなるひがおおいです",
-            "暖かくなる日が多いです"
-          ],
-          "hint": "溫暖的日子很多。"
-        }
-      ],
-      "speaking": [
-        {
-          "ja": "桜を見るのが楽しみですね。",
-          "furigana": "さくらをみるのがたのしみですね。",
-          "zh": "期待賞櫻呢。",
-          "focus": "intonation",
-          "linking": ""
-        }
-      ],
-      "id": "daily-2026-09-19-N5",
-      "date": "2026-09-19",
       "level": "N5"
     }
   ]
